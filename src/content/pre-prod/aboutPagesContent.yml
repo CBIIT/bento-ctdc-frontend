@@ -1,6 +1,6 @@
 - page: '/crdc'
   title: "Cancer Research Data Commons (CRDC) and Analysis"
-  primaryContentImage: https://github.com/CBIIT/datacommons-assets/blob/ctdc_Assets/ctdc/images/aboutPages/About_CRDC.png
+  primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_CRDC.png
   content:
     - paragraph: "$$#CRDC:#$$"
     - paragraph: "$$[The Cancer Research DataCommons](https://datascience.cancer.gov/data-commons)$$ is an initiative from NCI’s Center for Biomedical
@@ -46,7 +46,7 @@
     - paragraph: "Currently the CTDC supports analysis via the SBG Cloud Resource."
 - page: "/developers"
   title: "Developers"
-  primaryContentImage: https://github.com/CBIIT/datacommons-assets/blob/ctdc_Assets/ctdc/images/aboutPages/About_Developers.png
+  primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_Developers.png
   content:
     - paragraph: "The CTDC System features a GraphQL API to enable querying of the entire data model."
     - paragraph: "https://trialcommons-dev.cancer.gov/v1/graphql/"
@@ -62,12 +62,12 @@
         Each tier in the application stack is designed to be modular and adaptable for a variety of use-cases and scenarios. "
 - page: '/support'
   title: "Support"
-  primaryContentImage: https://github.com/CBIIT/datacommons-assets/blob/ctdc_Assets/ctdc/images/aboutPages/About_Support.png
+  primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_Support.png
   content:
     - paragraph: "If you have any questions, please contact us at $$*CTDCHelpDesk@mail.nih.gov*$$. "
 - page: '/request-access'
   title: "Request Access"
-  primaryContentImage: https://github.com/CBIIT/datacommons-assets/blob/ctdc_Assets/ctdc/images/aboutPages/About_RequestAccess.png
+  primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_RequestAccess.png
   content:
     - paragraph: "CTDC provides open access to baseline information on the cases present in CTDC. However, the detailed clinical information and associated sequencing data files for cases presented in the CTDC are not open access, they require users to have permission. Requesting permission is a two step process;"
     - paragraph: "STEP 1: Request access through the NCTN Data Archive site."
@@ -81,7 +81,7 @@
         If a user is requesting access as a PI, then they will need to create a new research project within dbGaP. The following information is useful to add the appropriate dataset to the dbGaP research project request; ARM Q Study Accession ID is phs001926, ARM Z1D Study Accession ID is phs001859."
 - page: '/purpose'
   title: "Purpose"
-  primaryContentImage: https://github.com/CBIIT/datacommons-assets/blob/ctdc_Assets/ctdc/images/aboutPages/About_Purpose.png
+  primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_Purpose.png
   content:
     - paragraph: "The CTDC is part of the Cancer Research Data Commons (CRDC), an initiative from 
         NCI’s Center for Biomedical Informatics and Information Technology (CBIIT). The CTDC is focused on providing access to data from NCI's Precision Medicine Initiative which has the goal to provide clinicians with new tools to select the therapies that can be used in a more individualized approach with patients. CTDC is providing the community with access to data from the National Cancer Institute-Molecular Analysis for Therapy Choice
@@ -91,7 +91,7 @@
         CTDC data is accomplished using the CRDC $$[Cloud Resources](https://datascience.cancer.gov/data-commons/cloud-resources)$$."
 - page: '/ctdc-data-model'
   title: 'CTDC Data Model'
-  primaryContentImage: https://github.com/CBIIT/datacommons-assets/blob/ctdc_Assets/ctdc/images/aboutPages/About_CTDC_Model.png
+  primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_CTDC_Model.png
   content:
     - paragraph: "$$#HARMONIZATION/INTEGRATION:#$$"
     - paragraph: "The CTDC functions best for the research community when the data is integrated. Once a project 
