@@ -1,4 +1,9 @@
 export default [
-  '/bento',
-  '/resources',
+  '/purpose',
+  '/crdc',
+  '/model',
+  '/data-dictionary',
+  '/developers',
+  '/support',
+  '/request-access',
 ];

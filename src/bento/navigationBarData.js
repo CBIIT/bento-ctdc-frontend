@@ -61,16 +61,32 @@ export const navBarData = [
     type: 'dropdown',
     dropDownLinks: [
       {
-        labelText: 'Bento',
-        link: '/bento',
+        labelText: 'Purpose',
+        link: '/purpose',
       },
       {
-        labelText: 'Resources',
-        link: '/resources',
+        labelText: 'CRDC & Analysis',
+        link: '/crdc',
       },
       {
-        labelText: 'Graphql',
-        link: '/graphql',
+        labelText: 'CTDC Data & Model',
+        link: '/model',
+      },
+      {
+        labelText: 'CTDC Data Dictionary',
+        link: '/data-dictionary',
+      },
+      {
+        labelText: 'Developers',
+        link: '/developers',
+      },
+      {
+        labelText: 'Support',
+        link: '/support',
+      },
+      {
+        labelText: 'Request Access',
+        link: '/request-access',
       },
     ],
   },

@@ -1,6 +1,7 @@
 import React from 'react';
-import { AboutHeader, AboutBody } from 'bento-components';
+import { AboutBody } from 'bento-components';
 import { withStyles } from '@material-ui/core';
+import AboutHeader from './aboutHeader';
 import Stats from '../../components/Stats/AllStatsController';
 
 const AboutView = ({ classes, data }) => {
@@ -9,18 +10,23 @@ const AboutView = ({ classes, data }) => {
   return (
     <>
       <Stats />
-      <AboutHeader title={data.title} />
-      <AboutBody data={{
-        image: getImage(data.primaryContentImage, data.title),
-        imageLocation: 'right',
-        title: data.title ? data.title : '',
-        content: data.content ? data.content : '',
-        table: data.table ? data.table : '',
-        secondaryImage: data.secondaryZoomImage ? data.secondaryZoomImage : null,
-        secondaryImageData: getImage(data.secondaryZoomImage, 'secondary zoominout'),
-        secondaryZoomImageTitle: data.secondaryZoomImageTitle ? data.secondaryZoomImageTitle : null,
-      }}
-      />
+      <div className={classes.container}>
+        <AboutHeader title={data.title} />
+        <AboutBody data={{
+          fontFamily: '"Lato Regular", "Open Sans", sans-serif',
+          lineHeight: '25px',
+          image: getImage(data.primaryContentImage, data.title),
+          imageLocation: 'left',
+          title: data.title ? data.title : '',
+          content: data.content ? data.content : '',
+          table: data.table ? data.table : '',
+          secondaryImage: data.secondaryZoomImage ? data.secondaryZoomImage : null,
+          secondaryImageData: getImage(data.secondaryZoomImage, 'secondary zoominout'),
+          secondaryZoomImageTitle:
+           data.secondaryZoomImageTitle ? data.secondaryZoomImageTitle : null,
+        }}
+        />
+      </div>
     </>
 
   );
@@ -28,6 +34,9 @@ const AboutView = ({ classes, data }) => {
 const styles = () => ({
   img: {
     width: '100%',
+  },
+  container: {
+    paddingTop: '1px',
   },
 });
 
