@@ -429,6 +429,14 @@ export const DASHBOARD_QUERY = gql`{
   numberOfTrials
   numberOfCases
   numberOfFiles
+  trialsAndArms{
+    trials
+    caseSize
+    arms{
+        arms
+        caseSize
+    }
+  }
 
    casesCountBaseOnTrialId {
       clinical_trial_id
@@ -496,10 +504,18 @@ export const DASHBOARD_QUERY = gql`{
 
 export const FILTER_GROUP_QUERY = gql`
   query groupCounts($case_ids: [String]){
-    caseCountByTrial(case_ids: $case_ids) {
-     group
-     count
+    trialsAndArms(case_ids: $case_ids){
+      trials
+      caseSize
+      arms{
+          arms
+          caseSize
+      }
  }
+ caseCountByTrial(case_ids: $case_ids) {
+  group
+  count
+}
  caseCountByDiagnoses(case_ids: $case_ids){
   group
   subjects
