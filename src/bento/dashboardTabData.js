@@ -426,144 +426,102 @@ export const tabIndex = [
 ];
 
 export const DASHBOARD_QUERY = gql`{
-  numberOfPrograms
-  numberOfStudies
-  numberOfSubjects
-  numberOfSamples
-  numberOfLabProcedures
+  numberOfTrials
+  numberOfCases
   numberOfFiles
-  subjectCountByProgram{
-        group
-        subjects
-      }
-    subjectCountByStudy{
-        group
-        subjects
-      }
-    subjectCountByDiagnoses{
-        group
-        subjects
-      }
-    subjectCountByRecurrenceScore{
-        group
-        subjects
-      }
-    subjectCountByTumorSize{
-        group
-        subjects
-      }
-    subjectCountByChemotherapyRegimen{
-        group
-        subjects
-      }
-    subjectCountByTumorGrade{
-        group
-        subjects
-      }
-  subjectCountByErStatus{
-        group
-        subjects
-      }
-  subjectCountByPrStatus{
-        group
-        subjects
-      }
-  subjectCountByMenopauseStatus{
-        group
-        subjects
-      }
-  subjectCountByChemotherapyRegimen{
-        group
-        subjects
-      }
-  subjectCountByEndocrineTherapy{
-    group
-    subjects
-  }
-  subjectCountByFileType{
-    group
-    subjects
-  }
-  subjectCountByFileAssociation {
-      group
-      subjects
-  }
-  subjectCountByTissueComposition{
-      group
-      subjects
-  }
-  subjectCountByTissueType{
-      group
-      subjects
-  }
-    armsByPrograms {
-        program
-        caseSize
-        children {
-            arm
-            caseSize
-            size
-        }
-    }
-  subjectOverViewPaged(first: 10) {
-      subject_id
-      program_id
-      study_info
-      samples
-      program
-      study_acronym
-      diagnosis
-      recurrence_score
-      tumor_size
-      tumor_grade
-      er_status
-      pr_status
-      chemotherapy
-      endocrine_therapy
-      menopause_status
-      age_at_index
-      survival_time
-      lab_procedures
-      files{
-        file_id
-      }
-  }
-  }`;
 
-export const FILTER_GROUP_QUERY = gql`
-  query groupCounts($subject_ids: [String]){
-   armsByPrograms(subject_ids: $subject_ids) {
-     program
-     caseSize
-     children {
-         arm
-         caseSize
-         size
-     }
+   casesCountBaseOnTrialId {
+      clinical_trial_id
+      cases
+  }
+   casesCountBaseOnTrialCode {
+      clinical_trial_designation
+      cases
+  }
+   casesCountBaseOnPubMedID {
+      pubmed_id
+      cases
+  }
+   casesCountBaseOnGender {
+      gender
+      cases
+  }
+   casesCountBaseOnRace {
+      race
+      cases
+  }
+  casesCountBaseOnEthnicity {
+      ethnicity
+      cases
+  }
+
+  casesCountBaseOnDiagnosis {
+      disease
+      cases
+  }
+   casesCountBaseOnFileType {
+      file_type
+      cases
+  }
+  casesCountBaseOnFileFormat {
+      file_format
+      cases
+  }
+
+  casesCountBaseOnTrialArm {
+      trial_arm
+      cases
+  }
+
+  caseOverviewPaged(first: 10) {   
+    case_id
+    clinical_trial_code
+    arm_id
+    arm_drug
+    disease
+    gender
+    race
+    arm_target
+    ethnicity
+    clinical_trial_id
+    pubmed_id
+    trial_arm
+    file_types
+    file_formats
+    files{
+       uuid
+      }
+  }
+}`;
+
+export const FILTER_GROUP_QUERY = gql` // Widgets
+  query groupCounts($case_ids: [String]){
+    caseCountByTrial(case_ids: $case_ids) {
+     group
+     count
  }
- subjectCountByDiagnoses (subject_ids: $subject_ids){
+ caseCountByDiagnoses(case_ids: $case_ids){
   group
   subjects
 }
-subjectCountByRecurrenceScore (subject_ids: $subject_ids){
+ caseCountByGender(case_ids: $case_ids){
   group
   subjects
 }
-subjectCountByTumorSize(subject_ids: $subject_ids) {
+ caseCountByRace(case_ids: $case_ids) {
   group
   subjects
 }
-subjectCountByChemotherapyRegimen(subject_ids: $subject_ids) {
+ caseCountByEthnicirt(case_ids: $case_ids) {
   group
   subjects
 }
-subjectCountByEndocrineTherapy (subject_ids: $subject_ids){
+ caseCountByPubmedID(case_ids: $case_ids){
   group
   subjects
 }
-   
-}
- `;
+
+}`;
 
 export const FILTER_QUERY = gql`
 query search($programs: [String] ,
@@ -773,72 +731,53 @@ export const GET_SAMPLES_OVERVIEW_DESC_QUERY = gql`
 // --------------- GraphQL query - Retrieve sample tab details --------------
 
 export const GET_CASES_OVERVIEW_QUERY = gql`
-query subjectOverViewPaged($subject_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  subjectOverViewPaged(subject_ids: $subject_ids, first: $first, offset: $offset, order_by: $order_by) {
-      subject_id
-      program
-      program_id
-      study_acronym
-      study_short_description
-      study_info
-      diagnosis
-      recurrence_score
-      tumor_size
-      tumor_grade
-      er_status
-      pr_status
-      chemotherapy
-      endocrine_therapy
-      menopause_status
-      age_at_index
-      survival_time
-      files {
-            file_id
-      }
-      lab_procedures
+query caseOverViewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
+  caseOverViewPaged(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+    case_id
+    clinical_trial_code
+    arm_id
+    arm_drug
+    disease
+    gender
+    race
+    arm_target
+    ethnicity
+    clinical_trial_id
+    files{
+      uuid
+    }
   }
-}
-  `;
+}`;
 
 // --------------- GraphQL query - Retrieve sample tab details --------------
 
 export const GET_CASES_OVERVIEW_DESC_QUERY = gql`
-  query subjectOverViewPaged($subject_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-    subjectOverViewPagedDesc(subject_ids: $subject_ids, first: $first, offset: $offset, order_by: $order_by) {
-        subject_id
-        program
-        program_id
-        study_acronym
-        study_short_description
-        study_info
-        diagnosis
-        recurrence_score
-        tumor_size
-        tumor_grade
-        er_status
-        pr_status
-        chemotherapy
-        endocrine_therapy
-        menopause_status
-        age_at_index
-        survival_time
-        files {
-              file_id
-        }
-        lab_procedures
+  query caseOverViewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
+    caseOverViewPagedDesc(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+      case_id
+      clinical_trial_code
+      arm_id
+      arm_drug
+      disease
+      gender
+      race
+      arm_target
+      ethnicity
+      clinical_trial_id
+      files{
+        uuid
+      }
     }
-}
-  `;
+}`;
 
 export const GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL = gql`
-  query subjectOverViewPaged($subject_ids: [String], $first: Int = 10000000){
-    subjectOverViewPaged(subject_ids: $subject_ids, first: $first) {
+  query caseOverViewPaged($case_ids: [String], $first: Int = 10000000){
+    caseOverViewPaged(case_ids: $case_ids, first: $first) {
         files {
-              file_id
+              uuid
         }
     }
-}
-  `;
+}`;
 
 export const GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL = gql`
 query sampleOverview($sample_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
