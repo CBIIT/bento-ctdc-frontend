@@ -9,7 +9,6 @@ import Error from '../../pages/error/Error';
 import Dashboard from '../../pages/dashboardTab/dashboardController';
 import CaseDetail from '../../pages/caseDetail/caseDetailController';
 import ArmDetail from '../../pages/armDetail/armDetailController';
-import modelPage from '../../pages/modelPage/modelPageView';
 import table from '../../pages/table/tableView';
 import Home from '../../pages/landing/landingController';
 import About from '../../pages/about/aboutController';
@@ -44,7 +43,6 @@ const Layout = ({ classes, isSidebarOpened }) => (
             <Route exact path="/home" component={Home} />
             <Route path="/cases" component={Dashboard} />
             <Route path="/programs" component={Programs} />
-            <Route path="/model" component={modelPage} />
             <Route path="/table" component={table} />
             <Route path="/fileCentricCart" component={fileCentricCart} />
             <Route path="/program/:id" component={ProgramDetail} />

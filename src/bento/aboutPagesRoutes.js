@@ -1,7 +1,7 @@
 export default [
   '/purpose',
   '/crdc',
-  '/model',
+  '/ctdc-data-model',
   '/data-dictionary',
   '/developers',
   '/support',

@@ -70,7 +70,7 @@ export const navBarData = [
       },
       {
         labelText: 'CTDC Data & Model',
-        link: '/model',
+        link: '/ctdc-data-model',
       },
       {
         labelText: 'CTDC Data Dictionary',
