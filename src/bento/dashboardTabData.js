@@ -632,9 +632,9 @@ filterCasesCountBaseOnTrialArm(clinical_trial_id: $clinical_trial_id , clinical_
 
 // --------------- GraphQL query - Retrieve files tab details --------------
 export const GET_FILES_OVERVIEW_QUERY = gql`
-query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="file_name"){
-  fileOverview(file_ids: $file_ids, offset: $offset,first: $first, order_by: $order_by) {
-    file_id
+query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="file_name"){
+  fileOverview(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
+    uuid
     file_name
     association
     file_description
@@ -650,9 +650,9 @@ query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 10, $ord
   `;
 
 export const GET_FILES_OVERVIEW_DESC_QUERY = gql`
-  query fileOverviewDesc($file_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="file_name"){
-    fileOverviewDesc(file_ids: $file_ids, offset: $offset,first: $first, order_by: $order_by) {
-      file_id
+  query fileOverviewDesc($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="file_name"){
+    fileOverviewDesc(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
+      uuid
       file_name
       association
       file_description
@@ -719,8 +719,8 @@ export const GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL = gql`
 }`;
 
 export const GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL = gql`
-query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by: String = "file_name") {
-  fileOverview(file_ids: $file_ids, offset: $offset, first: $first, order_by: $order_by) {
+query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by: String = "file_name") {
+  fileOverview(uuid: $uuid, offset: $offset, first: $first, order_by: $order_by) {
     uuid
   }
 }
@@ -728,8 +728,8 @@ query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 10, $ord
 
 // --------------- GraphQL query - Retrieve files tab details --------------
 export const GET_FILES_NAME_QUERY = gql`
-query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 100000, $order_by:String ="file_name"){
-  fileOverview(file_ids: $file_ids, offset: $offset,first: $first, order_by: $order_by) {
+query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 100000, $order_by:String ="file_name"){
+  fileOverview(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
     file_name
   }
 }
