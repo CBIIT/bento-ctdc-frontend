@@ -426,267 +426,208 @@ export const tabIndex = [
 ];
 
 export const DASHBOARD_QUERY = gql`{
-  numberOfPrograms
-  numberOfStudies
-  numberOfSubjects
-  numberOfSamples
-  numberOfLabProcedures
+  numberOfTrials
+  numberOfCases
   numberOfFiles
-  subjectCountByProgram{
-        group
-        subjects
-      }
-    subjectCountByStudy{
-        group
-        subjects
-      }
-    subjectCountByDiagnoses{
-        group
-        subjects
-      }
-    subjectCountByRecurrenceScore{
-        group
-        subjects
-      }
-    subjectCountByTumorSize{
-        group
-        subjects
-      }
-    subjectCountByChemotherapyRegimen{
-        group
-        subjects
-      }
-    subjectCountByTumorGrade{
-        group
-        subjects
-      }
-  subjectCountByErStatus{
-        group
-        subjects
-      }
-  subjectCountByPrStatus{
-        group
-        subjects
-      }
-  subjectCountByMenopauseStatus{
-        group
-        subjects
-      }
-  subjectCountByChemotherapyRegimen{
-        group
-        subjects
-      }
-  subjectCountByEndocrineTherapy{
-    group
-    subjects
-  }
-  subjectCountByFileType{
-    group
-    subjects
-  }
-  subjectCountByFileAssociation {
-      group
-      subjects
-  }
-  subjectCountByTissueComposition{
-      group
-      subjects
-  }
-  subjectCountByTissueType{
-      group
-      subjects
-  }
-    armsByPrograms {
-        program
+  trialsAndArms{
+    trials
+    caseSize
+    arms{
+        arms
         caseSize
-        children {
-            arm
-            caseSize
-            size
-        }
     }
-  subjectOverViewPaged(first: 10) {
-      subject_id
-      program_id
-      study_info
-      samples
-      program
-      study_acronym
-      diagnosis
-      recurrence_score
-      tumor_size
-      tumor_grade
-      er_status
-      pr_status
-      chemotherapy
-      endocrine_therapy
-      menopause_status
-      age_at_index
-      survival_time
-      lab_procedures
-      files{
-        file_id
+  }
+
+   casesCountBaseOnTrialId {
+      clinical_trial_id
+      cases
+  }
+   casesCountBaseOnTrialCode {
+      clinical_trial_designation
+      cases
+  }
+   casesCountBaseOnPubMedID {
+      pubmed_id
+      cases
+  }
+   casesCountBaseOnGender {
+      gender
+      cases
+  }
+   casesCountBaseOnRace {
+      race
+      cases
+  }
+  casesCountBaseOnEthnicity {
+      ethnicity
+      cases
+  }
+
+  casesCountBaseOnDiagnosis {
+      disease
+      cases
+  }
+   casesCountBaseOnFileType {
+      file_type
+      cases
+  }
+  casesCountBaseOnFileFormat {
+      file_format
+      cases
+  }
+
+  casesCountBaseOnTrialArm {
+      trial_arm
+      cases
+  }
+
+  caseOverviewPaged(first: 10) {   
+    case_id
+    clinical_trial_code
+    arm_id
+    arm_drug
+    disease
+    gender
+    race
+    arm_target
+    ethnicity
+    clinical_trial_id
+    pubmed_id
+    trial_arm
+    file_types
+    file_formats
+    files{
+       uuid
       }
   }
-  }`;
+}`;
 
 export const FILTER_GROUP_QUERY = gql`
-  query groupCounts($subject_ids: [String]){
-   armsByPrograms(subject_ids: $subject_ids) {
-     program
-     caseSize
-     children {
-         arm
-         caseSize
-         size
-     }
+  query groupCounts($case_ids: [String]){
+    trialsAndArms(case_ids: $case_ids){
+      trials
+      caseSize
+      arms{
+          arms
+          caseSize
+      }
  }
- subjectCountByDiagnoses (subject_ids: $subject_ids){
+ caseCountByTrial(case_ids: $case_ids) {
+  group
+  count
+}
+ caseCountByDiagnoses(case_ids: $case_ids){
   group
   subjects
 }
-subjectCountByRecurrenceScore (subject_ids: $subject_ids){
+ caseCountByGender(case_ids: $case_ids){
   group
   subjects
 }
-subjectCountByTumorSize(subject_ids: $subject_ids) {
+ caseCountByRace(case_ids: $case_ids) {
   group
   subjects
 }
-subjectCountByChemotherapyRegimen(subject_ids: $subject_ids) {
+ caseCountByEthnicirt(case_ids: $case_ids) {
   group
   subjects
 }
-subjectCountByEndocrineTherapy (subject_ids: $subject_ids){
+ caseCountByPubmedID(case_ids: $case_ids){
   group
   subjects
 }
-   
-}
- `;
+
+}`;
 
 export const FILTER_QUERY = gql`
 query search($programs: [String] ,
-  $studies: [String] ,
-  $diagnoses: [String] ,
-  $rc_scores: [String] ,
-  $tumor_sizes: [String] ,
-  $chemo_regimen: [String] ,
-  $tumor_grades: [String] ,
-  $er_status: [String] ,
-  $pr_status: [String] ,
-  $endo_therapies: [String] ,
-  $meno_status: [String] ,
-  $tissue_type: [String],
-  $composition: [String],
-  $association: [String],
-  $file_type: [String]
+  $clinical_trial_id: [String] ,
+  $clinical_trial_designation: [String] ,
+  $pubmed_id: [String] ,
+  $gender: [String] ,
+  $race: [String] ,
+  $ethnicity: [String] ,
+  $disease: [String] ,
+  $file_type: [String] ,
+  $file_format: [String] ,
+  $trial_arm: [String] ,
   $first: Int ) {
-searchSubjects(        programs: $programs,
-      studies: $studies,
-      diagnoses: $diagnoses,
-      rc_scores: $rc_scores,
-      tumor_sizes: $tumor_sizes,
-      chemo_regimen: $chemo_regimen,
-      tumor_grades: $tumor_grades,
-      er_status: $er_status,
-      pr_status: $pr_status,
-      endo_therapies: $endo_therapies,
-      meno_status: $meno_status,
-      tissue_type: $tissue_type,
-      composition: $composition,
-      association: $association,       
-      file_type: $file_type
+searchSubjects(
+  clinical_trial_id: $clinical_trial_id ,
+  clinical_trial_designation:  $clinical_trial_designation ,
+  pubmed_id: $pubmed_id,
+  gender: $gender,
+  race: $race ,
+  ethnicity: $ethnicity,
+  disease: $disease ,
+  file_type: $file_type,
+  file_format: $file_format ,
+  trial_arm: $trial_arm,
       first: $first) {
-  numberOfPrograms
-  numberOfStudies
-  numberOfSubjects
-  numberOfSamples
-  numberOfLabProcedures
-  numberOfFiles
-  sampleIds
-  fileIds
-  subjectIds
+        numberOfTrials
+        numberOfCases
+        numberOfFiles
   firstPage {
-          subject_id
-          program
-          program_id
-          study_acronym
-          diagnosis
-          recurrence_score
-          tumor_size
-          tumor_grade
-          er_status
-          pr_status
-          age_at_index
-          survival_time
-          survival_time_unit
+    case_id
+    clinical_trial_code
+    arm_id
+    arm_drug
+    disease
+    gender
+    race
+    arm_target
+    ethnicity
+    clinical_trial_id
+    pubmed_id
+    trial_arm
+    file_types
+    file_formats
+    files{
+       uuid
+    }
       }
-  
 }
-filterSubjectCountByProgram(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnTrialId(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  clinical_trial_id
+  cases
 }
-filterSubjectCountByStudy(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnTrialCode(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  clinical_trial_designation
+  cases
 }
-filterSubjectCountByDiagnoses(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnPubMedID(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  pubmed_id
+  cases
 }
-filterSubjectCountByRecurrenceScore(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnGender(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  gender
+  cases
 }
-filterSubjectCountByTumorSize(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnRace(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  race
+  cases
 }
-filterSubjectCountByTumorGrade(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnEthnicity(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  ethnicity
+  cases
 }
-filterSubjectCountByErStatus(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnDiagnosis(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  disease
+  cases
 }
-filterSubjectCountByPrStatus(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnFileType(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  file_type
+  cases
 }
-filterSubjectCountByChemotherapyRegimen(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnFileFormat(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  file_format
+  cases
 }
-filterSubjectCountByEndocrineTherapy(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
+filterCasesCountBaseOnTrialArm(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
+  trial_arm
+  cases
 }
-filterSubjectCountByMenopauseStatus(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
 }
-filterSubjectCountByTissueType(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByTissueComposition(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByFileAssociation(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByFileType(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-
-}
-
 `;
 
 // --------------- GraphQL query - Retrieve files tab details --------------
@@ -699,12 +640,11 @@ query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 10, $ord
     file_description
     file_format
     file_size
-    program
-    program_id
+    trial
+    trial_id
     arm
-    subject_id
-    sample_id
-    diagnosis
+    case_id
+    disease
   }
 }
   `;
@@ -718,140 +658,70 @@ export const GET_FILES_OVERVIEW_DESC_QUERY = gql`
       file_description
       file_format
       file_size
-      program
-      program_id
+      trial
+      trial_id
       arm
-      subject_id
-      sample_id
-      diagnosis
+      case_id
+      disease
     }
   }
     `;
 
 // --------------- GraphQL query - Retrieve sample tab details --------------
 
-export const GET_SAMPLES_OVERVIEW_QUERY = gql`
-  query sampleOverview($sample_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  sampleOverview(sample_ids: $sample_ids, offset: $offset,first: $first, order_by: $order_by) {
-    sample_id
-    subject_id
-    program
-    program_id
-    arm
-    diagnosis
-    tissue_type
-    tissue_composition
-    sample_anatomic_site
-    sample_procurement_method
-    platform
-    files 
-}
-}
-  `;
-
-// --------------- GraphQL query - Retrieve sample tab details --------------
-
-export const GET_SAMPLES_OVERVIEW_DESC_QUERY = gql`
-  query sampleOverview($sample_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  sampleOverviewDesc(sample_ids: $sample_ids, offset: $offset,first: $first, order_by: $order_by) {
-    sample_id
-    subject_id
-    program
-    program_id
-    arm
-    diagnosis
-    tissue_type
-    tissue_composition
-    sample_anatomic_site
-    sample_procurement_method
-    platform
-    files 
-}
-}
-  `;
-
-// --------------- GraphQL query - Retrieve sample tab details --------------
-
 export const GET_CASES_OVERVIEW_QUERY = gql`
-query subjectOverViewPaged($subject_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  subjectOverViewPaged(subject_ids: $subject_ids, first: $first, offset: $offset, order_by: $order_by) {
-      subject_id
-      program
-      program_id
-      study_acronym
-      study_short_description
-      study_info
-      diagnosis
-      recurrence_score
-      tumor_size
-      tumor_grade
-      er_status
-      pr_status
-      chemotherapy
-      endocrine_therapy
-      menopause_status
-      age_at_index
-      survival_time
-      files {
-            file_id
-      }
-      lab_procedures
+query caseOverViewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
+  caseOverViewPaged(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+    case_id
+    clinical_trial_code
+    arm_id
+    arm_drug
+    disease
+    gender
+    race
+    arm_target
+    ethnicity
+    clinical_trial_id
+    files{
+      uuid
+    }
   }
-}
-  `;
+}`;
 
 // --------------- GraphQL query - Retrieve sample tab details --------------
 
 export const GET_CASES_OVERVIEW_DESC_QUERY = gql`
-  query subjectOverViewPaged($subject_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-    subjectOverViewPagedDesc(subject_ids: $subject_ids, first: $first, offset: $offset, order_by: $order_by) {
-        subject_id
-        program
-        program_id
-        study_acronym
-        study_short_description
-        study_info
-        diagnosis
-        recurrence_score
-        tumor_size
-        tumor_grade
-        er_status
-        pr_status
-        chemotherapy
-        endocrine_therapy
-        menopause_status
-        age_at_index
-        survival_time
-        files {
-              file_id
-        }
-        lab_procedures
+  query caseOverViewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
+    caseOverViewPagedDesc(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+      case_id
+      clinical_trial_code
+      arm_id
+      arm_drug
+      disease
+      gender
+      race
+      arm_target
+      ethnicity
+      clinical_trial_id
+      files{
+        uuid
+      }
     }
-}
-  `;
+}`;
 
 export const GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL = gql`
-  query subjectOverViewPaged($subject_ids: [String], $first: Int = 10000000){
-    subjectOverViewPaged(subject_ids: $subject_ids, first: $first) {
+  query caseOverViewPaged($case_ids: [String], $first: Int = 10000000){
+    caseOverViewPaged(case_ids: $case_ids, first: $first) {
         files {
-              file_id
+              uuid
         }
     }
-}
-  `;
-
-export const GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL = gql`
-query sampleOverview($sample_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  sampleOverview(sample_ids: $sample_ids, offset: $offset,first: $first, order_by: $order_by) {
-    files
-}
-}
-  `;
+}`;
 
 export const GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL = gql`
 query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by: String = "file_name") {
   fileOverview(file_ids: $file_ids, offset: $offset, first: $first, order_by: $order_by) {
-    file_id
+    uuid
   }
 }
   `;
