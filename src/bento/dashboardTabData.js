@@ -1,13 +1,12 @@
 import gql from 'graphql-tag';
-import { customCasesTabDownloadCSV, customFilesTabDownloadCSV, customSamplesTabDownloadCSV } from './tableDownloadCSV';
+import { customCasesTabDownloadCSV, customFilesTabDownloadCSV } from './tableDownloadCSV';
 
 // --------------- Tooltip configuration --------------
 export const tooltipContent = {
   icon: 'https://raw.githubusercontent.com/google/material-design-icons/master/src/action/help/materialicons/24px.svg',
   alt: 'tooltipIcon',
   0: 'Click button to add selected files associated with the selected case(s).',
-  1: 'Click button to add selected files associated with the selected sample(s).',
-  2: 'Click button to add selected files.',
+  1: 'Click button to add selected files.',
 };
 
 // --------------- Dahboard Table external link configuration --------------
@@ -126,115 +125,6 @@ export const tabContainers = [
     selectableRows: true,
     tableDownloadCSV: customCasesTabDownloadCSV,
     tabIndex: '0',
-    downloadFileName: 'Bento_Dashboard_cases_download',
-    headerPagination: true,
-    footerPagination: true,
-  },
-  {
-    name: 'Samples',
-    dataField: 'dataSample',
-    api: 'GET_SAMPLES_OVERVIEW_QUERY',
-    count: 'numberOfSamples',
-    paginationAPIField: 'sampleOverview',
-    paginationAPIFieldDesc: 'sampleOverviewDesc',
-    dataKey: 'sample_id',
-    saveButtonDefaultStyle: {
-      color: '#fff',
-      backgroundColor: '#00AEEF',
-      opacity: '1',
-      border: '0px',
-      cursor: 'pointer',
-    },
-    DeactiveSaveButtonDefaultStyle: {
-      opacity: '0.3',
-      cursor: 'auto',
-    },
-    ActiveSaveButtonDefaultStyle: {
-      cursor: 'pointer',
-      opacity: 'unset',
-      border: 'unset',
-    },
-
-    columns: [
-      {
-        dataField: 'sample_id',
-        header: 'Sample ID',
-        sort: 'asc',
-        primary: true,
-        display: true,
-      },
-      {
-        dataField: 'subject_id',
-        header: 'Case ID',
-        sort: 'asc',
-        link: '/case/{subject_id}',
-        display: true,
-      },
-      {
-        dataField: 'program',
-        header: 'Program Code',
-        sort: 'asc',
-        link: '/program/{program_id}',
-        display: true,
-      },
-      {
-        dataField: 'program_id',
-        header: 'Program ID',
-        sort: 'asc',
-        display: false,
-      },
-      {
-        dataField: 'arm',
-        header: 'Arm',
-        sort: 'asc',
-        link: '/arm/{arm}',
-        display: true,
-      },
-      {
-        dataField: 'diagnosis',
-        header: 'Diagnosis',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'tissue_type',
-        header: 'Tissue Type',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'tissue_composition',
-        header: 'Tissue Composition',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'sample_anatomic_site',
-        header: 'Sample Anatomic Site',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'sample_procurement_method',
-        header: 'Sample Procurement Method',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'platform',
-        header: 'platform',
-        sort: 'asc',
-        display: true,
-      },
-    ],
-    id: 'sample_tab',
-    onRowsSelect: 'type3',
-    disableRowSelection: 'type2',
-    buttonText: 'Add Selected Files',
-    tableID: 'sample_tab_table',
-    selectableRows: true,
-    tabIndex: '1',
-    tableDownloadCSV: customSamplesTabDownloadCSV,
     downloadFileName: 'Bento_Dashboard_cases_download',
     headerPagination: true,
     footerPagination: true,
@@ -390,12 +280,6 @@ export const tabs = [
     count: 'numberOfSubjects',
   },
   {
-    id: 'sample_tab',
-    title: 'Samples',
-    dataField: 'dataSample',
-    count: 'numberOfSamples',
-  },
-  {
     id: 'file_tab',
     title: 'Files',
     dataField: 'dataFile',
@@ -410,12 +294,6 @@ export const tabIndex = [
     primaryColor: '#D6F2EA',
     secondaryColor: '#FFDFB8',
     selectedColor: '#10A075',
-  },
-  {
-    title: 'Samples',
-    primaryColor: '#CFEDF9',
-    secondaryColor: '#C9F1F1',
-    selectedColor: '#0DAFEC',
   },
   {
     title: 'Files',

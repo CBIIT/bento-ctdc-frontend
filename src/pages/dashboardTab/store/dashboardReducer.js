@@ -23,13 +23,10 @@ import {
   FILTER_QUERY,
   FILTER_GROUP_QUERY,
   GET_FILES_OVERVIEW_QUERY,
-  GET_SAMPLES_OVERVIEW_QUERY,
   GET_CASES_OVERVIEW_QUERY,
   GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL,
-  GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL,
   GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL,
   GET_FILES_OVERVIEW_DESC_QUERY,
-  GET_SAMPLES_OVERVIEW_DESC_QUERY,
   GET_CASES_OVERVIEW_DESC_QUERY,
   GET_FILES_NAME_QUERY,
   GET_FILE_IDS_FROM_FILE_NAME,
@@ -242,8 +239,6 @@ function clearGroup(data) {
 
 const querySwitch = (payload, tabContainer) => {
   switch (payload) {
-    case ('Samples'):
-      return { QUERY: tabContainer.defaultSortDirection === 'desc' ? GET_SAMPLES_OVERVIEW_DESC_QUERY : GET_SAMPLES_OVERVIEW_QUERY, sortfield: tabContainer.defaultSortField || '', sortDirection: tabContainer.defaultSortDirection || '' };
     case ('Files'):
       return { QUERY: tabContainer.defaultSortDirection === 'desc' ? GET_FILES_OVERVIEW_DESC_QUERY : GET_FILES_OVERVIEW_QUERY, sortfield: tabContainer.defaultSortField || '', sortDirection: tabContainer.defaultSortDirection || '' };
     default:
@@ -326,11 +321,9 @@ export async function fetchAllFileIDsForSelectAll(fileCount = 100000) {
   const subjectIds = getState().filteredSubjectIds;
   const sampleIds = getState().filteredSampleIds;
   const fileIds = getState().filteredFileIds;
-  const SELECT_ALL_QUERY = getState().currentActiveTab === tabIndex[2].title
+  const SELECT_ALL_QUERY = getState().currentActiveTab === tabIndex[1].title
     ? GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL
-    : getState().currentActiveTab === tabIndex[1].title
-      ? GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL
-      : GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL;
+    : GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL;
 
   const fetchResult = await client
     .query({
@@ -467,11 +460,8 @@ function filterOutFileIds(fileIds) {
 export async function fetchAllFileIDs(fileCount = 100000, selectedIds = [], offset = 0.0, first = 100000, order_by = 'file_name') {
   let filesIds = [];
   switch (getState().currentActiveTab) {
-    case tabIndex[2].title:
-      filesIds = await getFileIDsByFileName(selectedIds, offset, first, order_by);
-      break;
     case tabIndex[1].title:
-      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL, [], selectedIds, 'sampleOverview');
+      filesIds = await getFileIDsByFileName(selectedIds, offset, first, order_by);
       break;
     default:
       filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], 'subjectOverViewPaged');
