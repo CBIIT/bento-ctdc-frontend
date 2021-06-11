@@ -92,6 +92,8 @@
 - page: '/ctdc-data-model'
   title: 'CTDC Data Model'
   primaryContentImage: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_CTDC_Model.png'
+  secondaryZoomImageTitle: "The CTDC Data Model" 
+  secondaryZoomImage: 'https://cbiit.github.io/ctdc-model/model-desc/ctdc-model.svg'
   content:
     - paragraph: "$$#HARMONIZATION/INTEGRATION:#$$"
     - paragraph: "The CTDC functions best for the research community when the data is integrated. Once a project 
