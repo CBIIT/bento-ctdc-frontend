@@ -1,0 +1,1037 @@
+type arm {
+  arm_id: String
+  arm_title: String
+  arm_target: String
+  arm_drug: String
+  pubmed_id: String
+  dbgap_accession_number: String
+  assignment_reports: [assignment_report] @relation(name:"of_arm", direction:IN)
+  cases: [case] @relation(name:"of_arm", direction:IN)
+  files: [file] @relation(name:"of_arm", direction:IN)
+  disease_eligibility_criterions: [disease_eligibility_criterion] @relation(name:"of_arm", direction:IN)
+  drug_eligibility_criterions: [drug_eligibility_criterion] @relation(name:"of_arm", direction:IN)
+  clinical_trial: clinical_trial @relation(name:"of_trial", direction:OUT)
+}
+
+type assignment_report {
+  assignment_report_id: String
+  step_at_assignment: Int
+  assignment_logic: String
+  assignment_outcome: String
+  treatment_outcome: String
+  specimen: specimen @relation(name:"of_specimen", direction:OUT)
+  variant_report: variant_report @relation(name:"of_variant_report", direction:OUT)
+  arms: [arm] @relation(name:"of_arm", direction:OUT)
+}
+
+type case {
+  case_id: String
+  gender: String
+  race: String
+  ethnicity: String
+  patient_status: String
+  current_step: Int
+  disease: String
+  ctep_category: String
+  ctep_subcategory: String
+  meddra_code: String
+  prior_drugs: String
+  extent_of_disease: String
+  ecog_performance_status: Int
+  specimens: [specimen] @relation(name:"of_case", direction:IN)
+  arms: [arm] @relation(name:"of_arm", direction:OUT)
+  metastatic_sites: [metastatic_site] @relation(name:"met_site_of", direction:IN)
+}
+
+type clinical_trial {
+  clinical_trial_id: String
+  clinical_trial_short_name: String
+  clinical_trial_description: String
+  clinical_trial_designation: String
+  clinical_trial_long_name: String
+  clinical_trial_type: String
+  lead_organization: String
+  principal_investigators: String
+  dbgap_accession_number: String
+  arms: [arm] @relation(name:"of_trial", direction:IN)
+}
+
+type copy_number_variant {
+  variant_id: String
+  external_variant_id: String
+  gene: String
+  chromosome: String
+  oncomine_variant_class: String
+  tumor_suppressor: Boolean
+  variant_reports: [variant_report] @relation(name:"copy_number_variant_of", direction:OUT)
+}
+
+type copy_number_variant_of {
+  copy_number: Float
+  copy_number_ci_5: Float
+  copy_number_ci_95: Float
+}
+
+type delins_variant {
+  variant_id: String
+  external_variant_id: String
+  gene: String
+  chromosome: String
+  exon: Int
+  position: Int
+  reference: String
+  alternative: String
+  transcript_id: String
+  transcript_hgvs: String
+  genomic_hgvs: String
+  oncomine_variant_class: String
+  variant_classification: String
+  amino_acid_change: String
+  variant_reports: [variant_report] @relation(name:"delins_variant_of", direction:OUT)
+}
+
+type delins_variant_of {
+  allele_frequency: Float
+}
+
+type disease_eligibility_criterion {
+  disease_eligibility_criterion_id: String
+  criterion_type: String
+  ctep_category: String
+  ctep_subcategory: String
+  ctep_short_name: String
+  meddra_code: String
+  arms: [arm] @relation(name:"of_arm", direction:OUT)
+}
+
+type drug_eligibility_criterion {
+  drug_eligibility_criterion_id: String
+  criterion_type: String
+  drug_name: String
+  arms: [arm] @relation(name:"of_arm", direction:OUT)
+}
+
+type file {
+  file_description: String
+  file_format: String
+  file_location: String
+  file_name: String
+  file_size: Float
+  file_status: String
+  file_type: String
+  md5sum: String
+  uuid: String
+  sequencing_assay: sequencing_assay @relation(name:"of_sequencing_assay", direction:OUT)
+  arms: [arm] @relation(name:"of_arm", direction:OUT)
+}
+
+type gene_fusion_variant {
+  variant_id: String
+  external_variant_id: String
+  gene1: String
+  gene2: String
+  oncomine_variant_class: String
+  variant_reports: [variant_report] @relation(name:"gene_fusion_variant_of", direction:OUT)
+}
+
+type gene_fusion_variant_of {
+  gene1_read_count: Int
+  gene2_read_count: Int
+}
+
+type ihc_assay_report {
+  ihc_assay_id: String
+  ihc_test_gene: String
+  ihc_test_result: String
+  specimen: specimen @relation(name:"of_specimen", direction:OUT)
+}
+
+type indel_variant {
+  variant_id: String
+  external_variant_id: String
+  gene: String
+  chromosome: String
+  exon: Int
+  position: Int
+  reference: String
+  alternative: String
+  transcript_id: String
+  transcript_hgvs: String
+  genomic_hgvs: String
+  oncomine_variant_class: String
+  variant_classification: String
+  amino_acid_change: String
+  variant_reports: [variant_report] @relation(name:"indel_variant_of", direction:OUT)
+}
+
+type indel_variant_of {
+  allele_frequency: Float
+}
+
+type metastatic_site {
+  met_site_id: String
+  metastatic_site_name: String
+  cases: [case] @relation(name:"met_site_of", direction:OUT)
+}
+
+type nucleic_acid {
+  aliquot_id: String
+  nucleic_acid_concentration: Float
+  nucleic_acid_volume: Float
+  nucleic_acid_type: String
+  specimen: specimen @relation(name:"of_specimen", direction:OUT)
+  sequencing_assays: [sequencing_assay] @relation(name:"of_nucleic_acid", direction:IN)
+}
+
+type sequencing_assay {
+  qc_result: String
+  experimental_method: String
+  platform: String
+  nucleic_acid: nucleic_acid @relation(name:"of_nucleic_acid", direction:OUT)
+  files: [file] @relation(name:"of_sequencing_assay", direction:IN)
+  variant_reports: [variant_report] @relation(name:"of_sequencing_assay", direction:IN)
+}
+
+type snv_variant {
+  variant_id: String
+  external_variant_id: String
+  gene: String
+  chromosome: String
+  exon: Int
+  position: Int
+  reference: String
+  alternative: String
+  transcript_id: String
+  transcript_hgvs: String
+  genomic_hgvs: String
+  oncomine_variant_class: String
+  variant_classification: String
+  amino_acid_change: String
+  variant_reports: [variant_report] @relation(name:"snv_variant_of", direction:OUT)
+}
+
+type snv_variant_of {
+  allele_frequency: Float
+}
+
+type specimen {
+  specimen_id: String
+  specimen_type: String
+  case: case @relation(name:"of_case", direction:OUT)
+  ihc_assay_reports: [ihc_assay_report] @relation(name:"of_specimen", direction:IN)
+  nucleic_acids: [nucleic_acid] @relation(name:"of_specimen", direction:IN)
+  assignment_reports: [assignment_report] @relation(name:"of_specimen", direction:IN)
+}
+
+type variant_report {
+  variant_report_id: String
+  mapd: Float
+  cellularity: Float
+  torrent_variant_caller_version: String
+  reference_genome: String
+  sequencing_assay: sequencing_assay @relation(name:"of_sequencing_assay", direction:OUT)
+  snv_variants: [snv_variant] @relation(name:"snv_variant_of", direction:IN)
+  delins_variants: [delins_variant] @relation(name:"delins_variant_of", direction:IN)
+  indel_variants: [indel_variant] @relation(name:"indel_variant_of", direction:IN)
+  copy_number_variants: [copy_number_variant] @relation(name:"copy_number_variant_of", direction:IN)
+  gene_fusion_variants: [gene_fusion_variant] @relation(name:"gene_fusion_variant_of", direction:IN)
+  assignment_reports: [assignment_report] @relation(name:"of_variant_report", direction:IN)
+}
+
+schema {
+  query: QueryType
+}
+
+type ArmInfo {
+  arms: String
+  caseSize: Int
+}
+
+type TrialArms {
+  trials: String
+  caseSize: Int
+  arms: [ArmInfo]
+}
+
+# ---Case Count Types---
+
+type ClinicalTrialCaseCount{
+  clinical_trial_id: String
+  cases: Int
+}
+
+type TrialCodeCaseCount{
+  clinical_trial_designation: String
+  cases: Int
+}
+
+type PubMedIDCaseCount{
+  pubmed_id: String
+  cases: Int
+}
+
+type GenderCaseCount{
+  gender: String
+  cases: Int
+}
+
+type RaceCaseCount{
+  race: String
+  cases: Int
+}
+
+type EthnicityCaseCount{
+  ethnicity: String
+  cases: Int
+}
+
+type DiagnosisCaseCount{
+  disease: String
+  cases: Int
+}
+
+type FileTypeCaseCount{
+  file_type: String
+  cases: Int
+}
+
+type FileFormatCaseCount{
+  file_format: String
+  cases: Int
+}
+
+type TrialArmCaseCount{
+  trial_arm: String
+  cases: Int
+}
+
+# ---Case Overview Types---
+
+type FileUuid{
+  uuid: String
+}
+
+type CaseOverview{
+  case_id: String
+  clinical_trial_code: String
+  arm_id: String
+  arm_drug: String
+  disease: String
+  gender: String
+  race: String
+  arm_target: String
+  ethnicity: String
+  clinical_trial_id: String
+  pubmed_id: String
+  trial_arm: String
+  file_types: [String]
+  file_formats: [String]
+  files: [FileUuid]
+}
+
+
+
+type GroupCountA{
+  group: String
+  count: Int
+}
+
+type GroupCountB{
+  group: String
+  subjects: Int
+}
+
+type SearchResult{
+  numberOfTrials: Int
+  numberOfCases: Int
+  numberOfFiles: Int
+  firstPage: [CaseOverview]
+}
+
+type FileOverview{
+  uuid: String,
+  file_name: String,
+  file_description: String,
+  file_format: String,
+  file_size: Float,
+  trial: String,
+  trial_id: String,
+  arm: String,
+  case_id: String,
+  disease: String
+}
+
+# ---Queries---
+
+type QueryType {
+
+  # ---Schema Version---
+
+  schemaVersion: String @cypher(statement: """
+    RETURN '0.1.0'
+  """)
+
+  # ---Numbers of nodes---
+
+  numberOfCases: Int @cypher(statement: """
+    MATCH (n:case) 
+    RETURN  count (n)
+  """)
+
+  numberOfFiles: Int @cypher(statement: """
+    MATCH (:assignment_report)-->(:specimen)<-[*]-(n:file) 
+    RETURN count (n)
+  """)
+
+  numberOfTrials: Int @cypher(statement: """
+    MATCH (n:clinical_trial) 
+    RETURN  count (n)
+  """)
+
+  trialsAndArms: [TrialArms] @cypher(statement: """
+    MATCH (ct:clinical_trial)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+    WITH 
+      ct, 
+      COUNT(DISTINCT c) AS caseSize
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+    WITH 
+      ct, caseSize,
+      {
+        arms: a.arm_id,
+        caseSize: COUNT(DISTINCT c)
+      } AS arms
+    RETURN{
+      trials: ct.clinical_trial_short_name,
+      caseSize: caseSize,
+      arms: COLLECT(arms)
+    }
+  """, passThrough: true)
+
+  # ---Case Counts---
+
+  casesCountBaseOnTrialId: [ClinicalTrialCaseCount] @cypher(statement: """
+    MATCH (ct:clinical_trial)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+    RETURN{
+      clinical_trial_id: ct.clinical_trial_id,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnTrialCode: [TrialCodeCaseCount] @cypher(statement: """
+    MATCH (ct:clinical_trial)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+    RETURN{
+      clinical_trial_designation: ct.clinical_trial_designation,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnPubMedID: [PubMedIDCaseCount] @cypher(statement: """
+    MATCH (a:arm)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a)
+    RETURN{
+      pubmed_id: a.pubmed_id,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnGender: [GenderCaseCount] @cypher(statement: """
+    MATCH (c:case)
+    RETURN{
+      gender: c.gender,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnRace: [RaceCaseCount] @cypher(statement: """
+    MATCH (c:case)
+    RETURN{
+      race: c.race,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnEthnicity: [EthnicityCaseCount] @cypher(statement: """
+    MATCH (c:case)
+    RETURN{
+      ethnicity: c.ethnicity,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnDiagnosis: [DiagnosisCaseCount] @cypher(statement: """
+    MATCH (c:case)
+    RETURN{
+      disease: c.disease,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnFileType: [FileTypeCaseCount] @cypher(statement: """
+    MATCH (f:file)
+    OPTIONAL MATCH (f)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)
+    RETURN{
+      file_type: f.file_type,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnFileFormat: [FileFormatCaseCount] @cypher(statement: """
+    MATCH (f:file)
+    OPTIONAL MATCH (f)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)
+    RETURN{
+      file_format: f.file_format,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnTrialArm: [TrialArmCaseCount] @cypher(statement: """
+    MATCH (a:arm)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a)
+    RETURN{
+      trial_arm: a.arm_id+'_'+ a.arm_drug,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  caseCountByTrial(case_ids: [String] = [""]): [GroupCountA] @cypher(statement: """
+    MATCH (ct:clinical_trial)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+    RETURN{
+      group: ct.clinical_trial_id,
+      count: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  caseCountByDiagnoses(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+    RETURN{
+      group: c.disease,
+      subjects: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  caseCountByGender(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+    RETURN{
+      group: c.gender,
+      subjects: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  caseCountByRace(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+    RETURN{
+      group: c.race,
+      subjects: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  caseCountByEthnicity(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+    RETURN{
+      group: c.ethnicity,
+      subjects: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  caseCountByPubmedID(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
+    MATCH (a:arm)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+    RETURN{
+      group: a.pubmed_id,
+      subjects: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  # ---Case Overview---
+
+  caseOverviewPaged: [CaseOverview] @cypher(statement: """
+    MATCH (c:case)
+    OPTIONAL MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    RETURN{
+      case_id: c.case_id,
+      clinical_trial_code: ct.clinical_trial_designation,
+      arm_id: a.arm_id,
+      arm_drug: a.arm_drug,
+      disease: c.disease,
+      gender: c.gender,
+      race: c.race,
+      arm_target: a.arm_target,
+      ethnicity: c.ethnicity,
+      clinical_trial_id: ct.clinical_trial_id,
+      pubmed_id: a.pubmed_id,
+      trial_arm: a.arm_id+'_'+ a.arm_drug,
+      file_types: COLLECT(DISTINCT f.file_type),
+      file_formats: COLLECT(DISTINCT f.file_format),
+      files: COLLECT(DISTINCT {
+        uuid: f.uuid
+      })
+    }
+  """, passThrough: true)
+
+# ---Search Subjects---
+
+  searchSubjects(
+    clinical_trial_id: [String] = [""],
+    clinical_trial_designation: [String] = [""], 
+    pubmed_id: [String] = [""], 
+    gender: [String] = [""], 
+    race: [String] = [""], 
+    ethnicity: [String] = [""], 
+    disease: [String] = [""], 
+    file_type: [String] = [""], 
+    file_format: [String] = [""], 
+    trial_arm: [String] = [""], 
+    first: Int = 100
+  ): SearchResult @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+      WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+        AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+        AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+        AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+        AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+        AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+        AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+        AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+        AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+        AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    WITH 
+      COUNT(DISTINCT ct) AS numberOfTrials,
+      COUNT(DISTINCT c) AS numberOfCases,
+      COUNT(DISTINCT f) AS numberOfFiles
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+      WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+        AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+        AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+        AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+        AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+        AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+        AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+        AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+        AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+        AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    WITH
+      numberOfTrials, numberOfCases, numberOfFiles,
+      {
+        case_id: c.case_id,
+        clinical_trial_code: ct.clinical_trial_designation,
+        arm_id: a.arm_id,
+        arm_drug: a.arm_drug,
+        disease: c.disease,
+        gender: c.gender,
+        race: c.race,
+        arm_target: a.arm_target,
+        ethnicity: c.ethnicity,
+        clinical_trial_id: ct.clinical_trial_id,
+        pubmed_id: a.pubmed_id,
+        trial_arm: a.arm_id+'_'+ a.arm_drug,
+        file_types: COLLECT(DISTINCT f.file_type),
+        file_formats: COLLECT(DISTINCT f.file_format),
+        files: COLLECT(DISTINCT {
+            uuid: f.uuid
+        })
+      } AS firstPage
+    RETURN{
+      numberOfTrials: numberOfTrials,
+      numberOfCases: numberOfCases,
+      numberOfFiles: numberOfFiles,
+      firstPage: COLLECT(DISTINCT firstPage)[0..$first]
+    }
+  """, passThrough: true)
+
+# ---Filter Case Counts---
+
+  filterCasesCountBaseOnTrialId(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [ClinicalTrialCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      clinical_trial_id: ct.clinical_trial_id,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnTrialCode(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [TrialCodeCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      clinical_trial_designation: ct.clinical_trial_designation,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnPubMedID(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [PubMedIDCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      pubmed_id: a.pubmed_id,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnGender(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [GenderCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      gender: c.gender,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnRace(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [RaceCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      race: c.race,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnEthnicity(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [EthnicityCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      ethnicity: c.ethnicity,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnDiagnosis(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [DiagnosisCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      disease: c.disease,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnFileType(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [FileTypeCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      file_type: f.file_type,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnFileFormat(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [FileFormatCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      file_format: f.file_format,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  filterCasesCountBaseOnTrialArm(
+    clinical_trial_id: [String] = [""], 
+    clinical_trial_designation: [String] = [""],
+    pubmed_id: [String] = [""],
+    gender: [String] = [""],
+    race: [String] = [""],
+    ethnicity: [String] = [""],
+    disease: [String] = [""],
+    file_type: [String] = [""],
+    file_format: [String] = [""],
+    trial_arm: [String] = [""]
+  ): [TrialArmCaseCount] @cypher(statement: """
+    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
+      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
+      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
+      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
+      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
+      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
+      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
+      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+    RETURN{
+      trial_arm: a.arm_id+'_'+ a.arm_drug,
+      cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+# ---File Overview---
+  
+  fileOverview(
+    uuid: [String] = [""],
+    order_by: String = "file_name"
+  ): [FileOverview] @cypher(statement: """
+    MATCH (f:file)
+      WHERE ($uuid IS NULL OR $uuid = [""] OR f.uuid IN $uuid)
+    OPTIONAL MATCH (f)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WITH
+      f.uuid as file_uuid,
+      f.file_name AS file_name,
+      f.file_description AS file_description,
+      f.file_format AS file_format,
+      f.file_size AS file_size,
+      ct.clinical_trial_short_name AS trial,
+      ct.clinical_trial_id AS trial_id,
+      a.arm_id AS arm,
+      c.case_id AS case_id,
+      c.disease AS disease
+    RETURN{
+      uuid: file_uuid,
+      file_name: file_name,
+      file_description: file_description,
+      file_format: file_format,
+      file_size: file_size,
+      trial: trial,
+      trial_id: trial_id,
+      arm: arm,
+      case_id: case_id,
+      disease: disease
+    }
+    ORDER BY 
+      CASE $order_by
+        WHEN "file_uuid" THEN file_uuid
+        WHEN "file_name" THEN file_name
+        WHEN "file_description" THEN file_description
+        WHEN "file_format" THEN file_format
+        WHEN "file_size" THEN file_size
+        WHEN "trial" THEN trial
+        WHEN "trial_id" THEN trial_id
+        WHEN "arm" THEN arm
+        WHEN "case_id" THEN case_id
+        WHEN "disease" THEN disease
+        ELSE file_name
+      END
+  """, passThrough: true)
+
+  fileOverviewDesc(
+    uuid: [String] = [""],
+    order_by: String = "file_name"
+  ): [FileOverview] @cypher(statement: """
+    MATCH (f:file)
+      WHERE ($uuid IS NULL OR $uuid = [""] OR f.uuid IN $uuid)
+    OPTIONAL MATCH (f)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WITH
+      f.uuid as file_uuid,
+      f.file_name AS file_name,
+      f.file_description AS file_description,
+      f.file_format AS file_format,
+      f.file_size AS file_size,
+      ct.clinical_trial_short_name AS trial,
+      ct.clinical_trial_id AS trial_id,
+      a.arm_id AS arm,
+      c.case_id AS case_id,
+      c.disease AS disease
+    RETURN{
+      uuid: file_uuid,
+      file_name: file_name,
+      file_description: file_description,
+      file_format: file_format,
+      file_size: file_size,
+      trial: trial,
+      trial_id: trial_id,
+      arm: arm,
+      case_id: case_id,
+      disease: disease
+    }
+    ORDER BY
+    CASE $order_by
+      WHEN "file_uuid" THEN file_uuid
+      WHEN "file_name" THEN file_name
+      WHEN "file_description" THEN file_description
+      WHEN "file_format" THEN file_format
+      WHEN "file_size" THEN file_size
+      WHEN "trial" THEN trial
+      WHEN "trial_id" THEN trial_id
+      WHEN "arm" THEN arm
+      WHEN "case_id" THEN case_id
+      WHEN "disease" THEN disease
+      ELSE file_name
+    END DESC
+  """, passThrough: true)
+
+} 
