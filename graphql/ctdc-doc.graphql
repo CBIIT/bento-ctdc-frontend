@@ -305,8 +305,6 @@ type TrialArmCaseCount{
   cases: Int
 }
 
-# ---Case Overview Types---
-
 type FileUuid{
   uuid: String
 }
@@ -328,8 +326,6 @@ type CaseOverview{
   file_formats: [String]
   files: [FileUuid]
 }
-
-
 
 type GroupCountA{
   group: String
@@ -361,6 +357,64 @@ type FileOverview{
   disease: String
 }
 
+type ArmDetail{
+  arm_id: String,
+  arm_target: String,
+  arm_drug: String
+}
+
+type CaseDetail{
+  case_id: String,
+  clinical_trial_code: String,
+  clinical_trial_id: String,
+  disease: String,
+  gender: String,
+  race: String,
+  arms: [ArmDetail],
+  ethnicity: String
+}
+
+type FileOfCase{
+  parent: String,
+  file_name: String,
+  file_type: String,
+  file_description: String,
+  file_format: String,
+  file_size: Float,
+  md5sum: String
+}
+
+type FileInList{
+  clinical_trial_code: String,
+  case_id: String,
+  arm_id: String,
+  file_type: String,
+  association: String,
+  file_description: String,
+  file_format: String,
+  file_size: Float,
+  uuid: String,
+  md5sum: String
+}
+
+type ArmDiagnosisCount{
+  arm_id: String,
+  diagnoses: String
+}
+
+type ClinicalTrialInfo{
+  clinical_trial_id: String,
+  clinical_trial_short_name: String,
+  clinical_trial_description: String,
+  clinical_trial_designation: String,
+  clinical_trial_long_name: String,
+  clinical_trial_type: String,
+  lead_organization: String,
+  principal_investigators: String,
+  number_of_arms: Int,
+  number_of_cases: Int
+}
+
 # ---Queries---
 
 type QueryType {
@@ -376,6 +430,12 @@ type QueryType {
   numberOfFiles: Int 
 
   numberOfTrials: Int 
+
+  numberOfArms: Int 
+
+  numberOfFileTypes: Int 
+
+  numberOfDiagnoses: Int 
 
   trialsAndArms: [TrialArms] 
 
@@ -576,5 +636,23 @@ type QueryType {
     uuid: [String] = [""],
     order_by: String = "file_name"
   ): [FileOverview] 
+
+  caseDetailByCaseId(case_id: String!): CaseDetail 
+
+  filesOfCase(case_id: String!): [FileOfCase] 
+
+  filesInList(
+    uuid: [String] = [""], 
+    order_by: String = "uuid"
+  ): [FileInList] 
+
+  filesInListDesc(
+    uuid: [String] = [""], 
+    order_by: String = "uuid"
+  ): [FileInList] 
+
+  diagnosisCountByArm: [ArmDiagnosisCount] 
+
+  clinicalTrials: [ClinicalTrialInfo] 
 
 } 
