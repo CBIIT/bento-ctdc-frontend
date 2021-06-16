@@ -383,28 +383,124 @@ type QueryType {
 
   # ---Case Overview---
 
-  caseOverviewPaged: [CaseOverview] @cypher(statement: """
+  caseOverviewPaged(case_ids: [String] = [""], order_by: String = "case_id"): [CaseOverview] @cypher(statement: """
     MATCH (c:case)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
     OPTIONAL MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
-    RETURN{
-      case_id: c.case_id,
-      clinical_trial_code: ct.clinical_trial_designation,
-      arm_id: a.arm_id,
-      arm_drug: a.arm_drug,
-      disease: c.disease,
-      gender: c.gender,
-      race: c.race,
-      arm_target: a.arm_target,
-      ethnicity: c.ethnicity,
-      clinical_trial_id: ct.clinical_trial_id,
-      pubmed_id: a.pubmed_id,
-      trial_arm: a.arm_id+'_'+ a.arm_drug,
-      file_types: COLLECT(DISTINCT f.file_type),
-      file_formats: COLLECT(DISTINCT f.file_format),
-      files: COLLECT(DISTINCT {
+    WITH
+      c.case_id AS case_id,
+      ct.clinical_trial_designation AS clinical_trial_code,
+      a.arm_id AS arm_id,
+      a.arm_drug AS arm_drug,
+      c.disease AS disease,
+      c.gender AS gender,
+      c.race AS race,
+      a.arm_target AS arm_target,
+      c.ethnicity AS ethnicity,
+      ct.clinical_trial_id AS clinical_trial_id,
+      a.pubmed_id AS pubmed_id,
+      a.arm_id+'_'+ a.arm_drug AS trial_arm,
+      COLLECT(DISTINCT f.file_type) AS file_types,
+      COLLECT(DISTINCT f.file_format) AS file_formats,
+      COLLECT(DISTINCT {
         uuid: f.uuid
-      })
+      }) AS files
+    RETURN{
+      case_id: case_id,
+      clinical_trial_code: clinical_trial_code,
+      arm_id: arm_id,
+      arm_drug: arm_drug,
+      disease: disease,
+      gender: gender,
+      race: race,
+      arm_target: arm_target,
+      ethnicity: ethnicity,
+      clinical_trial_id: clinical_trial_id,
+      pubmed_id: pubmed_id,
+      trial_arm: trial_arm,
+      file_types: file_types,
+      file_formats: file_formats,
+      files: files
     }
+    ORDER BY
+    CASE $order_by
+      WHEN "case_id" THEN case_id
+      WHEN "clinical_trial_code" THEN clinical_trial_code
+      WHEN "arm_id" THEN arm_id
+      WHEN "arm_drug" THEN arm_drug
+      WHEN "disease" THEN disease
+      WHEN "gender" THEN gender
+      WHEN "race" THEN race
+      WHEN "arm_target" THEN arm_target
+      WHEN "ethnicity" THEN ethnicity
+      WHEN "clinical_trial_id" THEN clinical_trial_id
+      WHEN "pubmed_id" THEN pubmed_id
+      WHEN "trial_arm" THEN trial_arm
+      WHEN "file_types" THEN file_types
+      WHEN "file_formats" THEN file_formats
+      WHEN "files" THEN files
+      ELSE case_id
+    END
+  """, passThrough: true)
+
+  caseOverviewPagedDesc(case_ids: [String] = [""], order_by: String = "case_id"): [CaseOverview] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+    OPTIONAL MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WITH
+      c.case_id AS case_id,
+      ct.clinical_trial_designation AS clinical_trial_code,
+      a.arm_id AS arm_id,
+      a.arm_drug AS arm_drug,
+      c.disease AS disease,
+      c.gender AS gender,
+      c.race AS race,
+      a.arm_target AS arm_target,
+      c.ethnicity AS ethnicity,
+      ct.clinical_trial_id AS clinical_trial_id,
+      a.pubmed_id AS pubmed_id,
+      a.arm_id+'_'+ a.arm_drug AS trial_arm,
+      COLLECT(DISTINCT f.file_type) AS file_types,
+      COLLECT(DISTINCT f.file_format) AS file_formats,
+      COLLECT(DISTINCT {
+      uuid: f.uuid
+      }) AS files
+    RETURN{
+      case_id: case_id,
+      clinical_trial_code: clinical_trial_code,
+      arm_id: arm_id,
+      arm_drug: arm_drug,
+      disease: disease,
+      gender: gender,
+      race: race,
+      arm_target: arm_target,
+      ethnicity: ethnicity,
+      clinical_trial_id: clinical_trial_id,
+      pubmed_id: pubmed_id,
+      trial_arm: trial_arm,
+      file_types: file_types,
+      file_formats: file_formats,
+      files: files
+    }
+    ORDER BY
+      CASE $order_by
+        WHEN "case_id" THEN case_id
+        WHEN "clinical_trial_code" THEN clinical_trial_code
+        WHEN "arm_id" THEN arm_id
+        WHEN "arm_drug" THEN arm_drug
+        WHEN "disease" THEN disease
+        WHEN "gender" THEN gender
+        WHEN "race" THEN race
+        WHEN "arm_target" THEN arm_target
+        WHEN "ethnicity" THEN ethnicity
+        WHEN "clinical_trial_id" THEN clinical_trial_id
+        WHEN "pubmed_id" THEN pubmed_id
+        WHEN "trial_arm" THEN trial_arm
+        WHEN "file_types" THEN file_types
+        WHEN "file_formats" THEN file_formats
+        WHEN "files" THEN files
+        ELSE case_id
+      END DESC
   """, passThrough: true)
 
 # ---Search Subjects---
