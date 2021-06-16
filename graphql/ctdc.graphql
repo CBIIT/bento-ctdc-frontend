@@ -305,8 +305,6 @@ type TrialArmCaseCount{
   cases: Int
 }
 
-# ---Case Overview Types---
-
 type FileUuid{
   uuid: String
 }
@@ -328,8 +326,6 @@ type CaseOverview{
   file_formats: [String]
   files: [FileUuid]
 }
-
-
 
 type GroupCountA{
   group: String
@@ -361,6 +357,64 @@ type FileOverview{
   disease: String
 }
 
+type ArmDetail{
+  arm_id: String,
+  arm_target: String,
+  arm_drug: String
+}
+
+type CaseDetail{
+  case_id: String,
+  clinical_trial_code: String,
+  clinical_trial_id: String,
+  disease: String,
+  gender: String,
+  race: String,
+  arms: [ArmDetail],
+  ethnicity: String
+}
+
+type FileOfCase{
+  parent: String,
+  file_name: String,
+  file_type: String,
+  file_description: String,
+  file_format: String,
+  file_size: Float,
+  md5sum: String
+}
+
+type FileInList{
+  clinical_trial_code: String,
+  case_id: String,
+  arm_id: String,
+  file_type: String,
+  association: String,
+  file_description: String,
+  file_format: String,
+  file_size: Float,
+  uuid: String,
+  md5sum: String
+}
+
+type ArmDiagnosisCount{
+  arm_id: String,
+  diagnoses: String
+}
+
+type ClinicalTrialInfo{
+  clinical_trial_id: String,
+  clinical_trial_short_name: String,
+  clinical_trial_description: String,
+  clinical_trial_designation: String,
+  clinical_trial_long_name: String,
+  clinical_trial_type: String,
+  lead_organization: String,
+  principal_investigators: String,
+  number_of_arms: Int,
+  number_of_cases: Int
+}
+
 # ---Queries---
 
 type QueryType {
@@ -379,13 +433,28 @@ type QueryType {
   """)
 
   numberOfFiles: Int @cypher(statement: """
-    MATCH (:assignment_report)-->(:specimen)<-[*]-(n:file) 
-    RETURN count (n)
+    MATCH (f:file)
+    RETURN count (f)
   """)
 
   numberOfTrials: Int @cypher(statement: """
     MATCH (n:clinical_trial) 
-    RETURN  count (n)
+    RETURN count (n)
+  """)
+
+  numberOfArms: Int @cypher(statement: """
+    MATCH (n:arm) 
+    RETURN count (n)
+  """)
+
+  numberOfFileTypes: Int @cypher(statement: """
+    MATCH (f:file)
+    RETURN COUNT(DISTINCT f.file_type)
+  """)
+
+  numberOfDiagnoses: Int @cypher(statement: """
+    MATCH (c:case)
+    RETURN COUNT(DISTINCT c.disease)
   """)
 
   trialsAndArms: [TrialArms] @cypher(statement: """
@@ -1032,6 +1101,173 @@ type QueryType {
       WHEN "disease" THEN disease
       ELSE file_name
     END DESC
+  """, passThrough: true)
+
+  caseDetailByCaseId(case_id: String!): CaseDetail @cypher(statement: """
+    MATCH (c:case)
+      WHERE c.case_id = $case_id
+    OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WITH
+      c, ct, a,
+      COLLECT({
+        arm_id: a.arm_id,
+        arm_target: a.arm_target,
+        arm_drug: a.arm_drug
+      }) AS arms
+    RETURN{
+      case_id: c.case_id,
+      clinical_trial_code: ct.clinical_trial_designation,
+      clinical_trial_id: ct.clinical_trial_id,
+      disease: c.disease,
+      gender: c.gender,
+      race: c.race,
+      arms: arms,
+      ethnicity: c.ethnicity
+    }
+  """, passThrough: true)
+
+  filesOfCase(case_id: String!): [FileOfCase] @cypher(statement: """
+    MATCH (f:file)-[*]->(s:specimen)-->(c:case)
+    WITH 
+      DISTINCT(f) AS f, 
+      c 
+    MATCH (f)-->(parent) 
+      WHERE c.case_id = $case_id 
+    RETURN{
+      parent: head(labels(parent)),
+      file_name: f.file_name,
+      file_type: f.file_type,
+      file_description: f.file_description,
+      file_format: f.file_format,
+      file_size: f.file_size,
+      md5sum: f.md5sum
+    }
+  """, passThrough: true)
+
+  filesInList(
+    uuid: [String] = [""], 
+    order_by: String = "uuid"
+  ): [FileInList] @cypher(statement: """
+    MATCH (f:file)-[*]->(s:specimen)-->(c:case)
+    OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WITH 
+      DISTINCT(f) AS f, 
+      c, ct, a
+    MATCH (f)-->(parent) 
+      WHERE f.uuid IN $uuid 
+    WITH
+      ct.clinical_trial_designation as clinical_trial_code,
+      c.case_id as case_id,
+      a.arm_id as arm_id,
+      f.file_type as file_type,
+      head(labels(parent)) as association,
+      f.file_description as file_description,
+      f.file_format as file_format,
+      f.file_size as file_size,
+      f.uuid as uuid,
+      f.md5sum as md5sum
+    RETURN{
+      clinical_trial_code: clinical_trial_code,
+      case_id: case_id, 
+      arm_id: arm_id,
+      file_type: file_type, 
+      association: association,
+      file_description: file_description,
+      file_format: file_format,
+      file_size: file_size,
+      uuid: uuid,
+      md5sum: md5sum
+    }
+    ORDER BY 
+    CASE $order_by
+      WHEN "uuid" THEN uuid
+      WHEN "clinical_trial_code" THEN clinical_trial_code
+      WHEN "case_id" THEN case_id
+      WHEN "arm_id" THEN arm_id
+      WHEN "file_type" THEN file_type
+      WHEN "association" THEN association
+      WHEN "file_description" THEN file_description
+      WHEN "file_format" THEN file_format
+      WHEN "file_size" THEN file_size
+      WHEN "md5sum" THEN md5sum
+      ELSE uuid
+    END
+  """, passThrough: true)
+
+  filesInListDesc(
+    uuid: [String] = [""], 
+    order_by: String = "uuid"
+  ): [FileInList] @cypher(statement: """
+    MATCH (f:file)-[*]->(s:specimen)-->(c:case)
+    OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    WITH 
+      DISTINCT(f) AS f, 
+      c, ct, a
+    MATCH (f)-->(parent) 
+      WHERE f.uuid IN $uuid 
+    WITH
+      ct.clinical_trial_designation as clinical_trial_code,
+      c.case_id as case_id,
+      a.arm_id as arm_id,
+      f.file_type as file_type,
+      head(labels(parent)) as association,
+      f.file_description as file_description,
+      f.file_format as file_format,
+      f.file_size as file_size,
+      f.uuid as uuid,
+      f.md5sum as md5sum
+    RETURN{
+      clinical_trial_code: clinical_trial_code,
+      case_id: case_id, 
+      arm_id: arm_id,
+      file_type: file_type, 
+      association: association,
+      file_description: file_description,
+      file_format: file_format,
+      file_size: file_size,
+      uuid: uuid,
+      md5sum: md5sum
+    }
+    ORDER BY 
+    CASE $order_by
+      WHEN "uuid" THEN uuid
+      WHEN "clinical_trial_code" THEN clinical_trial_code
+      WHEN "case_id" THEN case_id
+      WHEN "arm_id" THEN arm_id
+      WHEN "file_type" THEN file_type
+      WHEN "association" THEN association
+      WHEN "file_description" THEN file_description
+      WHEN "file_format" THEN file_format
+      WHEN "file_size" THEN file_size
+      WHEN "md5sum" THEN md5sum
+      ELSE uuid
+    END DESC
+  """, passThrough: true)
+
+  diagnosisCountByArm: [ArmDiagnosisCount] @cypher(statement: """
+    MATCH (a:arm)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a)
+    RETURN{
+      arm_id: a.arm_id,
+      diagnoses: COUNT(DISTINCT c.disease)
+    }
+  """, passThrough: true)
+
+  clinicalTrials: [ClinicalTrialInfo] @cypher(statement: """
+    MATCH (ct:clinical_trial)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+    RETURN{
+      clinical_trial_id: ct.clinical_trial_id,
+      clinical_trial_short_name: ct.clinical_trial_short_name,
+      clinical_trial_description: ct.clinical_trial_description,
+      clinical_trial_designation: ct.clinical_trial_designation,
+      clinical_trial_long_name: ct.clinical_trial_long_name,
+      clinical_trial_type: ct.clinical_trial_type,
+      lead_organization: ct.lead_organization,
+      principal_investigators: ct.principal_investigators,
+      number_of_arms: COUNT(DISTINCT a),
+      number_of_cases: COUNT(DISTINCT c)
+    }
   """, passThrough: true)
 
 } 
