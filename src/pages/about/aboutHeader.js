@@ -13,7 +13,7 @@ const AboutHeader = ({ classes, title }) => (
 const styles = () => ({
   header: {
     position: 'relative',
-    margin: '20px auto',
+    margin: '0px auto',
   },
   slope2Text: {
     height: '65px',
