@@ -193,8 +193,8 @@ type QueryType {
   """)
 
   numberOfFiles: Int @cypher(statement: """
-    MATCH (:assignment_report)-->(:specimen)<-[*]-(n:file) 
-    RETURN count (n)
+    MATCH (f:file)
+    RETURN count (f)
   """)
 
   numberOfTrials: Int @cypher(statement: """
