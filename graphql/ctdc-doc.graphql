@@ -475,7 +475,9 @@ type QueryType {
 
   # ---Case Overview---
 
-  caseOverviewPaged: [CaseOverview] 
+  caseOverviewPaged(case_ids: [String] = [""], order_by: String = "case_id"): [CaseOverview] 
+
+  caseOverviewPagedDesc(case_ids: [String] = [""], order_by: String = "case_id"): [CaseOverview] 
 
 # ---Search Subjects---
 
