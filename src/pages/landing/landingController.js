@@ -7,21 +7,18 @@ import { Typography } from '../../components/Wrappers/Wrappers';
 import { GET_LANDING_PAGE_DATA_QUERY } from '../../bento/landingPageData';
 
 const landingController = () => {
-  console.log('x');
-  return <LandingView />;
+  const { loading, error, data } = useQuery(GET_LANDING_PAGE_DATA_QUERY);
 
-  // const { loading, error, data } = useQuery(GET_LANDING_PAGE_DATA_QUERY);
+  if (loading) return <CircularProgress />;
+  if (error) {
+    return (
+      <Typography variant="h5" color="error" size="sm">
+        {error && `An error has occurred in loading stats component: ${error}`}
+      </Typography>
+    );
+  }
 
-  // if (loading) return <CircularProgress />;
-  // if (error) {
-  //   return (
-  //     <Typography variant="h5" color="error" size="sm">
-  //       {error && `An error has occurred in loading stats component: ${error}`}
-  //     </Typography>
-  //   );
-  // }
-
-  // return <LandingView statsData={data} />;
+  return <LandingView heroData={data} />;
 };
 
 export default landingController;

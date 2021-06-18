@@ -19,16 +19,15 @@ import herobg1400 from '../../assets/landing/heroGraphic/heroGraphic1400.png';
 import herobg1600 from '../../assets/landing/heroGraphic/heroGraphic1600.png';
 import herobg1800 from '../../assets/landing/heroGraphic/heroGraphic1800.png';
 import herobg2000 from '../../assets/landing/heroGraphic/heroGraphic2000.png';
+import InteractiveHero from '../../components/InteractiveHero/InteractiveHero';
 
-// import InteractiveHero from '../../components/InteractiveHero/InteractiveHero';
-
-const LandingController = ({ classes }) => (
+const LandingController = ({ classes, heroData }) => (
   <div className={classes.page}>
     <div className={classes.container}>
       <div className={classes.hero}>
         <Grid container spacing={16} direction="row">
           <div className={classes.heroImage} />
-          {/* <InteractiveHero heroData={heroData} /> */}
+          <InteractiveHero heroData={heroData} />
         </Grid>
       </div>
     </div>
