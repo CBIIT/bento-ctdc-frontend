@@ -253,58 +253,6 @@ type TrialArms {
   arms: [ArmInfo]
 }
 
-# ---Case Count Types---
-
-type ClinicalTrialCaseCount{
-  clinical_trial_id: String
-  cases: Int
-}
-
-type TrialCodeCaseCount{
-  clinical_trial_designation: String
-  cases: Int
-}
-
-type PubMedIDCaseCount{
-  pubmed_id: String
-  cases: Int
-}
-
-type GenderCaseCount{
-  gender: String
-  cases: Int
-}
-
-type RaceCaseCount{
-  race: String
-  cases: Int
-}
-
-type EthnicityCaseCount{
-  ethnicity: String
-  cases: Int
-}
-
-type DiagnosisCaseCount{
-  disease: String
-  cases: Int
-}
-
-type FileTypeCaseCount{
-  file_type: String
-  cases: Int
-}
-
-type FileFormatCaseCount{
-  file_format: String
-  cases: Int
-}
-
-type TrialArmCaseCount{
-  trial_arm: String
-  cases: Int
-}
-
 type FileUuid{
   uuid: String
 }
@@ -327,14 +275,9 @@ type CaseOverview{
   files: [FileUuid]
 }
 
-type GroupCountA{
+type GroupCount{
   group: String
   count: Int
-}
-
-type GroupCountB{
-  group: String
-  subjects: Int
 }
 
 type SearchResult{
@@ -415,6 +358,14 @@ type ClinicalTrialInfo{
   number_of_cases: Int
 }
 
+type ClinicalTrialArm{
+  arm_id: String,
+  arm_target: String,
+  arm_drug: String,
+  pubmed_id: String,
+  number_of_cases: Int
+}
+
 # ---Queries---
 
 type QueryType {
@@ -437,41 +388,33 @@ type QueryType {
 
   numberOfDiagnoses: Int 
 
-  trialsAndArms: [TrialArms] 
+  trialsAndArms(case_ids: [String] = [""]): [TrialArms] 
 
   # ---Case Counts---
 
-  casesCountBaseOnTrialId: [ClinicalTrialCaseCount] 
+  casesCountBaseOnTrial(case_ids: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnTrialCode: [TrialCodeCaseCount] 
+  casesCountBaseOnTrialId(trial_ids: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnPubMedID: [PubMedIDCaseCount] 
+  casesCountBaseOnTrialCode(trial_codes: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnGender: [GenderCaseCount] 
+  casesCountBaseOnPubMedID(pubmed_ids: [String] = [""], case_ids: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnRace: [RaceCaseCount] 
+  casesCountBaseOnGender(genders: [String] = [""], case_ids: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnEthnicity: [EthnicityCaseCount] 
+  casesCountBaseOnRace(races: [String] = [""], case_ids: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnDiagnosis: [DiagnosisCaseCount] 
+  casesCountBaseOnEthnicity(ethnicities: [String] = [""], case_ids: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnFileType: [FileTypeCaseCount] 
+  casesCountBaseOnDiagnoses(diagnoses: [String] = [""], case_ids: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnFileFormat: [FileFormatCaseCount] 
+  casesCountBaseOnFileType(file_types: [String] = [""]): [GroupCount] 
 
-  casesCountBaseOnTrialArm: [TrialArmCaseCount] 
+  casesCountBaseOnFileFormat(file_formats: [String] = [""]): [GroupCount] 
 
-  caseCountByTrial(case_ids: [String] = [""]): [GroupCountA] 
+  casesCountBaseOnTrialArm(trial_arms: [String] = [""]): [GroupCount] 
 
-  caseCountByDiagnoses(case_ids: [String] = [""]): [GroupCountB] 
 
-  caseCountByGender(case_ids: [String] = [""]): [GroupCountB] 
-
-  caseCountByRace(case_ids: [String] = [""]): [GroupCountB] 
-
-  caseCountByEthnicity(case_ids: [String] = [""]): [GroupCountB] 
-
-  caseCountByPubmedID(case_ids: [String] = [""]): [GroupCountB] 
 
   # ---Case Overview---
 
@@ -508,7 +451,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [ClinicalTrialCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnTrialCode(
     clinical_trial_id: [String] = [""], 
@@ -521,7 +464,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [TrialCodeCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnPubMedID(
     clinical_trial_id: [String] = [""], 
@@ -534,7 +477,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [PubMedIDCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnGender(
     clinical_trial_id: [String] = [""], 
@@ -547,7 +490,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [GenderCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnRace(
     clinical_trial_id: [String] = [""], 
@@ -560,7 +503,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [RaceCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnEthnicity(
     clinical_trial_id: [String] = [""], 
@@ -573,7 +516,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [EthnicityCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnDiagnosis(
     clinical_trial_id: [String] = [""], 
@@ -586,7 +529,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [DiagnosisCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnFileType(
     clinical_trial_id: [String] = [""], 
@@ -599,7 +542,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [FileTypeCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnFileFormat(
     clinical_trial_id: [String] = [""], 
@@ -612,7 +555,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [FileFormatCaseCount] 
+  ): [GroupCount] 
 
   filterCasesCountBaseOnTrialArm(
     clinical_trial_id: [String] = [""], 
@@ -625,7 +568,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [TrialArmCaseCount] 
+  ): [GroupCount] 
 
 # ---File Overview---
   
@@ -656,5 +599,11 @@ type QueryType {
   diagnosisCountByArm: [ArmDiagnosisCount] 
 
   clinicalTrials: [ClinicalTrialInfo] 
+
+  clinicalTrialByTrialId(trial_id: String!): ClinicalTrialInfo 
+
+  fileCountByTrialId(trial_id: String!): Int 
+
+  clinicalTrialArmByTrialId(trial_id: String!): [ClinicalTrialArm] 
 
 } 
