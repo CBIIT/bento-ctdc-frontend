@@ -284,6 +284,8 @@ type SearchResult{
   numberOfTrials: Int
   numberOfCases: Int
   numberOfFiles: Int
+  fileIds: [String]
+  caseIds: [String]
   firstPage: [CaseOverview]
 }
 
@@ -295,6 +297,7 @@ type FileOverview{
   file_size: Float,
   trial: String,
   trial_id: String,
+  clinical_trial_code: String,
   arm: String,
   case_id: String,
   disease: String
