@@ -300,12 +300,6 @@ type FileOverview{
   disease: String
 }
 
-type ArmDetail{
-  arm_id: String,
-  arm_target: String,
-  arm_drug: String
-}
-
 type CaseDetail{
   case_id: String,
   clinical_trial_code: String,
@@ -313,8 +307,11 @@ type CaseDetail{
   disease: String,
   gender: String,
   race: String,
-  arms: [ArmDetail],
-  ethnicity: String
+  arm_id: String,
+  arm_target: String,
+  arm_drug: String,
+  ethnicity: String,
+  files: [String]
 }
 
 type FileOfCase{
@@ -1127,14 +1124,7 @@ type QueryType {
   caseDetailByCaseId(case_id: String!): CaseDetail @cypher(statement: """
     MATCH (c:case)
       WHERE c.case_id = $case_id
-    OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
-    WITH
-      c, ct, a,
-      COLLECT({
-        arm_id: a.arm_id,
-        arm_target: a.arm_target,
-        arm_drug: a.arm_drug
-      }) AS arms
+    OPTIONAL MATCH (f:file)-[*]->(c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     RETURN{
       case_id: c.case_id,
       clinical_trial_code: ct.clinical_trial_designation,
@@ -1142,8 +1132,11 @@ type QueryType {
       disease: c.disease,
       gender: c.gender,
       race: c.race,
-      arms: arms,
-      ethnicity: c.ethnicity
+      arm_id: a.arm_id,
+      arm_target: a.arm_target,
+      arm_drug: a.arm_drug,
+      ethnicity: c.ethnicity,
+      files: COLLECT(DISTINCT f.uuid)
     }
   """, passThrough: true)
 

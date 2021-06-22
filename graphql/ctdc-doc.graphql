@@ -300,12 +300,6 @@ type FileOverview{
   disease: String
 }
 
-type ArmDetail{
-  arm_id: String,
-  arm_target: String,
-  arm_drug: String
-}
-
 type CaseDetail{
   case_id: String,
   clinical_trial_code: String,
@@ -313,8 +307,11 @@ type CaseDetail{
   disease: String,
   gender: String,
   race: String,
-  arms: [ArmDetail],
-  ethnicity: String
+  arm_id: String,
+  arm_target: String,
+  arm_drug: String,
+  ethnicity: String,
+  files: [String]
 }
 
 type FileOfCase{
