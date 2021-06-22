@@ -18,9 +18,9 @@ const table = {
   // Set 'display' to false to hide the table entirely
   display: true,
   // Table title
-  title: 'Programs',
+  title: 'Trials',
   // Field name for table data, need to be updated only when using a different GraphQL query
-  dataField: 'programInfo',
+  dataField: 'clinicalTrials',
   // Value must be one of the 'field' in columns
   defaultSortField: 'program_acronym',
   // 'asc' or 'desc'
@@ -30,39 +30,27 @@ const table = {
   // A maximum of 10 columns are allowed
   columns: [
     {
-      dataField: 'program_acronym',
-      header: 'Program Code',
-      link: '/program/{program_id}',
+      dataField: 'clinical_trial_designation',
+      header: 'Trial Code',
+      link: '/trial/{clinical_trial_designation}',
       display: true,
     },
     {
-      dataField: 'program_id',
-      header: 'Program ID',
+      dataField: 'clinical_trial_id',
+      header: 'Trial ID',
+      link: 'https://clinicaltrials.gov/',
     },
     {
-      dataField: 'program_name',
-      header: 'Program Name',
+      dataField: 'clinical_trial_short_name',
+      header: 'Trial Name',
     },
     {
-      dataField: 'start_date',
-      header: 'Start Date',
+      dataField: 'number_of_arms',
+      header: 'Arms',
     },
     {
-      dataField: 'end_date',
-      header: 'End Date',
-    },
-    {
-      dataField: 'pubmed_id',
-      header: 'PubMed ID',
-      link: 'https://pubmed.ncbi.nlm.nih.gov/{pubmed_id}',
-    },
-    {
-      dataField: 'num_studies',
-      header: 'Number of ARMs',
-    },
-    {
-      dataField: 'num_subjects',
-      header: 'Associated Cases',
+      dataField: 'number_of_cases',
+      header: 'Cases',
     },
   ],
 };

@@ -131,10 +131,10 @@ const table = {
 
 // --------------- GraphQL query - Retrieve program details --------------
 const GET_TRIAL_DETAIL_DATA_QUERY = gql`
-query clinicalTrialByTrialId($id: String!) {
+query clinicalTrialByTrialId($trial_id: String!) {
 
-   caseCountByTrialId(trial_id:$id)
-   fileCountByTrialId(trial_id:$id)
+  casesCountBaseOnTrialId(trial_id:[$id])
+  fileCountByTrialId(trial_id:$id)
 
   clinicalTrialByTrialId(trial_id: $id) {
   clinical_trial_id

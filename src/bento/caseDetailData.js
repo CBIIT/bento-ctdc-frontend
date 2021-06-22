@@ -11,39 +11,13 @@ export const tooltipContent = {
 // -------------- Case ID area configurations --------------
 const caseHeader = {
   label: 'Case ID',
-  dataField: 'subject_id',
+  dataField: 'case_id',
 };
 
 // --------------- Data panel configuration --------------
 const leftPanel = [
   // Each object here represents a subsection in the panel
   // A maximum of 3 subsections are allowed
-  {
-    sectionHeader: 'Program',
-    // sectionDesc: 'Subsection description goes here',
-    properties: [
-      // A maximum of 10 properties are allowed
-      {
-        label: 'Assigned to Program',
-        dataField: 'program_acronym',
-        // link property specify URL value should link to
-        // space holder "{program_id}" will be replaced by actual value in the property program_id
-        link: '/program/{program_id}',
-        // labelLink property specify URL label should link to
-        // labelLink: '/programs',
-        // external links must have URL scheme part such as "https://"
-      },
-      {
-        label: 'Arm',
-        dataField: 'study_acronym',
-        link: '/arm/{study_acronym}',
-      },
-      {
-        label: 'Arm Description',
-        dataField: 'study_name',
-      },
-    ],
-  },
   {
     sectionHeader: 'Demographics',
     // sectionDesc: 'Demographic Related Info',
@@ -61,22 +35,6 @@ const leftPanel = [
         label: 'Ethnicity',
         dataField: 'ethnicity',
       },
-      {
-        label: 'Age At Enrollment',
-        dataField: 'age_at_index',
-      },
-      {
-        label: 'Menopause Status',
-        dataField: 'menopause_status',
-      },
-      {
-        label: 'Vital Status',
-        dataField: 'vital_status',
-      },
-      {
-        label: 'Cause Of Death',
-        dataField: 'cause_of_death',
-      },
     ],
   },
   {
@@ -85,35 +43,7 @@ const leftPanel = [
     properties: [
       {
         label: 'Diagnosis',
-        dataField: 'disease_type',
-      },
-      {
-        label: 'Diagnosis Subtype',
-        dataField: 'disease_subtype',
-      },
-      {
-        label: 'Tumor Grade',
-        dataField: 'tumor_grade',
-      },
-      {
-        label: 'Tumor Grade (mm)',
-        dataField: 'tumor_largest_dimension_diameter',
-      },
-      {
-        label: 'ER Status',
-        dataField: 'er_status',
-      },
-      {
-        label: 'PR Status',
-        dataField: 'pr_status',
-      },
-      {
-        label: 'Nuclear Grade',
-        dataField: 'nuclear_grade',
-      },
-      {
-        label: 'Recurrence Score',
-        dataField: 'recurrence_score',
+        dataField: 'disease',
       },
     ],
   },
@@ -123,60 +53,25 @@ const rightPanel = [
   // Each object here represents a subsection in the panel
   // A maximum of 3 subsections are allowed
   {
-    sectionHeader: 'Treatment',
+    sectionHeader: 'TRIAL',
     // sectionDesc: 'Treatment Related Info',
     properties: [
       // A maximum of 10 properties are allowed
       {
-        label: 'Primary Surgical Procedure',
-        dataField: 'primary_surgical_procedure',
+        label: 'Assigned to Trial',
+        dataField: 'clinical_trial_code',
       },
       {
-        label: 'Chemotherapy Regimen Group',
+        label: 'ARM',
         dataField: 'chemotherapy_regimen_group',
       },
       {
-        label: 'Chemotherapy Regimen',
+        label: 'ARM TREATMENT',
         dataField: 'chemotherapy_regimen',
       },
       {
-        label: 'Endocrine Therapy Type',
+        label: 'ARM TARGET',
         dataField: 'endocrine_therapy_type',
-      },
-    ],
-  },
-  {
-    sectionHeader: 'Follow Up',
-    // sectionDesc: 'Follow Up Related Info',
-    properties: [
-      // A maximum of 10 properties are allowed
-      {
-        label: 'Is Disease Free',
-        dataField: 'dfs_event_indicator',
-      },
-      {
-        label: 'Is Recurrence Free',
-        dataField: 'recurrence_free_indicator',
-      },
-      {
-        label: 'Is Distant Recurrence Free',
-        dataField: 'distant_recurrence_indicator',
-      },
-      {
-        label: 'Disease Free Event Type',
-        dataField: 'dfs_event_type',
-      },
-      {
-        label: 'Recurrence Event Type',
-        dataField: 'first_recurrence_type',
-      },
-      {
-        label: 'Days to Progression',
-        dataField: 'days_to_progression',
-      },
-      {
-        label: 'Days to Recurrence',
-        dataField: 'days_to_recurrence',
       },
     ],
   },
@@ -351,37 +246,37 @@ const table2 = {
 // --------------- GraphQL query configuration --------------
 
 // query name, also used as root of returned data
-const dataRoot = 'subjectDetail';
+const dataRoot = 'caseDetailByCaseId';
 // query name, also used as key for files to Samples Mapping.
-const filesOfSamples = 'samplesForSubjectId';
+const filesOfCase = 'filesOfCase';
 // Primary ID field used to query a case
-const caseIDField = 'subject_id';
+const caseIDField = 'case_id';
 
 // GraphQL query to retrieve detailed info for a case
 const GET_CASE_DETAIL_DATA_QUERY = gql`
 query caseDetailByCaseId($case_id: String!){
-        caseDetailByCaseId(case_id:$case_id){
-          case_id
-          clinical_trial_code
-          clinical_trial_id
-          disease
-          gender
-          race
-          arms{
-              arm_id
-              arm_target
-              arm_drug
-          }
-          ethnicity
-        }
-        filesOfCase(case_id:$case_id){
-      parent 
-      file_name 
-      file_type 
-      file_description 
-      file_format 
-      file_size 
-      md5sum 
+    caseDetailByCaseId(case_id:$case_id){
+      case_id
+      clinical_trial_code
+      clinical_trial_id
+      disease
+      gender
+      race
+      arms{
+          arm_id
+          arm_target
+          arm_drug
+      }
+      ethnicity
+  }
+  filesOfCase(case_id:$case_id){
+  parent 
+  file_name 
+  file_type 
+  file_description 
+  file_format 
+  file_size 
+  md5sum 
   }
 }`;
 
@@ -389,7 +284,7 @@ export {
   caseHeader,
   dataRoot,
   caseIDField,
-  filesOfSamples,
+  filesOfCase,
   leftPanel,
   rightPanel,
   table1,

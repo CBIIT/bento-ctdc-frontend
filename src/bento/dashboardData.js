@@ -16,7 +16,7 @@ export const facetSearchData = [
     label: 'Trial Arm', field: 'group', api: 'casesCountBaseOnTrialArm', apiForFiltering: 'filterCasesCountBaseOnTrialArm', datafield: 'trial_arm', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'Diagnosis', field: 'group', api: 'casesCountBaseOnDiagnosis', apiForFiltering: 'filterCasesCountBaseOnDiagnosis', datafield: 'disease', section: 'Filter By Cases', show: true,
+    label: 'Diagnosis', field: 'group', api: 'casesCountBaseOnDiagnoses', apiForFiltering: 'filterCasesCountBaseOnDiagnosis', datafield: 'disease', section: 'Filter By Cases', show: true,
   },
   {
     label: 'Gender', field: 'group', api: 'casesCountBaseOnGender', apiForFiltering: 'filterCasesCountBaseOnGender', datafield: 'gender', section: 'Filter By Cases', show: true,
@@ -69,7 +69,7 @@ export const widgetsData = [
   {
     type: 'donut',
     label: 'Diagnosis',
-    dataName: 'casesCountBaseOnDiagnosis',
+    dataName: 'casesCountBaseOnDiagnoses',
     datatable_field: 'disease',
     show: true,
   },

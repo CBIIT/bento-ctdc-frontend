@@ -118,8 +118,9 @@ function getFilteredStat(input, statCountVariables) {
  *  @param {object}
  */
  const removeEmptySubjectsFromDonutData = (data) => {
+   console.log('#3', data);
   const convertCasesToSubjects = data.map((item) => ({
-    subjects: item.cases,
+    subjects: item.count,
     group: item.group,
   }));
   convertCasesToSubjects.sort((a, b) => {
@@ -184,7 +185,7 @@ function fetchDashboardTabForClearAll() {
 
 function allFilters() {
   const emptyFilters = facetSearchData.reduce((acc, facet) => (
-    { ...acc, [facet.datafield]: [] }
+    { ...acc, [facet.datafield]: [""] }
   ), {});
   return emptyFilters;
 }
@@ -198,16 +199,27 @@ function allFilters() {
 
 function createFilterVariables(data) {
   const currentAllActiveFilters = getState().allActiveFilters;
+  const removeUncecked = (currentAllActiveFilters, key, data) => {
+    const checkedItems = currentAllActiveFilters[key].filter((item) => item !== data[0].name);
+    console.log('#6', checkedItems);
+    return checkedItems.length <= 0 ? [""] : checkedItems;
+  }
+
   // eslint-disable-next-line  no-unused-vars
   const filter = Object.entries(currentAllActiveFilters).reduce((acc, [key, val]) => {
     if (data[0].datafield === key) {
       return data[0].isChecked
-        ? { ...acc, [key]: [...currentAllActiveFilters[key], ...[data[0].name]] }
-        : { ...acc, [key]: currentAllActiveFilters[key].filter((item) => item !== data[0].name) };
+        ? { ...acc, [key]: currentAllActiveFilters[key][0] == "" 
+            ? [...[data[0].name]]
+            : [...currentAllActiveFilters[key], ...[data[0].name]]
+          }
+        : { ...acc, [key]: removeUncecked(currentAllActiveFilters, key, data) };
     }
     // return { ...acc , [key]: [...currentAllActiveFilters[key],...[data[0].name]] }
     return { ...acc, [key]: currentAllActiveFilters[key] };
   }, {});
+
+  console.log('#4', filter)
 
   return filter;
 }
@@ -220,7 +232,7 @@ function createFilterVariables(data) {
  */
 function clearGroup(data) {
   let currentAllActiveFilters = getState().allActiveFilters;
-  currentAllActiveFilters[data] = [];
+  currentAllActiveFilters[data] = [""];
   return currentAllActiveFilters;
 }
 
@@ -289,6 +301,7 @@ export function fetchDataForDashboardTab(
   fileIDsAfterFilter = null,
 ) {
   const { QUERY, sortfield, sortDirection } = getQueryAndDefaultSort(payload);
+  console.log('#2', payload);
 
   return client
     .query({
@@ -546,7 +559,7 @@ function toggleCheckBoxWithAPIAction(payload, currentAllFilterVariables) {
     })
     .then((result) => client.query({ // request to get the filtered group counts
       query: FILTER_GROUP_QUERY,
-      variables: { subject_ids: result.data.searchSubjects.subjectIds },
+      variables: { case_ids: result.data.searchSubjects.case_ids },
     })
       .then((result2) => store.dispatch({
         type: 'TOGGGLE_CHECKBOX_WITH_API',
@@ -721,17 +734,21 @@ so it contains more information and easy for front-end to show it correctly.
  * @return {json}
  */
 export function updateFilteredAPIDataIntoCheckBoxData(data, facetSearchDataFromConfig) {
+  console.log('#8', data, facetSearchDataFromConfig);
   return (
-    facetSearchDataFromConfig.map((mapping) => ({
+    facetSearchDataFromConfig.map((mapping) => {
+      console.log('#5', data[mapping.apiForFiltering], mapping, data);
+      return {
       groupName: mapping.label,
       checkboxItems: transformAPIDataIntoCheckBoxData(
-        convertCasesToCount(data[mapping.filterAPI]),
+        convertCasesToCount(data[mapping.apiForFiltering]),
         mapping.field,
       ),
       datafield: mapping.datafield,
       show: mapping.show,
       section: mapping.section,
-    }))
+    }
+  })
   );
 }
 
@@ -852,6 +869,7 @@ const reducers = {
     const updatedCheckboxData1 = updateFilteredAPIDataIntoCheckBoxData(
       item.data, facetSearchData,
     );
+    console.log('#7', updatedCheckboxData1);
     const checkboxData1 = setSelectedFilterValues(updatedCheckboxData1, item.allFilters);
     fetchDataForDashboardTab(state.currentActiveTab,
       item.data.searchSubjects.subjectIds, item.data.searchSubjects.sampleIds,
@@ -877,8 +895,7 @@ const reducers = {
       currentActiveTab: item.currentTab,
       datatable: {
         ...state.datatable,
-        dataCase: item.sortDirection === 'desc' ? item.data.subjectOverViewPagedDesc : item.data.subjectOverViewPaged,
-        dataSample: item.sortDirection === 'desc' ? item.data.sampleOverviewDesc : item.data.sampleOverview,
+        dataCase: item.sortDirection === 'desc' ? item.data.caseOverViewPagedDesc : item.data.caseOverviewPaged,
         dataFile: item.sortDirection === 'desc' ? item.data.fileOverviewDesc : item.data.fileOverview,
       },
     }
@@ -920,8 +937,8 @@ const reducers = {
     };
   },
   RECEIVE_DASHBOARDTAB: (state, item) => {
-    const checkboxData = customCheckBox(item.data, facetSearchData, 'cases');
-    console.log('#1', item.data, facetSearchData, checkboxData);
+    const checkboxData = customCheckBox(item.data, facetSearchData, 'count');
+    console.log('#2', checkboxData);
     fetchDataForDashboardTab(tabIndex[0].title, null, null, null);
     return item.data
       ? {

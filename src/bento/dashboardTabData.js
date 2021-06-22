@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import gql from 'graphql-tag';
 import { customCasesTabDownloadCSV, customFilesTabDownloadCSV } from './tableDownloadCSV';
 
@@ -104,98 +105,92 @@ export const tabContainers = [
         display: true,
       },
       {
-        dataField: 'file_id',
+        dataField: 'uuid',
         header: 'File ID',
         sort: 'asc',
         display: false,
       },
-      {
-        dataField: 'association',
-        header: 'Association',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'file_description',
-        header: 'Description',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'file_format',
-        header: 'File Format',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'file_size',
-        header: 'Size',
-        sort: 'asc',
-        display: true,
-        formatBytes: true,
-      },
-      {
-        dataField: '', // This need to left empty if no data need to be displayed before file download icon
-        header: 'Access',
-        sort: 'asc',
-        display: true,
-        downloadDocument: true, // To indicate that column is document donwload
-        documentDownloadProps: {
-          // Max file size needs to bin Bytes to seperate two support file preview and download
-          maxFileSize: 315,
-          // Tool top text for file download
-          toolTipTextFileDownload: 'Download a copy of this file',
-          // Tool top text for file preview
-          toolTipTextFilePreview: 'Because of its size and/or format, this file is unavailable for download and must be accessed via the My Files workflow',
-          // datafield where file file column exists in the table
-          fileSizeColumn: 'file_size',
-          // datafield where file file id exists in the table which is used to get file location
-          fileLocationColumn: 'file_id',
-          // file download icon
-          iconFileDownload: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadPDF.svg',
-          // file preview ico
-          iconFilePreview: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadCloud.svg',
-        },
-      },
-      {
-        dataField: 'program',
-        header: 'Program Code',
-        sort: 'asc',
-        link: '/program/{program_id}',
-        display: true,
-      },
-      {
-        dataField: 'program_id',
-        header: 'Program ID',
-        sort: 'asc',
-        display: false,
-      },
-      {
-        dataField: 'arm',
-        header: 'Arm',
-        sort: 'asc',
-        link: '/arm/{arm}',
-        display: true,
-      },
-      {
-        dataField: 'subject_id',
-        header: 'Case ID',
-        sort: 'asc',
-        link: '/case/{subject_id}',
-        display: true,
-      },
-      {
-        dataField: 'sample_id',
-        header: 'Sample ID',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'diagnosis',
-        header: 'Diagnosis',
-        sort: 'asc',
-        display: true,
-      },
+      // {
+      //   dataField: 'file_description',
+      //   header: 'Description',
+      //   sort: 'asc',
+      //   display: true,
+      // },
+      // {
+      //   dataField: 'file_format',
+      //   header: 'File Format',
+      //   sort: 'asc',
+      //   display: true,
+      // },
+      // {
+      //   dataField: 'file_size',
+      //   header: 'Size',
+      //   sort: 'asc',
+      //   display: true,
+      //   formatBytes: true,
+      // },
+      // {
+      //   dataField: '', // This need to left empty if no data need to be displayed before file download icon
+      //   header: 'Access',
+      //   sort: 'asc',
+      //   display: true,
+      //   downloadDocument: true, // To indicate that column is document donwload
+      //   documentDownloadProps: {
+      //     // Max file size needs to bin Bytes to seperate two support file preview and download
+      //     maxFileSize: 315,
+      //     // Tool top text for file download
+      //     toolTipTextFileDownload: 'Download a copy of this file',
+      //     // Tool top text for file preview
+      //     toolTipTextFilePreview: 'Because of its size and/or format, this file is unavailable for download and must be accessed via the My Files workflow',
+      //     // datafield where file file column exists in the table
+      //     fileSizeColumn: 'file_size',
+      //     // datafield where file file id exists in the table which is used to get file location
+      //     fileLocationColumn: 'file_id',
+      //     // file download icon
+      //     iconFileDownload: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadPDF.svg',
+      //     // file preview ico
+      //     iconFilePreview: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadCloud.svg',
+      //   },
+      // },
+      // {
+      //   dataField: 'program',
+      //   header: 'Program Code',
+      //   sort: 'asc',
+      //   link: '/program/{program_id}',
+      //   display: true,
+      // },
+      // {
+      //   dataField: 'program_id',
+      //   header: 'Program ID',
+      //   sort: 'asc',
+      //   display: false,
+      // },
+      // {
+      //   dataField: 'arm',
+      //   header: 'Arm',
+      //   sort: 'asc',
+      //   link: '/arm/{arm}',
+      //   display: true,
+      // },
+      // {
+      //   dataField: 'subject_id',
+      //   header: 'Case ID',
+      //   sort: 'asc',
+      //   link: '/case/{subject_id}',
+      //   display: true,
+      // },
+      // {
+      //   dataField: 'sample_id',
+      //   header: 'Sample ID',
+      //   sort: 'asc',
+      //   display: true,
+      // },
+      // {
+      //   dataField: 'diagnosis',
+      //   header: 'Diagnosis',
+      //   sort: 'asc',
+      //   display: true,
+      // },
     ],
     id: 'file_tab',
     onRowsSelect: 'type2',
@@ -257,46 +252,45 @@ export const DASHBOARD_QUERY = gql`{
   }
 
    casesCountBaseOnTrialId {
-      clinical_trial_id
-      cases
+      group
+      count
   }
    casesCountBaseOnTrialCode {
-      clinical_trial_designation
-      cases
+      group
+      count
   }
    casesCountBaseOnPubMedID {
-      pubmed_id
-      cases
+      group
+      count
   }
    casesCountBaseOnGender {
-      gender
-      cases
+      group
+      count
   }
    casesCountBaseOnRace {
-      race
-      cases
+      group
+      count
   }
   casesCountBaseOnEthnicity {
-      ethnicity
-      cases
+      group
+      count
   }
-
-  casesCountBaseOnDiagnosis {
-      disease
-      cases
+  casesCountBaseOnDiagnoses {
+      group
+      count
   }
    casesCountBaseOnFileType {
-      file_type
-      cases
+      group
+      count
   }
   casesCountBaseOnFileFormat {
-      file_format
-      cases
+      group
+      count
   }
 
   casesCountBaseOnTrialArm {
-      trial_arm
-      cases
+      group
+      count
   }
 
   caseOverviewPaged(first: 10) {   
@@ -336,29 +330,29 @@ export const FILTER_GROUP_QUERY = gql`
 }
  casesCountBaseOnDiagnoses(case_ids: $case_ids){
   group
-  subjects
+  count
 }
  casesCountBaseOnGender(case_ids: $case_ids){
   group
-  subjects
+  count
 }
  casesCountBaseOnRace(case_ids: $case_ids) {
   group
-  subjects
+  count
 }
  casesCountBaseOnEthnicity(case_ids: $case_ids) {
   group
-  subjects
+  count
 }
 casesCountBaseOnPubMedID(case_ids: $case_ids){
   group
-  subjects
+  count
 }
 
 }`;
 
 export const FILTER_QUERY = gql`
-query search($programs: [String] ,
+query search(
   $clinical_trial_id: [String] ,
   $clinical_trial_designation: [String] ,
   $pubmed_id: [String] ,
@@ -385,6 +379,8 @@ searchSubjects(
         numberOfTrials
         numberOfCases
         numberOfFiles
+        fileIds
+        caseIds
   firstPage {
     case_id
     clinical_trial_code
@@ -406,44 +402,44 @@ searchSubjects(
       }
 }
 filterCasesCountBaseOnTrialId(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  clinical_trial_id
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnTrialCode(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  clinical_trial_designation
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnPubMedID(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  pubmed_id
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnGender(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  gender
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnRace(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  race
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnEthnicity(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  ethnicity
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnDiagnosis(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  disease
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnFileType(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  file_type
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnFileFormat(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  file_format
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnTrialArm(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  trial_arm
-  cases
+  group
+  count
 }
 }
 `;
@@ -454,7 +450,6 @@ query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_b
   fileOverview(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
     uuid
     file_name
-    association
     file_description
     file_format
     file_size
@@ -472,7 +467,6 @@ export const GET_FILES_OVERVIEW_DESC_QUERY = gql`
     fileOverviewDesc(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
       uuid
       file_name
-      association
       file_description
       file_format
       file_size
