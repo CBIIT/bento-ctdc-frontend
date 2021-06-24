@@ -26,8 +26,8 @@ export const tabContainers = [
     dataField: 'dataCase',
     api: 'GET_CASES_OVERVIEW_QUERY',
     paginationAPIField: 'caseOverviewPaged',
-    paginationAPIFieldDesc: 'caseOverViewPagedDesc',
-    count: 'numberOfSubjects',
+    paginationAPIFieldDesc: 'caseOverviewPagedDesc',
+    count: 'numberOfCases',
     dataKey: 'case_id',
     defaultSortField: 'case_id',
     defaultSortDirection: 'asc',
@@ -55,6 +55,49 @@ export const tabContainers = [
         sort: 'asc',
         link: '/case/{case_id}',
         primary: true,
+        display: true,
+      },
+      {
+        dataField: 'clinical_trial_code',
+        header: 'Trial Code',
+        sort: 'asc',
+        link: '/trial/{clinical_trial_code}',
+        display: true,
+      },
+      {
+        dataField: 'arm_id',
+        header: 'Arm',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'arm_drug',
+        header: 'Arm Trearment',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'disease',
+        header: 'Diagnosis',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'gender',
+        header: 'Gender',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'race',
+        header: 'Race',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'ethnicity',
+        header: 'Ethnicity',
+        sort: 'asc',
         display: true,
       },
     ],
@@ -106,29 +149,29 @@ export const tabContainers = [
       },
       {
         dataField: 'uuid',
-        header: 'File ID',
+        header: 'Association',
         sort: 'asc',
-        display: false,
+        display: true,
       },
-      // {
-      //   dataField: 'file_description',
-      //   header: 'Description',
-      //   sort: 'asc',
-      //   display: true,
-      // },
-      // {
-      //   dataField: 'file_format',
-      //   header: 'File Format',
-      //   sort: 'asc',
-      //   display: true,
-      // },
-      // {
-      //   dataField: 'file_size',
-      //   header: 'Size',
-      //   sort: 'asc',
-      //   display: true,
-      //   formatBytes: true,
-      // },
+      {
+        dataField: 'file_description',
+        header: 'Description',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'file_format',
+        header: 'File Format',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'file_size',
+        header: 'Size',
+        sort: 'asc',
+        display: true,
+        formatBytes: true,
+      },
       // {
       //   dataField: '', // This need to left empty if no data need to be displayed before file download icon
       //   header: 'Access',
@@ -152,45 +195,38 @@ export const tabContainers = [
       //     iconFilePreview: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadCloud.svg',
       //   },
       // },
-      // {
-      //   dataField: 'program',
-      //   header: 'Program Code',
-      //   sort: 'asc',
-      //   link: '/program/{program_id}',
-      //   display: true,
-      // },
-      // {
-      //   dataField: 'program_id',
-      //   header: 'Program ID',
-      //   sort: 'asc',
-      //   display: false,
-      // },
-      // {
-      //   dataField: 'arm',
-      //   header: 'Arm',
-      //   sort: 'asc',
-      //   link: '/arm/{arm}',
-      //   display: true,
-      // },
-      // {
-      //   dataField: 'subject_id',
-      //   header: 'Case ID',
-      //   sort: 'asc',
-      //   link: '/case/{subject_id}',
-      //   display: true,
-      // },
-      // {
-      //   dataField: 'sample_id',
-      //   header: 'Sample ID',
-      //   sort: 'asc',
-      //   display: true,
-      // },
-      // {
-      //   dataField: 'diagnosis',
-      //   header: 'Diagnosis',
-      //   sort: 'asc',
-      //   display: true,
-      // },
+      {
+        dataField: 'trial_code',
+        header: 'Trial Code',
+        sort: 'asc',
+        link: '/trials/{trial_code}',
+        display: true,
+      },
+      {
+        dataField: 'trial_id',
+        header: 'Trial ID',
+        sort: 'asc',
+        display: false,
+      },
+      {
+        dataField: 'arm',
+        header: 'Arm',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'case_id',
+        header: 'Case ID',
+        sort: 'asc',
+        link: '/case/{case_id}',
+        display: true,
+      },
+      {
+        dataField: 'uuid',
+        header: 'UUID',
+        sort: 'asc',
+        display: false,
+      },
     ],
     id: 'file_tab',
     onRowsSelect: 'type2',
@@ -507,8 +543,8 @@ query caseOverviewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10,
 // --------------- GraphQL query - Retrieve sample tab details --------------
 
 export const GET_CASES_OVERVIEW_DESC_QUERY = gql`
-  query caseOverViewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-    caseOverViewPagedDesc(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+  query caseOverviewPagedDesc($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
+    caseOverviewPagedDesc(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
       case_id
       clinical_trial_code
       arm_id
@@ -526,10 +562,10 @@ export const GET_CASES_OVERVIEW_DESC_QUERY = gql`
 }`;
 
 export const GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL = gql`
-  query caseOverViewPaged($case_ids: [String], $first: Int = 10000000){
-    caseOverViewPaged(case_ids: $case_ids, first: $first) {
-        files {
-              uuid
+  query caseOverviewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10000000, $order_by:String =""){
+    caseOverviewPaged(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+        files{
+          uuid
         }
     }
 }`;

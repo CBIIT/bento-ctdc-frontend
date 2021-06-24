@@ -118,7 +118,6 @@ function getFilteredStat(input, statCountVariables) {
  *  @param {object}
  */
  const removeEmptySubjectsFromDonutData = (data) => {
-   console.log('#3', data);
   const convertCasesToSubjects = data.map((item) => ({
     subjects: item.count,
     group: item.group,
@@ -140,8 +139,17 @@ function getFilteredStat(input, statCountVariables) {
  */
 function getWidgetsInitData(data, widgetsInfoFromCustConfig) {
   const donut = widgetsInfoFromCustConfig.reduce((acc, widget) => {
-    // console.log('##', widget.dataName, data[widget.dataName]);
+    if (widget.type === 'sunburst') { 
+    console.log('##abc', widget.dataName, data[widget.dataName]);
+    const sunbrustData = data[widget.dataName];
+    data[widget.dataName] = sunbrustData.map((d)=>{
+      d.program = d.trials
+      return d;
+    })
+  };
     const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.dataName], widget.datatable_level1_field, widget.datatable_level2_field, 'arms') : removeEmptySubjectsFromDonutData(data[widget.dataName]);
+    if (widget.type === 'sunburst') console.log('##sunburst', Data);
+    if (widget.type === 'sunburst') console.log('##sunburst', data[widget.dataName]);
     const label = widget.dataName;
     return { ...acc, [label]: Data };
   }, {});
@@ -301,7 +309,6 @@ export function fetchDataForDashboardTab(
   fileIDsAfterFilter = null,
 ) {
   const { QUERY, sortfield, sortDirection } = getQueryAndDefaultSort(payload);
-  console.log('#2', payload);
 
   return client
     .query({
@@ -491,7 +498,7 @@ export async function fetchAllFileIDs(fileCount = 100000, selectedIds = [], offs
       filesIds = await getFileIDsByFileName(selectedIds, offset, first, order_by);
       break;
     default:
-      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], 'subjectOverViewPaged');
+      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], 'caseOverviewPaged');
   }
   return filterOutFileIds(filesIds);
 }
@@ -559,7 +566,7 @@ function toggleCheckBoxWithAPIAction(payload, currentAllFilterVariables) {
     })
     .then((result) => client.query({ // request to get the filtered group counts
       query: FILTER_GROUP_QUERY,
-      variables: { case_ids: result.data.searchSubjects.case_ids },
+      variables: { case_ids: result.data.searchSubjects.caseIds },
     })
       .then((result2) => store.dispatch({
         type: 'TOGGGLE_CHECKBOX_WITH_API',
@@ -734,10 +741,8 @@ so it contains more information and easy for front-end to show it correctly.
  * @return {json}
  */
 export function updateFilteredAPIDataIntoCheckBoxData(data, facetSearchDataFromConfig) {
-  console.log('#8', data, facetSearchDataFromConfig);
   return (
     facetSearchDataFromConfig.map((mapping) => {
-      console.log('#5', data[mapping.apiForFiltering], mapping, data);
       return {
       groupName: mapping.label,
       checkboxItems: transformAPIDataIntoCheckBoxData(
@@ -938,7 +943,6 @@ const reducers = {
   },
   RECEIVE_DASHBOARDTAB: (state, item) => {
     const checkboxData = customCheckBox(item.data, facetSearchData, 'count');
-    console.log('#2', checkboxData);
     fetchDataForDashboardTab(tabIndex[0].title, null, null, null);
     return item.data
       ? {
@@ -979,7 +983,7 @@ const reducers = {
       } : { ...state };
   },
   CLEAR_ALL: (state, item) => {
-    const checkboxData = customCheckBox(item.data, facetSearchData);
+    const checkboxData = customCheckBox(item.data, facetSearchData, 'count');
     fetchDataForDashboardTab(state.currentActiveTab, null, null, null);
     return item.data
       ? {

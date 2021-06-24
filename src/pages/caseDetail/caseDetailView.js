@@ -44,7 +44,7 @@ const CaseDetail = ({ data, filesOfCase, classes }) => {
   const stat = {
     numberOfTrials: 1,
     numberOfCases: 1,
-    numberOfFiles: filesOfCase.length,
+    numberOfFiles: data.files.length,
   };
 
   const breadCrumbJson = [{

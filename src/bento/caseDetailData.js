@@ -63,15 +63,15 @@ const rightPanel = [
       },
       {
         label: 'ARM',
-        dataField: 'chemotherapy_regimen_group',
+        dataField: 'arm_id',
       },
       {
         label: 'ARM TREATMENT',
-        dataField: 'chemotherapy_regimen',
+        dataField: 'arm_drug',
       },
       {
         label: 'ARM TARGET',
-        dataField: 'endocrine_therapy_type',
+        dataField: 'arm_target',
       },
     ],
   },
@@ -262,12 +262,11 @@ query caseDetailByCaseId($case_id: String!){
       disease
       gender
       race
-      arms{
-          arm_id
-          arm_target
-          arm_drug
-      }
+      arm_id
+      arm_target
+      arm_drug
       ethnicity
+      files
   }
   filesOfCase(case_id:$case_id){
   parent 

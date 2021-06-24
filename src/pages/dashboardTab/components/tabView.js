@@ -119,6 +119,7 @@ const TabView = ({
     const selectFileIds = filteredFileIds != null
       ? selectedIDs.filter((x) => filteredFileIds.includes(x))
       : selectedIDs;
+    console.log('#8', selectFileIds);
     const newFileIDS = fileIDs !== null ? selectFileIds.filter(
       (e) => !fileIDs.find((a) => e === a),
     ).length : selectedIDs.length;

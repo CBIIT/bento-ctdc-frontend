@@ -32,7 +32,7 @@ const table = {
     {
       dataField: 'clinical_trial_designation',
       header: 'Trial Code',
-      link: '/trial/{clinical_trial_designation}',
+      link: '/trial/{clinical_trial_id}',
       display: true,
     },
     {

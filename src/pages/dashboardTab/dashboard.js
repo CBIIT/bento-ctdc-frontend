@@ -63,6 +63,7 @@ const Dashboard = ({
                   <Grid container>
                     {displaywidgets.map((widget, index) => {
                       if (widget.type === 'sunburst' && widget.show) {
+                        console.log('##Widget:', widget, data[widget.dataName]);
                         return (
                           <Grid key={index} item lg={4} md={6} sm={12} xs={12}>
                             <Widget
@@ -91,7 +92,6 @@ const Dashboard = ({
                         );
                       }
                       if (widget.type === 'donut' && widget.show) {
-                        // console.log('##Widget:', widget, data[widget.dataName]);
                         return (
                           <Grid key={index} item lg={4} md={6} sm={12} xs={12}>
                             <Widget

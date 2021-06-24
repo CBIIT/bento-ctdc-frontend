@@ -78,15 +78,15 @@ export const table = {
       formatBytes: true,
     },
     {
-      dataField: 'subject_id',
+      dataField: 'case_id',
       header: 'Case ID',
     },
     {
-      dataField: 'study_code',
-      header: 'Study Code',
+      dataField: 'clinical_trial_code',
+      header: 'Trial Code',
     },
     {
-      dataField: 'file_id',
+      dataField: 'uuid',
       header: 'UUID',
       display: false,
     },
@@ -100,8 +100,8 @@ export const table = {
 
 // --------------- GraphQL query - Retrieve selected cases info --------------
 export const GET_MY_CART_DATA_QUERY = gql`
-query filesInList($uuids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="") {
-    filesInList(uuids: $uuids, offset: $offset,first: $first, order_by: $order_by) {
+query filesInList($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="") {
+    filesInList(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
       clinical_trial_code
       case_id
       arm_id
@@ -117,8 +117,8 @@ query filesInList($uuids: [String], $offset: Int = 0, $first: Int = 10, $order_b
 
 // --------------- GraphQL query - Retrieve selected files info Desc --------------
 export const GET_MY_CART_DATA_QUERY_DESC = gql`
-query filesInListDesc($uuids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="") {
-  filesInListDesc(uuids: $uuids, offset: $offset,first: $first, order_by: $order_by) {
+query filesInListDesc($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="") {
+  filesInListDesc(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
     clinical_trial_code
     case_id
     arm_id
