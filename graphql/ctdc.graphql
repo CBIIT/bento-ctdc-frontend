@@ -253,58 +253,6 @@ type TrialArms {
   arms: [ArmInfo]
 }
 
-# ---Case Count Types---
-
-type ClinicalTrialCaseCount{
-  clinical_trial_id: String
-  cases: Int
-}
-
-type TrialCodeCaseCount{
-  clinical_trial_designation: String
-  cases: Int
-}
-
-type PubMedIDCaseCount{
-  pubmed_id: String
-  cases: Int
-}
-
-type GenderCaseCount{
-  gender: String
-  cases: Int
-}
-
-type RaceCaseCount{
-  race: String
-  cases: Int
-}
-
-type EthnicityCaseCount{
-  ethnicity: String
-  cases: Int
-}
-
-type DiagnosisCaseCount{
-  disease: String
-  cases: Int
-}
-
-type FileTypeCaseCount{
-  file_type: String
-  cases: Int
-}
-
-type FileFormatCaseCount{
-  file_format: String
-  cases: Int
-}
-
-type TrialArmCaseCount{
-  trial_arm: String
-  cases: Int
-}
-
 type FileUuid{
   uuid: String
 }
@@ -327,20 +275,17 @@ type CaseOverview{
   files: [FileUuid]
 }
 
-type GroupCountA{
+type GroupCount{
   group: String
   count: Int
-}
-
-type GroupCountB{
-  group: String
-  subjects: Int
 }
 
 type SearchResult{
   numberOfTrials: Int
   numberOfCases: Int
   numberOfFiles: Int
+  fileIds: [String]
+  caseIds: [String]
   firstPage: [CaseOverview]
 }
 
@@ -352,15 +297,10 @@ type FileOverview{
   file_size: Float,
   trial: String,
   trial_id: String,
+  clinical_trial_code: String,
   arm: String,
   case_id: String,
   disease: String
-}
-
-type ArmDetail{
-  arm_id: String,
-  arm_target: String,
-  arm_drug: String
 }
 
 type CaseDetail{
@@ -370,8 +310,11 @@ type CaseDetail{
   disease: String,
   gender: String,
   race: String,
-  arms: [ArmDetail],
-  ethnicity: String
+  arm_id: String,
+  arm_target: String,
+  arm_drug: String,
+  ethnicity: String,
+  files: [String]
 }
 
 type FileOfCase{
@@ -415,6 +358,14 @@ type ClinicalTrialInfo{
   number_of_cases: Int
 }
 
+type ClinicalTrialArm{
+  arm_id: String,
+  arm_target: String,
+  arm_drug: String,
+  pubmed_id: String,
+  number_of_cases: Int
+}
+
 # ---Queries---
 
 type QueryType {
@@ -422,7 +373,7 @@ type QueryType {
   # ---Schema Version---
 
   schemaVersion: String @cypher(statement: """
-    RETURN '0.1.0'
+    RETURN '0.1.1'
   """)
 
   # ---Numbers of nodes---
@@ -457,13 +408,14 @@ type QueryType {
     RETURN COUNT(DISTINCT c.disease)
   """)
 
-  trialsAndArms: [TrialArms] @cypher(statement: """
-    MATCH (ct:clinical_trial)
-    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+  trialsAndArms(case_ids: [String] = [""]): [TrialArms] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_ids IN $case_ids)
+    OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WITH 
       ct, 
       COUNT(DISTINCT c) AS caseSize
-    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+    OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WITH 
       ct, caseSize,
       {
@@ -479,147 +431,120 @@ type QueryType {
 
   # ---Case Counts---
 
-  casesCountBaseOnTrialId: [ClinicalTrialCaseCount] @cypher(statement: """
-    MATCH (ct:clinical_trial)
-    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
-    RETURN{
-      clinical_trial_id: ct.clinical_trial_id,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnTrialCode: [TrialCodeCaseCount] @cypher(statement: """
-    MATCH (ct:clinical_trial)
-    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
-    RETURN{
-      clinical_trial_designation: ct.clinical_trial_designation,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnPubMedID: [PubMedIDCaseCount] @cypher(statement: """
-    MATCH (a:arm)
-    OPTIONAL MATCH (c:case)-[:of_arm]->(a)
-    RETURN{
-      pubmed_id: a.pubmed_id,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnGender: [GenderCaseCount] @cypher(statement: """
+  casesCountBaseOnTrial(case_ids: [String] = [""]): [GroupCount] @cypher(statement: """
     MATCH (c:case)
-    RETURN{
-      gender: c.gender,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnRace: [RaceCaseCount] @cypher(statement: """
-    MATCH (c:case)
-    RETURN{
-      race: c.race,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnEthnicity: [EthnicityCaseCount] @cypher(statement: """
-    MATCH (c:case)
-    RETURN{
-      ethnicity: c.ethnicity,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnDiagnosis: [DiagnosisCaseCount] @cypher(statement: """
-    MATCH (c:case)
-    RETURN{
-      disease: c.disease,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnFileType: [FileTypeCaseCount] @cypher(statement: """
-    MATCH (f:file)
-    OPTIONAL MATCH (f)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)
-    RETURN{
-      file_type: f.file_type,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnFileFormat: [FileFormatCaseCount] @cypher(statement: """
-    MATCH (f:file)
-    OPTIONAL MATCH (f)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)
-    RETURN{
-      file_format: f.file_format,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  casesCountBaseOnTrialArm: [TrialArmCaseCount] @cypher(statement: """
-    MATCH (a:arm)
-    OPTIONAL MATCH (c:case)-[:of_arm]->(a)
-    RETURN{
-      trial_arm: a.arm_id+'_'+ a.arm_drug,
-      cases: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  caseCountByTrial(case_ids: [String] = [""]): [GroupCountA] @cypher(statement: """
-    MATCH (ct:clinical_trial)
-    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
-      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_ids IN $case_ids)
+    OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     RETURN{
       group: ct.clinical_trial_id,
       count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
-  caseCountByDiagnoses(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
-    MATCH (c:case)
-      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+  casesCountBaseOnTrialId(trial_ids: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (ct:clinical_trial)
+      WHERE ($trial_ids IS NULL OR $trial_ids = [""] OR ct.clinical_trial_id IN $trial_ids)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
     RETURN{
-      group: c.disease,
-      subjects: COUNT(DISTINCT c)
+      group: ct.clinical_trial_id,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
-  caseCountByGender(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
-    MATCH (c:case)
-      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+  casesCountBaseOnTrialCode(trial_codes: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (ct:clinical_trial)
+      WHERE ($trial_codes IS NULL OR $trial_codes = [""] OR ct.clinical_trial_designation IN $trial_codes)
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
     RETURN{
-      group: c.gender,
-      subjects: COUNT(DISTINCT c)
+      group: ct.clinical_trial_designation,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
-  caseCountByRace(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
-    MATCH (c:case)
-      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
-    RETURN{
-      group: c.race,
-      subjects: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  caseCountByEthnicity(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
-    MATCH (c:case)
-      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
-    RETURN{
-      group: c.ethnicity,
-      subjects: COUNT(DISTINCT c)
-    }
-  """, passThrough: true)
-
-  caseCountByPubmedID(case_ids: [String] = [""]): [GroupCountB] @cypher(statement: """
+  casesCountBaseOnPubMedID(pubmed_ids: [String] = [""], case_ids: [String] = [""]): [GroupCount] @cypher(statement: """
     MATCH (a:arm)
+      WHERE ($pubmed_ids IS NULL OR $pubmed_ids = [""] OR a.pubmed_ids IN $pubmed_ids)
     OPTIONAL MATCH (c:case)-[:of_arm]->(a)
-      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids) 
     RETURN{
       group: a.pubmed_id,
-      subjects: COUNT(DISTINCT c)
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
+
+  casesCountBaseOnGender(genders: [String] = [""], case_ids: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($genders IS NULL OR $genders = [""] OR c.gender IN $genders)
+      AND ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids) 
+    RETURN{
+      group: c.gender,
+      count: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnRace(races: [String] = [""], case_ids: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($races IS NULL OR $races = [""] OR c.race IN $races)
+      AND ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids) 
+    RETURN{
+      group: c.race,
+      count: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnEthnicity(ethnicities: [String] = [""], case_ids: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($ethnicities IS NULL OR $ethnicities = [""] OR c.ethnicity IN $ethnicities)
+      AND ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
+    RETURN{
+      group: c.ethnicity,
+      count: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnDiagnoses(diagnoses: [String] = [""], case_ids: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (c:case)
+      WHERE ($diagnoses IS NULL OR $diagnoses = [""] OR c.disease IN $diagnoses) 
+      AND ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids) 
+    RETURN{
+      group: c.disease,
+      count: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnFileType(file_types: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (f:file)
+      WHERE ($file_types IS NULL OR $file_types = [""] OR f.file_type IN $file_types)
+    OPTIONAL MATCH (f)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)
+    RETURN{
+      group: f.file_type,
+      count: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnFileFormat(file_formats: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (f:file)
+      WHERE ($file_formats IS NULL OR $file_formats = [""] OR f.file_format IN $file_formats)
+    OPTIONAL MATCH (f)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)
+    RETURN{
+      group: f.file_format,
+      count: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  casesCountBaseOnTrialArm(trial_arms: [String] = [""]): [GroupCount] @cypher(statement: """
+    MATCH (a:arm)
+    WITH
+      a, a.arm_id+'_'+ a.arm_drug AS trial_arm
+    WHERE ($trial_arms IS NULL OR $trial_arms = [""] OR trial_arm IN $trial_arms) 
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a)
+    RETURN{
+      group: a.arm_id+'_'+ a.arm_drug,
+      count: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+
 
   # ---Case Overview---
 
@@ -772,7 +697,9 @@ type QueryType {
     WITH 
       COUNT(DISTINCT ct) AS numberOfTrials,
       COUNT(DISTINCT c) AS numberOfCases,
-      COUNT(DISTINCT f) AS numberOfFiles
+      COUNT(DISTINCT f) AS numberOfFiles,
+      COLLECT(DISTINCT f.uuid) AS fileIds,
+      COLLECT(DISTINCT c.case_id) AS caseIds
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
       WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
         AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
@@ -785,7 +712,7 @@ type QueryType {
         AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
         AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     WITH
-      numberOfTrials, numberOfCases, numberOfFiles,
+      numberOfTrials, numberOfCases, numberOfFiles, fileIds, caseIds,
       {
         case_id: c.case_id,
         clinical_trial_code: ct.clinical_trial_designation,
@@ -809,6 +736,8 @@ type QueryType {
       numberOfTrials: numberOfTrials,
       numberOfCases: numberOfCases,
       numberOfFiles: numberOfFiles,
+      fileIds: fileIds,
+      caseIds: caseIds,
       firstPage: COLLECT(DISTINCT firstPage)[0..$first]
     }
   """, passThrough: true)
@@ -826,10 +755,9 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [ClinicalTrialCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
-    WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
-      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
+    WHERE ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
       AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
       AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
       AND ($race IS NULL OR $race = [""] OR c.race IN $race)
@@ -839,8 +767,8 @@ type QueryType {
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      clinical_trial_id: ct.clinical_trial_id,
-      cases: COUNT(DISTINCT c)
+      group: ct.clinical_trial_id,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -855,10 +783,9 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [TrialCodeCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
-      AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
       AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
       AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
       AND ($race IS NULL OR $race = [""] OR c.race IN $race)
@@ -868,8 +795,8 @@ type QueryType {
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      clinical_trial_designation: ct.clinical_trial_designation,
-      cases: COUNT(DISTINCT c)
+      group: ct.clinical_trial_designation,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -884,11 +811,10 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [PubMedIDCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
       AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
-      AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
       AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
       AND ($race IS NULL OR $race = [""] OR c.race IN $race)
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
@@ -897,8 +823,8 @@ type QueryType {
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      pubmed_id: a.pubmed_id,
-      cases: COUNT(DISTINCT c)
+      group: a.pubmed_id,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -913,12 +839,11 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [GenderCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
       AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
       AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
-      AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
       AND ($race IS NULL OR $race = [""] OR c.race IN $race)
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
@@ -926,8 +851,8 @@ type QueryType {
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      gender: c.gender,
-      cases: COUNT(DISTINCT c)
+      group: c.gender,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -942,21 +867,20 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [RaceCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
       AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
       AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
       AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
-      AND ($race IS NULL OR $race = [""] OR c.race IN $race)
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      race: c.race,
-      cases: COUNT(DISTINCT c)
+      group: c.race,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -971,21 +895,20 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [EthnicityCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
       AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
       AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
       AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
       AND ($race IS NULL OR $race = [""] OR c.race IN $race)
-      AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      ethnicity: c.ethnicity,
-      cases: COUNT(DISTINCT c)
+      group: c.ethnicity,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -1000,7 +923,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [DiagnosisCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
       AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
@@ -1008,13 +931,12 @@ type QueryType {
       AND ($gender IS NULL OR $gender = [""] OR c.gender IN $gender)
       AND ($race IS NULL OR $race = [""] OR c.race IN $race)
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
-      AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      disease: c.disease,
-      cases: COUNT(DISTINCT c)
+      group: c.disease,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -1029,7 +951,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [FileTypeCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
       AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
@@ -1038,12 +960,11 @@ type QueryType {
       AND ($race IS NULL OR $race = [""] OR c.race IN $race)
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
-      AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      file_type: f.file_type,
-      cases: COUNT(DISTINCT c)
+      group: f.file_type,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -1058,7 +979,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [FileFormatCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
       AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
@@ -1068,11 +989,10 @@ type QueryType {
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
-      AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
       AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      file_format: f.file_format,
-      cases: COUNT(DISTINCT c)
+      group: f.file_format,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -1087,7 +1007,7 @@ type QueryType {
     file_type: [String] = [""],
     file_format: [String] = [""],
     trial_arm: [String] = [""]
-  ): [TrialArmCaseCount] @cypher(statement: """
+  ): [GroupCount] @cypher(statement: """
     MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
       AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
@@ -1098,10 +1018,9 @@ type QueryType {
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
     RETURN{
-      trial_arm: a.arm_id+'_'+ a.arm_drug,
-      cases: COUNT(DISTINCT c)
+      group: a.arm_id+'_'+ a.arm_drug,
+      count: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -1122,6 +1041,7 @@ type QueryType {
       f.file_size AS file_size,
       ct.clinical_trial_short_name AS trial,
       ct.clinical_trial_id AS trial_id,
+      ct.clinical_trial_designation AS clinical_trial_code,
       a.arm_id AS arm,
       c.case_id AS case_id,
       c.disease AS disease
@@ -1133,6 +1053,7 @@ type QueryType {
       file_size: file_size,
       trial: trial,
       trial_id: trial_id,
+      clinical_trial_code: clinical_trial_code,
       arm: arm,
       case_id: case_id,
       disease: disease
@@ -1149,6 +1070,7 @@ type QueryType {
         WHEN "arm" THEN arm
         WHEN "case_id" THEN case_id
         WHEN "disease" THEN disease
+        WHEN "clinical_trial_code" THEN clinical_trial_code
         ELSE file_name
       END
   """, passThrough: true)
@@ -1168,6 +1090,7 @@ type QueryType {
       f.file_size AS file_size,
       ct.clinical_trial_short_name AS trial,
       ct.clinical_trial_id AS trial_id,
+      ct.clinical_trial_designation AS clinical_trial_code,
       a.arm_id AS arm,
       c.case_id AS case_id,
       c.disease AS disease
@@ -1179,37 +1102,32 @@ type QueryType {
       file_size: file_size,
       trial: trial,
       trial_id: trial_id,
+      clinical_trial_code: clinical_trial_code,
       arm: arm,
       case_id: case_id,
       disease: disease
     }
-    ORDER BY
-    CASE $order_by
-      WHEN "file_uuid" THEN file_uuid
-      WHEN "file_name" THEN file_name
-      WHEN "file_description" THEN file_description
-      WHEN "file_format" THEN file_format
-      WHEN "file_size" THEN file_size
-      WHEN "trial" THEN trial
-      WHEN "trial_id" THEN trial_id
-      WHEN "arm" THEN arm
-      WHEN "case_id" THEN case_id
-      WHEN "disease" THEN disease
-      ELSE file_name
-    END DESC
+    ORDER BY 
+      CASE $order_by
+        WHEN "file_uuid" THEN file_uuid
+        WHEN "file_name" THEN file_name
+        WHEN "file_description" THEN file_description
+        WHEN "file_format" THEN file_format
+        WHEN "file_size" THEN file_size
+        WHEN "trial" THEN trial
+        WHEN "trial_id" THEN trial_id
+        WHEN "arm" THEN arm
+        WHEN "case_id" THEN case_id
+        WHEN "disease" THEN disease
+        WHEN "clinical_trial_code" THEN clinical_trial_code
+        ELSE file_name
+      END DESC
   """, passThrough: true)
 
   caseDetailByCaseId(case_id: String!): CaseDetail @cypher(statement: """
     MATCH (c:case)
       WHERE c.case_id = $case_id
-    OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
-    WITH
-      c, ct, a,
-      COLLECT({
-        arm_id: a.arm_id,
-        arm_target: a.arm_target,
-        arm_drug: a.arm_drug
-      }) AS arms
+    OPTIONAL MATCH (f:file)-[*]->(c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     RETURN{
       case_id: c.case_id,
       clinical_trial_code: ct.clinical_trial_designation,
@@ -1217,8 +1135,11 @@ type QueryType {
       disease: c.disease,
       gender: c.gender,
       race: c.race,
-      arms: arms,
-      ethnicity: c.ethnicity
+      arm_id: a.arm_id,
+      arm_target: a.arm_target,
+      arm_drug: a.arm_drug,
+      ethnicity: c.ethnicity,
+      files: COLLECT(DISTINCT f.uuid)
     }
   """, passThrough: true)
 
@@ -1362,6 +1283,44 @@ type QueryType {
       lead_organization: ct.lead_organization,
       principal_investigators: ct.principal_investigators,
       number_of_arms: COUNT(DISTINCT a),
+      number_of_cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  clinicalTrialByTrialId(trial_id: String!): ClinicalTrialInfo @cypher(statement: """
+    MATCH (ct:clinical_trial)
+      WHERE ct.clinical_trial_id = $trial_id
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+    RETURN{
+      clinical_trial_id: ct.clinical_trial_id,
+      clinical_trial_short_name: ct.clinical_trial_short_name,
+      clinical_trial_description: ct.clinical_trial_description,
+      clinical_trial_designation: ct.clinical_trial_designation,
+      clinical_trial_long_name: ct.clinical_trial_long_name,
+      clinical_trial_type: ct.clinical_trial_type,
+      lead_organization: ct.lead_organization,
+      principal_investigators: ct.principal_investigators,
+      number_of_arms: COUNT(DISTINCT a),
+      number_of_cases: COUNT(DISTINCT c)
+    }
+  """, passThrough: true)
+
+  fileCountByTrialId(trial_id: String!): Int @cypher(statement: """
+    MATCH (ct:clinical_trial)
+      WHERE ct.clinical_trial_id = $trial_id
+    OPTIONAL MATCH (f:file)-[*]->(ct)
+    RETURN COUNT(DISTINCT f)
+  """)
+
+  clinicalTrialArmByTrialId(trial_id: String!): [ClinicalTrialArm] @cypher(statement: """
+    MATCH (ct:clinical_trial)
+      WHERE ct.clinical_trial_id = $trial_id
+    OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
+    RETURN{
+      arm_id: a.arm_id,
+      arm_target: a.arm_target,
+      arm_drug: a.arm_drug,
+      pubmed_id: a.pubmed_id,
       number_of_cases: COUNT(DISTINCT c)
     }
   """, passThrough: true)
