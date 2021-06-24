@@ -4,49 +4,34 @@ import gql from 'graphql-tag';
 // A maximum of 12 facetSearchData are allowed
 export const facetSearchData = [
   {
-    label: 'Program', field: 'group', api: 'subjectCountByProgram', apiForFiltering: 'filterSubjectCountByProgram', datafield: 'programs', section: 'Filter By Cases', show: true,
+    label: 'Trial Code', field: 'group', api: 'casesCountBaseOnTrialCode', apiForFiltering: 'filterCasesCountBaseOnTrialCode', datafield: 'clinical_trial_designation', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'Arm', field: 'group', api: 'subjectCountByStudy', apiForFiltering: 'filterSubjectCountByStudy', datafield: 'studies', section: 'Filter By Cases', show: true,
+    label: 'Trial ID', field: 'group', api: 'casesCountBaseOnTrialId', apiForFiltering: 'filterCasesCountBaseOnTrialId', datafield: 'clinical_trial_id', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'Diagnosis', field: 'group', api: 'subjectCountByDiagnoses', apiForFiltering: 'filterSubjectCountByDiagnoses', datafield: 'diagnoses', section: 'Filter By Cases', show: true,
+    label: 'PubMed ID', field: 'group', api: 'casesCountBaseOnPubMedID', apiForFiltering: 'filterCasesCountBaseOnPubMedID', datafield: 'pubmed_id', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'Recurrence Score', field: 'group', api: 'subjectCountByRecurrenceScore', apiForFiltering: 'filterSubjectCountByRecurrenceScore', datafield: 'rc_scores', section: 'Filter By Cases', show: true,
+    label: 'Trial Arm', field: 'group', api: 'casesCountBaseOnTrialArm', apiForFiltering: 'filterCasesCountBaseOnTrialArm', datafield: 'trial_arm', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'Tumor Size', field: 'group', api: 'subjectCountByTumorSize', apiForFiltering: 'filterSubjectCountByTumorSize', datafield: 'tumor_sizes', section: 'Filter By Cases', show: true,
+    label: 'Diagnosis', field: 'group', api: 'casesCountBaseOnDiagnoses', apiForFiltering: 'filterCasesCountBaseOnDiagnosis', datafield: 'disease', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'Chemotherapy', field: 'group', api: 'subjectCountByChemotherapyRegimen', apiForFiltering: 'filterSubjectCountByChemotherapyRegimen', datafield: 'chemo_regimen', section: 'Filter By Cases', show: true,
+    label: 'Gender', field: 'group', api: 'casesCountBaseOnGender', apiForFiltering: 'filterCasesCountBaseOnGender', datafield: 'gender', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'Tumor Grade', field: 'group', api: 'subjectCountByTumorGrade', apiForFiltering: 'filterSubjectCountByTumorGrade', datafield: 'tumor_grades', section: 'Filter By Cases', show: true,
+    label: 'Race', field: 'group', api: 'casesCountBaseOnRace', apiForFiltering: 'filterCasesCountBaseOnRace', datafield: 'race', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'ER Status', field: 'group', api: 'subjectCountByErStatus', apiForFiltering: 'filterSubjectCountByErStatus', datafield: 'er_status', section: 'Filter By Cases', show: true,
+    label: 'Ethnicity', field: 'group', api: 'casesCountBaseOnEthnicity', apiForFiltering: 'filterCasesCountBaseOnEthnicity', datafield: 'ethnicity', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'PR Status', field: 'group', api: 'subjectCountByPrStatus', apiForFiltering: 'filterSubjectCountByPrStatus', datafield: 'pr_status', section: 'Filter By Cases', show: true,
+    label: 'Associated File Type', field: 'group', api: 'casesCountBaseOnFileType', apiForFiltering: 'filterCasesCountBaseOnFileType', datafield: 'file_type', section: 'Filter By Cases', show: true,
   },
   {
-    label: 'Endocrine Therapy', field: 'group', api: 'subjectCountByEndocrineTherapy', apiForFiltering: 'filterSubjectCountByEndocrineTherapy', datafield: 'endo_therapies', section: 'Filter By Cases', show: true,
-  },
-  {
-    label: 'Menopause Status', field: 'group', api: 'subjectCountByMenopauseStatus', apiForFiltering: 'filterSubjectCountByMenopauseStatus', datafield: 'meno_status', section: 'Filter By Cases', show: true,
-  },
-  {
-    label: 'Tissue Type', field: 'group', api: 'subjectCountByTissueType', apiForFiltering: 'filterSubjectCountByTissueType', datafield: 'tissue_type', section: 'Filter By Samples', show: true,
-  },
-  {
-    label: 'Tissue Composition', field: 'group', api: 'subjectCountByTissueComposition', apiForFiltering: 'filterSubjectCountByTissueComposition', datafield: 'composition', section: 'Filter By Samples', show: true,
-  },
-  {
-    label: 'File Association', field: 'group', api: 'subjectCountByFileAssociation', apiForFiltering: 'filterSubjectCountByFileAssociation', datafield: 'association', section: 'Filter By Files', show: true,
-  },
-  {
-    label: 'File Type', field: 'group', api: 'subjectCountByFileType', apiForFiltering: 'filterSubjectCountByFileType', datafield: 'file_type', section: 'Filter By Files', show: true,
+    label: 'Associated File Format', field: 'group', api: 'casesCountBaseOnFileFormat', apiForFiltering: 'filterCasesCountBaseOnFileFormat', datafield: 'file_format', section: 'Filter By Cases', show: true,
   },
 ];
 
@@ -56,20 +41,6 @@ export const facetSectionVariables = {
     color: '#10A075',
     checkBoxColorsOne: '#E8F7DC',
     checkBoxColorsTwo: '#F5FDEE',
-    height: '5px',
-    isExpanded: false,
-  },
-  'Filter By Samples': {
-    color: '#10BEFF',
-    checkBoxColorsOne: '#C9EBF7',
-    checkBoxColorsTwo: '#E8F8FE',
-    height: '5px',
-    isExpanded: false,
-  },
-  'Filter By Files': {
-    color: '#E636E4',
-    checkBoxColorsOne: '#FBE3FB',
-    checkBoxColorsTwo: '#FFF2FF',
     height: '5px',
     isExpanded: false,
   },
@@ -89,45 +60,45 @@ export const defaultFacetSectionVariables = {
 export const widgetsData = [
   {
     type: 'sunburst',
-    label: 'Programs and Arms',
-    dataName: 'armsByPrograms',
-    datatable_level1_field: 'program',
-    datatable_level2_field: 'study_acronym',
+    label: 'Trials and Arms',
+    dataName: 'trialsAndArms',
+    datatable_level1_field: 'trials',
+    datatable_level2_field: 'arms',
     show: true,
   },
   {
     type: 'donut',
     label: 'Diagnosis',
-    dataName: 'subjectCountByDiagnoses',
-    datatable_field: 'diagnosis',
+    dataName: 'casesCountBaseOnDiagnoses',
+    datatable_field: 'disease',
     show: true,
   },
   {
     type: 'donut',
-    label: 'Recurrence Score',
-    dataName: 'subjectCountByRecurrenceScore',
-    datatable_field: 'recurrence_score',
+    label: 'Gender',
+    dataName: 'casesCountBaseOnGender',
+    datatable_field: 'gender',
     show: true,
   },
   {
     type: 'donut',
-    label: 'Tumor Size',
-    dataName: 'subjectCountByTumorSize',
-    datatable_field: 'tumor_size',
+    label: 'Race',
+    dataName: 'casesCountBaseOnRace',
+    datatable_field: 'race',
     show: true,
   },
   {
     type: 'donut',
-    label: 'Chemotherapy',
-    dataName: 'subjectCountByChemotherapyRegimen',
-    datatable_field: 'chemotherapy',
+    label: 'Ethnicity',
+    dataName: 'casesCountBaseOnEthnicity',
+    datatable_field: 'ethnicity',
     show: true,
   },
   {
     type: 'donut',
-    label: 'Endocrine Therapy',
-    dataName: 'subjectCountByEndocrineTherapy',
-    datatable_field: 'endocrine_therapy',
+    label: 'Pubmed ID',
+    dataName: 'casesCountBaseOnPubMedID',
+    datatable_field: 'pubmed_id',
     show: true,
   },
 ];

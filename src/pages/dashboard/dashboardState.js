@@ -111,7 +111,8 @@ function getWidgetsData(input) {
 
 function getWidgetsInitData(data) {
   const donut = widgetsData.reduce((acc, widget) => {
-    const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.dataName]) : data[widget.dataName];
+    console.log('##Data', data[widget.dataName]);
+    const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.dataName], widget.datatable_level1_field, widget.datatable_level2_field) : data[widget.dataName];
     const label = widget.dataName;
     return { ...acc, [label]: Data };
   }, {});

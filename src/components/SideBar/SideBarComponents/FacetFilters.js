@@ -329,6 +329,7 @@ const FacetPanel = ({ classes }) => {
                               {sortLabels.sortByCount}
                             </span>
                           </div>
+                          {/* {console.log('sideBarItem', sideBarItem)} */}
                           {
                             sideBarItem.checkboxItems.map(
                               (item, index) => (

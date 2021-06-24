@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -17,7 +18,7 @@ const landingController = () => {
     );
   }
 
-  return <LandingView statsData={data} />;
+  return <LandingView heroData={data} />;
 };
 
 export default landingController;

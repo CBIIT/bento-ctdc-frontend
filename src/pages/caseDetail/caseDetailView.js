@@ -3,7 +3,6 @@ import {
   Grid,
   withStyles,
 } from '@material-ui/core';
-import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import { getOptions, getColumns } from 'bento-components';
 import StatsView from '../../components/Stats/StatsView';
@@ -18,14 +17,13 @@ import {
   rightPanel,
   table1,
   table2,
-  externalLinkIcon,
   tooltipContent,
 } from '../../bento/caseDetailData';
 import Snackbar from '../../components/Snackbar';
 import { fetchDataForDashboardDataTable } from '../dashboard/dashboardState';
 
 // Main case detail component
-const CaseDetail = ({ data, filesOfSamples, classes }) => {
+const CaseDetail = ({ data, filesOfCase, classes }) => {
   const [snackbarState, setsnackbarState] = React.useState({
     open: false,
     value: 0,
@@ -42,13 +40,10 @@ const CaseDetail = ({ data, filesOfSamples, classes }) => {
   React.useEffect(() => {
     dispatch(fetchDataForDashboardDataTable());
   }, []);
-
+  console.log(data);
   const stat = {
-    numberOfPrograms: 1,
-    numberOfStudies: 1,
-    numberOfSubjects: 1,
-    numberOfSamples: data.num_samples,
-    numberOfLabProcedures: data.num_lab_procedures,
+    numberOfTrials: 1,
+    numberOfCases: 1,
     numberOfFiles: data.files.length,
   };
 
@@ -58,26 +53,9 @@ const CaseDetail = ({ data, filesOfSamples, classes }) => {
     isALink: true,
   }];
 
-  // those are questioning codes for ICDC only, need to remove from here.
-  const filesOfSamplesObj = filesOfSamples.reduce(
-    (obj, item) => ({ ...obj, [item.sample_id]: item.files }), {},
-  );
-
   // NOTE: Needs improvement.
   const datFieldsFromRoot = [];
   table1.columns.forEach((e) => (e.dataFromRoot ? datFieldsFromRoot.push(e.dataField) : null));
-
-  const samplesData = data.samples.map((s) => {
-    const files = filesOfSamplesObj[s.sample_id];
-    const sample = _.cloneDeep(s);
-    sample.files = files;
-    if (datFieldsFromRoot.length > 0) {
-      datFieldsFromRoot.forEach((e) => {
-        sample[e] = data[e];
-      });
-    }
-    return sample;
-  });
 
   return (
     <>
@@ -156,39 +134,6 @@ const CaseDetail = ({ data, filesOfSamples, classes }) => {
           </Grid>
         </div>
       </div>
-      {table1.display
-        ? (
-          <div id="case_detail_table_associated_samples" className={classes.tableContainer}>
-            <div className={classes.tableDiv}>
-              <Grid item xs={12}>
-                <Grid container spacing={4}>
-                  <Grid item xs={12}>
-                    <GridWithFooter
-                      data={samplesData}
-                      title={(
-                        <div className={classes.tableTitle}>
-                          <span className={classes.tableHeader}>{table1.tableTitle}</span>
-                        </div>
-                      )}
-                      columns={getColumns(table1, classes, data, externalLinkIcon)}
-                      options={getOptions(table1, classes)}
-                      customOnRowsSelect={table1.customOnRowsSelect}
-                      openSnack={openSnack}
-                      closeSnack={closeSnack}
-                      disableRowSelection={table1.disableRowSelection}
-                      buttonText={table1.buttonText}
-                      saveButtonDefaultStyle={table1.saveButtonDefaultStyle}
-                      ActiveSaveButtonDefaultStyle={table1.ActiveSaveButtonDefaultStyle}
-                      DeactiveSaveButtonDefaultStyle={table1.DeactiveSaveButtonDefaultStyle}
-                      tooltipMessage={table1.tooltipMessage}
-                      tooltipContent={tooltipContent}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </div>
-          </div>
-        ) : ''}
       {table2.display
         ? (
           <div id="case_detail_table_associated_files" className={classes.tableContainer}>
@@ -197,7 +142,7 @@ const CaseDetail = ({ data, filesOfSamples, classes }) => {
                 <Grid container spacing={4}>
                   <Grid item xs={12}>
                     <GridWithFooter
-                      data={data[table2.subjectDetailField]}
+                      data={filesOfCase}
                       title={(
                         <div className={classes.tableTitle}>
                           <span className={classes.tableHeader}>{table2.tableTitle}</span>

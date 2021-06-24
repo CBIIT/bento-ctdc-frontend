@@ -23,13 +23,10 @@ import {
   FILTER_QUERY,
   FILTER_GROUP_QUERY,
   GET_FILES_OVERVIEW_QUERY,
-  GET_SAMPLES_OVERVIEW_QUERY,
   GET_CASES_OVERVIEW_QUERY,
   GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL,
-  GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL,
   GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL,
   GET_FILES_OVERVIEW_DESC_QUERY,
-  GET_SAMPLES_OVERVIEW_DESC_QUERY,
   GET_CASES_OVERVIEW_DESC_QUERY,
   GET_FILES_NAME_QUERY,
   GET_FILE_IDS_FROM_FILE_NAME,
@@ -120,7 +117,19 @@ function getFilteredStat(input, statCountVariables) {
  * @param {object} data
  *  @param {object}
  */
-const removeEmptySubjectsFromDonutData = (data) => data.filter((item) => item.subjects !== 0);
+ const removeEmptySubjectsFromDonutData = (data) => {
+  const convertCasesToSubjects = data.map((item) => ({
+    subjects: item.count,
+    group: item.group,
+  }));
+  convertCasesToSubjects.sort((a, b) => {
+    if (a.group < b.group) return 1;
+    if (a.group > b.group) return -1;
+    return 0;
+  });
+
+  return convertCasesToSubjects.filter((item) => item.subjects !== 0);
+};
 
 /**
  * Returns the widgets data.
@@ -130,10 +139,21 @@ const removeEmptySubjectsFromDonutData = (data) => data.filter((item) => item.su
  */
 function getWidgetsInitData(data, widgetsInfoFromCustConfig) {
   const donut = widgetsInfoFromCustConfig.reduce((acc, widget) => {
-    const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.dataName]) : removeEmptySubjectsFromDonutData(data[widget.dataName]);
+    if (widget.type === 'sunburst') { 
+    console.log('##abc', widget.dataName, data[widget.dataName]);
+    const sunbrustData = data[widget.dataName];
+    data[widget.dataName] = sunbrustData.map((d)=>{
+      d.program = d.trials
+      return d;
+    })
+  };
+    const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.dataName], widget.datatable_level1_field, widget.datatable_level2_field, 'arms') : removeEmptySubjectsFromDonutData(data[widget.dataName]);
+    if (widget.type === 'sunburst') console.log('##sunburst', Data);
+    if (widget.type === 'sunburst') console.log('##sunburst', data[widget.dataName]);
     const label = widget.dataName;
     return { ...acc, [label]: Data };
   }, {});
+  // console.log(donut);
 
   return donut;
 }
@@ -173,7 +193,7 @@ function fetchDashboardTabForClearAll() {
 
 function allFilters() {
   const emptyFilters = facetSearchData.reduce((acc, facet) => (
-    { ...acc, [facet.datafield]: [] }
+    { ...acc, [facet.datafield]: [""] }
   ), {});
   return emptyFilters;
 }
@@ -187,16 +207,27 @@ function allFilters() {
 
 function createFilterVariables(data) {
   const currentAllActiveFilters = getState().allActiveFilters;
+  const removeUncecked = (currentAllActiveFilters, key, data) => {
+    const checkedItems = currentAllActiveFilters[key].filter((item) => item !== data[0].name);
+    console.log('#6', checkedItems);
+    return checkedItems.length <= 0 ? [""] : checkedItems;
+  }
+
   // eslint-disable-next-line  no-unused-vars
   const filter = Object.entries(currentAllActiveFilters).reduce((acc, [key, val]) => {
     if (data[0].datafield === key) {
       return data[0].isChecked
-        ? { ...acc, [key]: [...currentAllActiveFilters[key], ...[data[0].name]] }
-        : { ...acc, [key]: currentAllActiveFilters[key].filter((item) => item !== data[0].name) };
+        ? { ...acc, [key]: currentAllActiveFilters[key][0] == "" 
+            ? [...[data[0].name]]
+            : [...currentAllActiveFilters[key], ...[data[0].name]]
+          }
+        : { ...acc, [key]: removeUncecked(currentAllActiveFilters, key, data) };
     }
     // return { ...acc , [key]: [...currentAllActiveFilters[key],...[data[0].name]] }
     return { ...acc, [key]: currentAllActiveFilters[key] };
   }, {});
+
+  console.log('#4', filter)
 
   return filter;
 }
@@ -209,7 +240,7 @@ function createFilterVariables(data) {
  */
 function clearGroup(data) {
   let currentAllActiveFilters = getState().allActiveFilters;
-  currentAllActiveFilters[data] = [];
+  currentAllActiveFilters[data] = [""];
   return currentAllActiveFilters;
 }
 
@@ -242,8 +273,6 @@ function clearGroup(data) {
 
 const querySwitch = (payload, tabContainer) => {
   switch (payload) {
-    case ('Samples'):
-      return { QUERY: tabContainer.defaultSortDirection === 'desc' ? GET_SAMPLES_OVERVIEW_DESC_QUERY : GET_SAMPLES_OVERVIEW_QUERY, sortfield: tabContainer.defaultSortField || '', sortDirection: tabContainer.defaultSortDirection || '' };
     case ('Files'):
       return { QUERY: tabContainer.defaultSortDirection === 'desc' ? GET_FILES_OVERVIEW_DESC_QUERY : GET_FILES_OVERVIEW_QUERY, sortfield: tabContainer.defaultSortField || '', sortDirection: tabContainer.defaultSortDirection || '' };
     default:
@@ -326,10 +355,8 @@ export async function fetchAllFileIDsForSelectAll(fileCount = 100000) {
   const subjectIds = getState().filteredSubjectIds;
   const sampleIds = getState().filteredSampleIds;
   const fileIds = getState().filteredFileIds;
-  const SELECT_ALL_QUERY = getState().currentActiveTab === tabIndex[2].title
-    ? GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL
-    : getState().currentActiveTab === tabIndex[1].title
-      ? GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL
+  const SELECT_ALL_QUERY = getState().currentActiveTab === tabIndex[1].title
+      ? GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL
       : GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL;
 
   const fetchResult = await client
@@ -343,8 +370,8 @@ export async function fetchAllFileIDsForSelectAll(fileCount = 100000) {
       },
     })
     .then((result) => {
-      const RESULT_DATA = getState().currentActiveTab === tabIndex[2].title ? 'fileOverview' : getState().currentActiveTab === tabIndex[1].title ? 'sampleOverview' : 'subjectOverViewPaged';
-      const fileIdsFromQuery = RESULT_DATA === 'fileOverview' ? transformfileIdsToFiles(result.data[RESULT_DATA]) : RESULT_DATA === 'subjectOverViewPaged' ? transformCasesFileIdsToFiles(result.data[RESULT_DATA]) : result.data[RESULT_DATA] || [];
+      const RESULT_DATA = getState().currentActiveTab === tabIndex[1].title ? 'fileOverview' : 'caseOverViewPaged';
+      const fileIdsFromQuery = RESULT_DATA === 'fileOverview' ? transformfileIdsToFiles(result.data[RESULT_DATA]) : RESULT_DATA === 'caseOverViewPaged' ? transformCasesFileIdsToFiles(result.data[RESULT_DATA]) : result.data[RESULT_DATA] || [];
       return fileIdsFromQuery;
     });
 
@@ -467,14 +494,11 @@ function filterOutFileIds(fileIds) {
 export async function fetchAllFileIDs(fileCount = 100000, selectedIds = [], offset = 0.0, first = 100000, order_by = 'file_name') {
   let filesIds = [];
   switch (getState().currentActiveTab) {
-    case tabIndex[2].title:
+    case tabIndex[1].title:
       filesIds = await getFileIDsByFileName(selectedIds, offset, first, order_by);
       break;
-    case tabIndex[1].title:
-      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL, [], selectedIds, 'sampleOverview');
-      break;
     default:
-      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], 'subjectOverViewPaged');
+      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], 'caseOverviewPaged');
   }
   return filterOutFileIds(filesIds);
 }
@@ -542,7 +566,7 @@ function toggleCheckBoxWithAPIAction(payload, currentAllFilterVariables) {
     })
     .then((result) => client.query({ // request to get the filtered group counts
       query: FILTER_GROUP_QUERY,
-      variables: { subject_ids: result.data.searchSubjects.subjectIds },
+      variables: { case_ids: result.data.searchSubjects.caseIds },
     })
       .then((result2) => store.dispatch({
         type: 'TOGGGLE_CHECKBOX_WITH_API',
@@ -595,7 +619,7 @@ function sortByCheckboxItemsByAlphabet(checkboxData) {
  */
 
 function sortByCheckboxItemsByCount(checkboxData) {
-  checkboxData.sort((a, b) => b.subjects - a.subjects);
+  checkboxData.sort((a, b) => b.cases - a.cases);
   return sortByCheckboxByIsChecked(checkboxData);
 }
 
@@ -702,6 +726,11 @@ export function sortAll(){
   });
 }
 
+const convertCasesToCount = (data) => data.map((item) => ({
+  group: item.group,
+  subjects: item.count,
+}));
+
 /**
  *  updateFilteredAPIDataIntoCheckBoxData works for first time init Checkbox,
 that function transforms the data which returns from API into a another format
@@ -713,13 +742,18 @@ so it contains more information and easy for front-end to show it correctly.
  */
 export function updateFilteredAPIDataIntoCheckBoxData(data, facetSearchDataFromConfig) {
   return (
-    facetSearchDataFromConfig.map((mapping) => ({
+    facetSearchDataFromConfig.map((mapping) => {
+      return {
       groupName: mapping.label,
-      checkboxItems: transformAPIDataIntoCheckBoxData(data[mapping.apiForFiltering], mapping.field),
+      checkboxItems: transformAPIDataIntoCheckBoxData(
+        convertCasesToCount(data[mapping.apiForFiltering]),
+        mapping.field,
+      ),
       datafield: mapping.datafield,
       show: mapping.show,
       section: mapping.section,
-    }))
+    }
+  })
   );
 }
 
@@ -727,9 +761,8 @@ export function getCountForAddAllFilesModal() {
   const currentState = getState();
   const numberCount = currentState.currentActiveTab === tabIndex[0].title
     ? currentState.stats.numberOfCases
-    : currentState.currentActiveTab === tabIndex[1].title
-      ? currentState.stats.numberOfSamples : currentState.stats.numberOfFiles;
-  return { activeTab: currentState.currentActiveTab || tabIndex[2].title, count: numberCount };
+    : currentState.stats.numberOfFiles;
+  return { activeTab: currentState.currentActiveTab || tabIndex[1].title, count: numberCount };
 }
 
 
@@ -748,11 +781,6 @@ export async function tableHasSelections() {
   
   const filteredNames = await getFileNamesByFileIds(getState().filteredFileIds);
   switch (getState().currentActiveTab) {
-    case tabIndex[2].title:
-      filteredIds = filteredNames;
-      selectedRowInfo = getState().dataFileSelected.selectedRowInfo;
-
-      break;
     case tabIndex[1].title:
       filteredIds = getState().filteredSampleIds;
       selectedRowInfo = getState().dataSampleSelected.selectedRowInfo;
@@ -801,10 +829,9 @@ export async function getFileNamesByFileIds(fileIds) {
 
  export function getTableRowSelectionEvent() {
   const currentState = getState();
-  const tableRowSelectionEvent = currentState.currentActiveTab === tabIndex[2].title
+  const tableRowSelectionEvent = currentState.currentActiveTab === tabIndex[1].title
     ? setDataFileSelected
-    : currentState.currentActiveTab === tabIndex[1].title
-      ? setDataSampleSelected : setDataCaseSelected;
+    : setDataCaseSelected;
   return tableRowSelectionEvent;
 }
 
@@ -847,6 +874,7 @@ const reducers = {
     const updatedCheckboxData1 = updateFilteredAPIDataIntoCheckBoxData(
       item.data, facetSearchData,
     );
+    console.log('#7', updatedCheckboxData1);
     const checkboxData1 = setSelectedFilterValues(updatedCheckboxData1, item.allFilters);
     fetchDataForDashboardTab(state.currentActiveTab,
       item.data.searchSubjects.subjectIds, item.data.searchSubjects.sampleIds,
@@ -872,8 +900,7 @@ const reducers = {
       currentActiveTab: item.currentTab,
       datatable: {
         ...state.datatable,
-        dataCase: item.sortDirection === 'desc' ? item.data.subjectOverViewPagedDesc : item.data.subjectOverViewPaged,
-        dataSample: item.sortDirection === 'desc' ? item.data.sampleOverviewDesc : item.data.sampleOverview,
+        dataCase: item.sortDirection === 'desc' ? item.data.caseOverViewPagedDesc : item.data.caseOverviewPaged,
         dataFile: item.sortDirection === 'desc' ? item.data.fileOverviewDesc : item.data.fileOverview,
       },
     }
@@ -915,7 +942,7 @@ const reducers = {
     };
   },
   RECEIVE_DASHBOARDTAB: (state, item) => {
-    const checkboxData = customCheckBox(item.data, facetSearchData);
+    const checkboxData = customCheckBox(item.data, facetSearchData, 'count');
     fetchDataForDashboardTab(tabIndex[0].title, null, null, null);
     return item.data
       ? {
@@ -956,7 +983,7 @@ const reducers = {
       } : { ...state };
   },
   CLEAR_ALL: (state, item) => {
-    const checkboxData = customCheckBox(item.data, facetSearchData);
+    const checkboxData = customCheckBox(item.data, facetSearchData, 'count');
     fetchDataForDashboardTab(state.currentActiveTab, null, null, null);
     return item.data
       ? {
@@ -1040,7 +1067,7 @@ const reducers = {
   CLEAR_SECTION_SORT: (state, item) => {
     let { sortByList = {} } = state;
     const { groupName } = item;
-    console.log(groupName);
+    // console.log(groupName);
     sortByList[groupName] ? delete sortByList[groupName] : null ;
 
     return { ...state, sortByList };

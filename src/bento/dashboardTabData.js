@@ -1,5 +1,6 @@
+/* eslint-disable max-len */
 import gql from 'graphql-tag';
-import { customCasesTabDownloadCSV, customFilesTabDownloadCSV, customSamplesTabDownloadCSV } from './tableDownloadCSV';
+import { customCasesTabDownloadCSV, customFilesTabDownloadCSV } from './tableDownloadCSV';
 
 // --------------- Tooltip configuration --------------
 export const tooltipContent = {
@@ -24,11 +25,11 @@ export const tabContainers = [
     name: 'Cases',
     dataField: 'dataCase',
     api: 'GET_CASES_OVERVIEW_QUERY',
-    paginationAPIField: 'subjectOverViewPaged',
-    paginationAPIFieldDesc: 'subjectOverViewPagedDesc',
-    count: 'numberOfSubjects',
-    dataKey: 'subject_id',
-    defaultSortField: 'subject_id',
+    paginationAPIField: 'caseOverviewPaged',
+    paginationAPIFieldDesc: 'caseOverviewPagedDesc',
+    count: 'numberOfCases',
+    dataKey: 'case_id',
+    defaultSortField: 'case_id',
     defaultSortDirection: 'asc',
     buttonText: 'Add Selected Files',
     saveButtonDefaultStyle: {
@@ -49,72 +50,53 @@ export const tabContainers = [
     },
     columns: [
       {
-        dataField: 'subject_id',
+        dataField: 'case_id',
         header: 'Case ID',
         sort: 'asc',
-        link: '/case/{subject_id}',
+        link: '/case/{case_id}',
         primary: true,
         display: true,
       },
       {
-        dataField: 'program',
-        header: 'Program Code',
+        dataField: 'clinical_trial_code',
+        header: 'Trial Code',
         sort: 'asc',
-        link: '/program/{program_id}',
+        link: '/trial/{clinical_trial_code}',
         display: true,
       },
       {
-        dataField: 'program_id',
-        header: 'Program ID',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'study_acronym',
+        dataField: 'arm_id',
         header: 'Arm',
         sort: 'asc',
-        link: '/arm/{study_acronym}',
         display: true,
       },
       {
-        dataField: 'diagnosis',
+        dataField: 'arm_drug',
+        header: 'Arm Trearment',
+        sort: 'asc',
+        display: true,
+      },
+      {
+        dataField: 'disease',
         header: 'Diagnosis',
         sort: 'asc',
         display: true,
       },
       {
-        dataField: 'recurrence_score',
-        header: 'Recurrence Score',
+        dataField: 'gender',
+        header: 'Gender',
         sort: 'asc',
         display: true,
       },
       {
-        dataField: 'tumor_size',
-        header: 'Tumor Size (cm)',
+        dataField: 'race',
+        header: 'Race',
         sort: 'asc',
         display: true,
       },
       {
-        dataField: 'er_status',
-        header: 'ER Status',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'pr_status',
-        header: 'PR Status',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'age_at_index',
-        header: 'Age (years)',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'survival_time',
-        header: 'Survival (days)',
+        dataField: 'ethnicity',
+        header: 'Ethnicity',
         sort: 'asc',
         display: true,
       },
@@ -126,115 +108,6 @@ export const tabContainers = [
     selectableRows: true,
     tableDownloadCSV: customCasesTabDownloadCSV,
     tabIndex: '0',
-    downloadFileName: 'Bento_Dashboard_cases_download',
-    headerPagination: true,
-    footerPagination: true,
-  },
-  {
-    name: 'Samples',
-    dataField: 'dataSample',
-    api: 'GET_SAMPLES_OVERVIEW_QUERY',
-    count: 'numberOfSamples',
-    paginationAPIField: 'sampleOverview',
-    paginationAPIFieldDesc: 'sampleOverviewDesc',
-    dataKey: 'sample_id',
-    saveButtonDefaultStyle: {
-      color: '#fff',
-      backgroundColor: '#00AEEF',
-      opacity: '1',
-      border: '0px',
-      cursor: 'pointer',
-    },
-    DeactiveSaveButtonDefaultStyle: {
-      opacity: '0.3',
-      cursor: 'auto',
-    },
-    ActiveSaveButtonDefaultStyle: {
-      cursor: 'pointer',
-      opacity: 'unset',
-      border: 'unset',
-    },
-
-    columns: [
-      {
-        dataField: 'sample_id',
-        header: 'Sample ID',
-        sort: 'asc',
-        primary: true,
-        display: true,
-      },
-      {
-        dataField: 'subject_id',
-        header: 'Case ID',
-        sort: 'asc',
-        link: '/case/{subject_id}',
-        display: true,
-      },
-      {
-        dataField: 'program',
-        header: 'Program Code',
-        sort: 'asc',
-        link: '/program/{program_id}',
-        display: true,
-      },
-      {
-        dataField: 'program_id',
-        header: 'Program ID',
-        sort: 'asc',
-        display: false,
-      },
-      {
-        dataField: 'arm',
-        header: 'Arm',
-        sort: 'asc',
-        link: '/arm/{arm}',
-        display: true,
-      },
-      {
-        dataField: 'diagnosis',
-        header: 'Diagnosis',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'tissue_type',
-        header: 'Tissue Type',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'tissue_composition',
-        header: 'Tissue Composition',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'sample_anatomic_site',
-        header: 'Sample Anatomic Site',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'sample_procurement_method',
-        header: 'Sample Procurement Method',
-        sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'platform',
-        header: 'platform',
-        sort: 'asc',
-        display: true,
-      },
-    ],
-    id: 'sample_tab',
-    onRowsSelect: 'type3',
-    disableRowSelection: 'type2',
-    buttonText: 'Add Selected Files',
-    tableID: 'sample_tab_table',
-    selectableRows: true,
-    tabIndex: '1',
-    tableDownloadCSV: customSamplesTabDownloadCSV,
     downloadFileName: 'Bento_Dashboard_cases_download',
     headerPagination: true,
     footerPagination: true,
@@ -275,13 +148,7 @@ export const tabContainers = [
         display: true,
       },
       {
-        dataField: 'file_id',
-        header: 'File ID',
-        sort: 'asc',
-        display: false,
-      },
-      {
-        dataField: 'association',
+        dataField: 'uuid',
         header: 'Association',
         sort: 'asc',
         display: true,
@@ -305,39 +172,39 @@ export const tabContainers = [
         display: true,
         formatBytes: true,
       },
+      // {
+      //   dataField: '', // This need to left empty if no data need to be displayed before file download icon
+      //   header: 'Access',
+      //   sort: 'asc',
+      //   display: true,
+      //   downloadDocument: true, // To indicate that column is document donwload
+      //   documentDownloadProps: {
+      //     // Max file size needs to bin Bytes to seperate two support file preview and download
+      //     maxFileSize: 315,
+      //     // Tool top text for file download
+      //     toolTipTextFileDownload: 'Download a copy of this file',
+      //     // Tool top text for file preview
+      //     toolTipTextFilePreview: 'Because of its size and/or format, this file is unavailable for download and must be accessed via the My Files workflow',
+      //     // datafield where file file column exists in the table
+      //     fileSizeColumn: 'file_size',
+      //     // datafield where file file id exists in the table which is used to get file location
+      //     fileLocationColumn: 'file_id',
+      //     // file download icon
+      //     iconFileDownload: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadPDF.svg',
+      //     // file preview ico
+      //     iconFilePreview: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadCloud.svg',
+      //   },
+      // },
       {
-        dataField: '', // This need to left empty if no data need to be displayed before file download icon
-        header: 'Access',
+        dataField: 'trial_code',
+        header: 'Trial Code',
         sort: 'asc',
+        link: '/trials/{trial_code}',
         display: true,
-        downloadDocument: true, // To indicate that column is document donwload
-        documentDownloadProps: {
-          // Max file size needs to bin Bytes to seperate two support file preview and download
-          maxFileSize: 315,
-          // Tool top text for file download
-          toolTipTextFileDownload: 'Download a copy of this file',
-          // Tool top text for file preview
-          toolTipTextFilePreview: 'Because of its size and/or format, this file is unavailable for download and must be accessed via the My Files workflow',
-          // datafield where file file column exists in the table
-          fileSizeColumn: 'file_size',
-          // datafield where file file id exists in the table which is used to get file location
-          fileLocationColumn: 'file_id',
-          // file download icon
-          iconFileDownload: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadPDF.svg',
-          // file preview ico
-          iconFilePreview: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/DocumentDownloadCloud.svg',
-        },
       },
       {
-        dataField: 'program',
-        header: 'Program Code',
-        sort: 'asc',
-        link: '/program/{program_id}',
-        display: true,
-      },
-      {
-        dataField: 'program_id',
-        header: 'Program ID',
+        dataField: 'trial_id',
+        header: 'Trial ID',
         sort: 'asc',
         display: false,
       },
@@ -345,27 +212,20 @@ export const tabContainers = [
         dataField: 'arm',
         header: 'Arm',
         sort: 'asc',
-        link: '/arm/{arm}',
         display: true,
       },
       {
-        dataField: 'subject_id',
+        dataField: 'case_id',
         header: 'Case ID',
         sort: 'asc',
-        link: '/case/{subject_id}',
+        link: '/case/{case_id}',
         display: true,
       },
       {
-        dataField: 'sample_id',
-        header: 'Sample ID',
+        dataField: 'uuid',
+        header: 'UUID',
         sort: 'asc',
-        display: true,
-      },
-      {
-        dataField: 'diagnosis',
-        header: 'Diagnosis',
-        sort: 'asc',
-        display: true,
+        display: false,
       },
     ],
     id: 'file_tab',
@@ -387,13 +247,7 @@ export const tabs = [
     id: 'case_tab',
     title: 'Cases',
     dataField: 'dataCase',
-    count: 'numberOfSubjects',
-  },
-  {
-    id: 'sample_tab',
-    title: 'Samples',
-    dataField: 'dataSample',
-    count: 'numberOfSamples',
+    count: 'numberOfCases',
   },
   {
     id: 'file_tab',
@@ -412,12 +266,6 @@ export const tabIndex = [
     selectedColor: '#10A075',
   },
   {
-    title: 'Samples',
-    primaryColor: '#CFEDF9',
-    secondaryColor: '#C9F1F1',
-    selectedColor: '#0DAFEC',
-  },
-  {
     title: 'Files',
     primaryColor: '#F7D7F7',
     secondaryColor: '#86D6F0',
@@ -426,468 +274,7 @@ export const tabIndex = [
 ];
 
 // #############################################################################
-// ---------------- OLD BENTO Queries -------------------------
 export const DASHBOARD_QUERY = gql`{
-  numberOfPrograms
-  numberOfStudies
-  numberOfSubjects
-  numberOfSamples
-  numberOfLabProcedures
-  numberOfFiles
-  subjectCountByProgram{
-        group
-        subjects
-      }
-    subjectCountByStudy{
-        group
-        subjects
-      }
-    subjectCountByDiagnoses{
-        group
-        subjects
-      }
-    subjectCountByRecurrenceScore{
-        group
-        subjects
-      }
-    subjectCountByTumorSize{
-        group
-        subjects
-      }
-    subjectCountByChemotherapyRegimen{
-        group
-        subjects
-      }
-    subjectCountByTumorGrade{
-        group
-        subjects
-      }
-  subjectCountByErStatus{
-        group
-        subjects
-      }
-  subjectCountByPrStatus{
-        group
-        subjects
-      }
-  subjectCountByMenopauseStatus{
-        group
-        subjects
-      }
-  subjectCountByChemotherapyRegimen{
-        group
-        subjects
-      }
-  subjectCountByEndocrineTherapy{
-    group
-    subjects
-  }
-  subjectCountByFileType{
-    group
-    subjects
-  }
-  subjectCountByFileAssociation {
-      group
-      subjects
-  }
-  subjectCountByTissueComposition{
-      group
-      subjects
-  }
-  subjectCountByTissueType{
-      group
-      subjects
-  }
-    armsByPrograms {
-        program
-        caseSize
-        children {
-            arm
-            caseSize
-            size
-        }
-    }
-  subjectOverViewPaged(first: 10) {
-      subject_id
-      program_id
-      study_info
-      samples
-      program
-      study_acronym
-      diagnosis
-      recurrence_score
-      tumor_size
-      tumor_grade
-      er_status
-      pr_status
-      chemotherapy
-      endocrine_therapy
-      menopause_status
-      age_at_index
-      survival_time
-      lab_procedures
-      files{
-        file_id
-      }
-  }
-  }`;
-
-export const FILTER_GROUP_QUERY = gql`
-  query groupCounts($subject_ids: [String]){
-   armsByPrograms(subject_ids: $subject_ids) {
-     program
-     caseSize
-     children {
-         arm
-         caseSize
-         size
-     }
- }
- subjectCountByDiagnoses (subject_ids: $subject_ids){
-  group
-  subjects
-}
-subjectCountByRecurrenceScore (subject_ids: $subject_ids){
-  group
-  subjects
-}
-subjectCountByTumorSize(subject_ids: $subject_ids) {
-  group
-  subjects
-}
-subjectCountByChemotherapyRegimen(subject_ids: $subject_ids) {
-  group
-  subjects
-}
-subjectCountByEndocrineTherapy (subject_ids: $subject_ids){
-  group
-  subjects
-}
-   
-}
- `;
-
-export const FILTER_QUERY = gql`
-query search($programs: [String] ,
-  $studies: [String] ,
-  $diagnoses: [String] ,
-  $rc_scores: [String] ,
-  $tumor_sizes: [String] ,
-  $chemo_regimen: [String] ,
-  $tumor_grades: [String] ,
-  $er_status: [String] ,
-  $pr_status: [String] ,
-  $endo_therapies: [String] ,
-  $meno_status: [String] ,
-  $tissue_type: [String],
-  $composition: [String],
-  $association: [String],
-  $file_type: [String]
-  $first: Int ) {
-searchSubjects(        programs: $programs,
-      studies: $studies,
-      diagnoses: $diagnoses,
-      rc_scores: $rc_scores,
-      tumor_sizes: $tumor_sizes,
-      chemo_regimen: $chemo_regimen,
-      tumor_grades: $tumor_grades,
-      er_status: $er_status,
-      pr_status: $pr_status,
-      endo_therapies: $endo_therapies,
-      meno_status: $meno_status,
-      tissue_type: $tissue_type,
-      composition: $composition,
-      association: $association,       
-      file_type: $file_type
-      first: $first) {
-  numberOfPrograms
-  numberOfStudies
-  numberOfSubjects
-  numberOfSamples
-  numberOfLabProcedures
-  numberOfFiles
-  sampleIds
-  fileIds
-  subjectIds
-  firstPage {
-          subject_id
-          program
-          program_id
-          study_acronym
-          diagnosis
-          recurrence_score
-          tumor_size
-          tumor_grade
-          er_status
-          pr_status
-          age_at_index
-          survival_time
-          survival_time_unit
-      }
-  
-}
-filterSubjectCountByProgram(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByStudy(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByDiagnoses(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByRecurrenceScore(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByTumorSize(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByTumorGrade(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByErStatus(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByPrStatus(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByChemotherapyRegimen(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByEndocrineTherapy(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByMenopauseStatus(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByTissueType(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByTissueComposition(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByFileAssociation(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-filterSubjectCountByFileType(programs: $programs, studies: $studies, diagnoses: $diagnoses, rc_scores: $rc_scores, tumor_sizes: $tumor_sizes, chemo_regimen: $chemo_regimen, tumor_grades: $tumor_grades, er_status: $er_status, pr_status: $pr_status, endo_therapies: $endo_therapies, meno_status: $meno_status, tissue_type: $tissue_type, composition: $composition, association: $association, file_type: $file_type) {
-  group
-  subjects
-}
-
-}
-
-`;
-
-// --------------- GraphQL query - Retrieve files tab details --------------
-export const GET_FILES_OVERVIEW_QUERY = gql`
-query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="file_name"){
-  fileOverview(file_ids: $file_ids, offset: $offset,first: $first, order_by: $order_by) {
-    file_id
-    file_name
-    association
-    file_description
-    file_format
-    file_size
-    program
-    program_id
-    arm
-    subject_id
-    sample_id
-    diagnosis
-  }
-}
-  `;
-
-export const GET_FILES_OVERVIEW_DESC_QUERY = gql`
-  query fileOverviewDesc($file_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="file_name"){
-    fileOverviewDesc(file_ids: $file_ids, offset: $offset,first: $first, order_by: $order_by) {
-      file_id
-      file_name
-      association
-      file_description
-      file_format
-      file_size
-      program
-      program_id
-      arm
-      subject_id
-      sample_id
-      diagnosis
-    }
-  }
-    `;
-
-// --------------- GraphQL query - Retrieve sample tab details --------------
-
-export const GET_SAMPLES_OVERVIEW_QUERY = gql`
-  query sampleOverview($sample_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  sampleOverview(sample_ids: $sample_ids, offset: $offset,first: $first, order_by: $order_by) {
-    sample_id
-    subject_id
-    program
-    program_id
-    arm
-    diagnosis
-    tissue_type
-    tissue_composition
-    sample_anatomic_site
-    sample_procurement_method
-    platform
-    files 
-}
-}
-  `;
-
-// --------------- GraphQL query - Retrieve sample tab details --------------
-
-export const GET_SAMPLES_OVERVIEW_DESC_QUERY = gql`
-  query sampleOverview($sample_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  sampleOverviewDesc(sample_ids: $sample_ids, offset: $offset,first: $first, order_by: $order_by) {
-    sample_id
-    subject_id
-    program
-    program_id
-    arm
-    diagnosis
-    tissue_type
-    tissue_composition
-    sample_anatomic_site
-    sample_procurement_method
-    platform
-    files 
-}
-}
-  `;
-
-// --------------- GraphQL query - Retrieve sample tab details --------------
-
-export const GET_CASES_OVERVIEW_QUERY = gql`
-query subjectOverViewPaged($subject_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  subjectOverViewPaged(subject_ids: $subject_ids, first: $first, offset: $offset, order_by: $order_by) {
-      subject_id
-      program
-      program_id
-      study_acronym
-      study_short_description
-      study_info
-      diagnosis
-      recurrence_score
-      tumor_size
-      tumor_grade
-      er_status
-      pr_status
-      chemotherapy
-      endocrine_therapy
-      menopause_status
-      age_at_index
-      survival_time
-      files {
-            file_id
-      }
-      lab_procedures
-  }
-}
-  `;
-
-// --------------- GraphQL query - Retrieve sample tab details --------------
-
-export const GET_CASES_OVERVIEW_DESC_QUERY = gql`
-  query subjectOverViewPaged($subject_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-    subjectOverViewPagedDesc(subject_ids: $subject_ids, first: $first, offset: $offset, order_by: $order_by) {
-        subject_id
-        program
-        program_id
-        study_acronym
-        study_short_description
-        study_info
-        diagnosis
-        recurrence_score
-        tumor_size
-        tumor_grade
-        er_status
-        pr_status
-        chemotherapy
-        endocrine_therapy
-        menopause_status
-        age_at_index
-        survival_time
-        files {
-              file_id
-        }
-        lab_procedures
-    }
-}
-  `;
-
-export const GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL = gql`
-  query subjectOverViewPaged($subject_ids: [String], $first: Int = 10000000){
-    subjectOverViewPaged(subject_ids: $subject_ids, first: $first) {
-        files {
-              file_id
-        }
-    }
-}
-  `;
-
-export const GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL = gql`
-query sampleOverview($sample_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  sampleOverview(sample_ids: $sample_ids, offset: $offset,first: $first, order_by: $order_by) {
-    files
-}
-}
-  `;
-
-export const GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL = gql`
-query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by: String = "file_name") {
-  fileOverview(file_ids: $file_ids, offset: $offset, first: $first, order_by: $order_by) {
-    file_id
-  }
-}
-  `;
-
-// --------------- GraphQL query - Retrieve files tab details --------------
-export const GET_FILES_NAME_QUERY = gql`
-query fileOverview($file_ids: [String], $offset: Int = 0, $first: Int = 100000, $order_by:String ="file_name"){
-  fileOverview(file_ids: $file_ids, offset: $offset,first: $first, order_by: $order_by) {
-    file_name
-  }
-}
-  `;
-
-export const GET_FILE_IDS_FROM_FILE_NAME = gql`
-  query (
-      $file_name: [String],
-      $offset: Int,
-      $first: Int,
-      $order_by: String
-  )
-  {
-      fileIdsFromFileNameDesc(
-          file_name:$file_name, 
-          offset:$offset,
-          first:$first,
-          order_by:$order_by
-      )
-      {
-          file_id
-      }
-  }`;
-// #############################################################################
-
-export const CTDC_DASHBOARD_QUERY = gql`{
   numberOfTrials
   numberOfCases
   numberOfFiles
@@ -901,46 +288,45 @@ export const CTDC_DASHBOARD_QUERY = gql`{
   }
 
    casesCountBaseOnTrialId {
-      clinical_trial_id
-      cases
+      group
+      count
   }
    casesCountBaseOnTrialCode {
-      clinical_trial_designation
-      cases
+      group
+      count
   }
    casesCountBaseOnPubMedID {
-      pubmed_id
-      cases
+      group
+      count
   }
    casesCountBaseOnGender {
-      gender
-      cases
+      group
+      count
   }
    casesCountBaseOnRace {
-      race
-      cases
+      group
+      count
   }
   casesCountBaseOnEthnicity {
-      ethnicity
-      cases
+      group
+      count
   }
-
-  casesCountBaseOnDiagnosis {
-      disease
-      cases
+  casesCountBaseOnDiagnoses {
+      group
+      count
   }
    casesCountBaseOnFileType {
-      file_type
-      cases
+      group
+      count
   }
   casesCountBaseOnFileFormat {
-      file_format
-      cases
+      group
+      count
   }
 
   casesCountBaseOnTrialArm {
-      trial_arm
-      cases
+      group
+      count
   }
 
   caseOverviewPaged(first: 10) {   
@@ -964,7 +350,7 @@ export const CTDC_DASHBOARD_QUERY = gql`{
   }
 }`;
 
-export const CTDC_FILTER_GROUP_QUERY = gql`
+export const FILTER_GROUP_QUERY = gql`
   query groupCounts($case_ids: [String]){
     trialsAndArms(case_ids: $case_ids){
       trials
@@ -974,35 +360,35 @@ export const CTDC_FILTER_GROUP_QUERY = gql`
           caseSize
       }
  }
- caseCountByTrial(case_ids: $case_ids) {
+ casesCountBaseOnTrial(case_ids: $case_ids) {
   group
   count
 }
- caseCountByDiagnoses(case_ids: $case_ids){
+ casesCountBaseOnDiagnoses(case_ids: $case_ids){
   group
-  subjects
+  count
 }
- caseCountByGender(case_ids: $case_ids){
+ casesCountBaseOnGender(case_ids: $case_ids){
   group
-  subjects
+  count
 }
- caseCountByRace(case_ids: $case_ids) {
+ casesCountBaseOnRace(case_ids: $case_ids) {
   group
-  subjects
+  count
 }
- caseCountByEthnicirt(case_ids: $case_ids) {
+ casesCountBaseOnEthnicity(case_ids: $case_ids) {
   group
-  subjects
+  count
 }
- caseCountByPubmedID(case_ids: $case_ids){
+casesCountBaseOnPubMedID(case_ids: $case_ids){
   group
-  subjects
+  count
 }
 
 }`;
 
-export const CTDC_FILTER_QUERY = gql`
-query search($programs: [String] ,
+export const FILTER_QUERY = gql`
+query search(
   $clinical_trial_id: [String] ,
   $clinical_trial_designation: [String] ,
   $pubmed_id: [String] ,
@@ -1029,6 +415,8 @@ searchSubjects(
         numberOfTrials
         numberOfCases
         numberOfFiles
+        fileIds
+        caseIds
   firstPage {
     case_id
     clinical_trial_code
@@ -1050,55 +438,54 @@ searchSubjects(
       }
 }
 filterCasesCountBaseOnTrialId(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  clinical_trial_id
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnTrialCode(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  clinical_trial_designation
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnPubMedID(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  pubmed_id
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnGender(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  gender
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnRace(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  race
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnEthnicity(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  ethnicity
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnDiagnosis(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  disease
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnFileType(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  file_type
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnFileFormat(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  file_format
-  cases
+  group
+  count
 }
 filterCasesCountBaseOnTrialArm(clinical_trial_id: $clinical_trial_id , clinical_trial_designation:  $clinical_trial_designation , pubmed_id: $pubmed_id, gender: $gender, race: $race , ethnicity: $ethnicity, disease: $disease , file_type: $file_type, file_format: $file_format , trial_arm: $trial_arm,) {
-  trial_arm
-  cases
+  group
+  count
 }
 }
 `;
 
 // --------------- GraphQL query - Retrieve files tab details --------------
-export const CTDC_GET_FILES_OVERVIEW_QUERY = gql`
+export const GET_FILES_OVERVIEW_QUERY = gql`
 query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="file_name"){
   fileOverview(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
     uuid
     file_name
-    association
     file_description
     file_format
     file_size
@@ -1111,12 +498,11 @@ query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_b
 }
   `;
 
-export const CTDC_GET_FILES_OVERVIEW_DESC_QUERY = gql`
+export const GET_FILES_OVERVIEW_DESC_QUERY = gql`
   query fileOverviewDesc($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="file_name"){
     fileOverviewDesc(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
       uuid
       file_name
-      association
       file_description
       file_format
       file_size
@@ -1131,9 +517,9 @@ export const CTDC_GET_FILES_OVERVIEW_DESC_QUERY = gql`
 
 // --------------- GraphQL query - Retrieve sample tab details --------------
 
-export const CTDC_GET_CASES_OVERVIEW_QUERY = gql`
-query caseOverViewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-  caseOverViewPaged(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+export const GET_CASES_OVERVIEW_QUERY = gql`
+query caseOverviewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
+  caseOverviewPaged(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
     case_id
     clinical_trial_code
     arm_id
@@ -1144,17 +530,21 @@ query caseOverViewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10,
     arm_target
     ethnicity
     clinical_trial_id
+    pubmed_id
+    trial_arm
+    file_types
+    file_formats
     files{
-      uuid
+        uuid
     }
   }
 }`;
 
 // --------------- GraphQL query - Retrieve sample tab details --------------
 
-export const CTDC_GET_CASES_OVERVIEW_DESC_QUERY = gql`
-  query caseOverViewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
-    caseOverViewPagedDesc(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+export const GET_CASES_OVERVIEW_DESC_QUERY = gql`
+  query caseOverviewPagedDesc($case_ids: [String], $offset: Int = 0, $first: Int = 10, $order_by:String =""){
+    caseOverviewPagedDesc(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
       case_id
       clinical_trial_code
       arm_id
@@ -1171,16 +561,16 @@ export const CTDC_GET_CASES_OVERVIEW_DESC_QUERY = gql`
     }
 }`;
 
-export const CTDC_GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL = gql`
-  query caseOverViewPaged($case_ids: [String], $first: Int = 10000000){
-    caseOverViewPaged(case_ids: $case_ids, first: $first) {
-        files {
-              uuid
+export const GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL = gql`
+  query caseOverviewPaged($case_ids: [String], $offset: Int = 0, $first: Int = 10000000, $order_by:String =""){
+    caseOverviewPaged(case_ids: $case_ids, first: $first, offset: $offset, order_by: $order_by) {
+        files{
+          uuid
         }
     }
 }`;
 
-export const CTDC_GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL = gql`
+export const GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL = gql`
 query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by: String = "file_name") {
   fileOverview(uuid: $uuid, offset: $offset, first: $first, order_by: $order_by) {
     uuid
@@ -1189,7 +579,7 @@ query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_b
   `;
 
 // --------------- GraphQL query - Retrieve files tab details --------------
-export const CTDC_GET_FILES_NAME_QUERY = gql`
+export const GET_FILES_NAME_QUERY = gql`
 query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 100000, $order_by:String ="file_name"){
   fileOverview(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
     file_name
@@ -1197,7 +587,7 @@ query fileOverview($uuid: [String], $offset: Int = 0, $first: Int = 100000, $ord
 }
   `;
 
-export const CTDC_GET_FILE_IDS_FROM_FILE_NAME = gql`
+export const GET_FILE_IDS_FROM_FILE_NAME = gql`
   query (
       $file_name: [String],
       $offset: Int,

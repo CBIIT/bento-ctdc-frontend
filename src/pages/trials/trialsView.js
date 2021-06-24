@@ -6,7 +6,7 @@ import {
 import { CustomDataTable, getOptions, getColumns } from 'bento-components';
 import {
   table, programListingIcon, externalLinkIcon,
-} from '../../bento/programData';
+} from '../../bento/trialsData';
 import Stats from '../../components/Stats/AllStatsController';
 import { Typography } from '../../components/Wrappers/Wrappers';
 import {

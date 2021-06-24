@@ -2,23 +2,23 @@ import gql from 'graphql-tag';
 
 // --------------- Page title configuration --------------
 const pageTitle = {
-  label: 'Program :',
-  dataField: 'program_acronym',
+  label: 'Trial :',
+  dataField: 'clinical_trial_designation',
 };
 
 const pageSubTitle = {
-  dataField: 'program_id',
+  dataField: 'clinical_trial_short_name',
 };
 
 const breadCrumb = {
   label: 'ALL PROGRAMS',
-  link: '/programs',
+  link: '/trials',
 };
 
 // --------------- Aggregated count configuration --------------
 const aggregateCount = {
   labelText: 'Cases',
-  dataField: 'num_subjects',
+  dataField: 'number_of_cases',
   link: '/cases',
   display: true,
 };
@@ -41,30 +41,34 @@ const externalLinkIcon = {
 const leftPanel = {
   attributes: [
     {
-      dataField: 'program_acronym',
-      label: 'Program',
+      dataField: 'clinical_trial_long_name',
+      label: 'Trial Name',
     },
     {
-      dataField: 'program_name',
-      label: 'Program Name',
+      dataField: 'clinical_trial_id',
+      label: 'Trial Id',
     },
     {
-      dataField: 'program_id',
-      label: 'Program Id',
+      dataField: 'clinical_trial_description',
+      label: 'Trial Description',
     },
     {
-      dataField: 'program_full_description',
-      label: 'Program Description',
+      dataField: 'clinical_trial_type',
+      label: 'TRIAL TYPE',
     },
     {
-      dataField: 'institution_name',
-      label: 'Institution',
+      dataField: 'lead_organization',
+      label: 'LEAD ORGANIZATION',
     },
     {
-      dataField: 'program_external_url',
-      label: 'External Link to Program',
-      externalLinkToLabel: true,
+      dataField: 'principal_investigators',
+      label: 'PRINCIPAL INVESTIGATORS',
     },
+    // {
+    //   dataField: 'program_external_url',
+    //   label: 'External Link to Program',
+    //   externalLinkToLabel: true,
+    // },
   ],
 };
 
@@ -75,12 +79,12 @@ const rightPanel = {
     {
       dataField: 'diagnoses',
       label: 'Diagnosis',
-      display: true,
+      display: false,
     },
   ],
   files: [
     {
-      dataField: 'num_files',
+      dataField: 'fileCountByTrialId', // Todo: Include this property in clinicalTrialByTrialId.
       label: 'Number of files',
       fileIconSrc: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/programNumberofFilesIcon.svg',
       fileIconAlt: 'Number of files icon',
@@ -94,11 +98,11 @@ const table = {
   // Set 'display' to false to hide the table entirely
   display: true,
   // Table title
-  title: 'ARMS',
+  title: 'TRIAL ARMS',
   // Field name for table data, need to be updated only when using a different GraphQL query
-  dataField: 'studies',
+  dataField: 'clinicalTrialArmByTrialId',
   // Value must be one of the 'field' in columns
-  defaultSortField: 'study_acronym',
+  defaultSortField: 'arm_id',
   // 'asc' or 'desc'
   defaultSortDirection: 'asc',
   // Set 'selectableRows' to true to show the row selection
@@ -106,24 +110,24 @@ const table = {
   // A maximum of 10 columns are allowed
   columns: [
     {
-      dataField: 'study_acronym',
+      dataField: 'arm_id',
       header: 'Arm',
-      link: '/arm/{study_acronym}',
+      link: '/arm/{arm_id}',
     },
     {
-      dataField: 'study_name',
-      header: 'Arm Name',
+      dataField: 'arm_drug',
+      header: 'Arm Treatment',
     },
     {
-      dataField: 'study_full_description',
-      header: 'Arm Description',
+      dataField: 'arm_target',
+      header: 'Arm Target',
     },
     {
-      dataField: 'study_type',
-      header: 'Arm Type',
+      dataField: 'pubmed_id',
+      header: 'PubMed ID',
     },
     {
-      dataField: 'num_subjects',
+      dataField: 'number_of_cases',
       header: 'Associated Cases',
     },
   ],
@@ -131,31 +135,37 @@ const table = {
 
 // --------------- GraphQL query - Retrieve program details --------------
 const GET_TRIAL_DETAIL_DATA_QUERY = gql`
-query clinicalTrialByTrialId($id: String!) {
+query trialIdQueries(
+  $ids: [String],
+  $id: String!
+){
+  casesCountBaseOnTrialId(trial_ids:$ids){
+      group
+      count
+  }
 
-   caseCountByTrialId(trial_id:$id)
-   fileCountByTrialId(trial_id:$id)
+  fileCountByTrialId(trial_id:$id)
 
   clinicalTrialByTrialId(trial_id: $id) {
-  clinical_trial_id
-  clinical_trial_short_name
-  clinical_trial_description
-  clinical_trial_designation
-  clinical_trial_long_name
-  clinical_trial_type
-  lead_organization
-  principal_investigators
-  number_of_cases
-  number_of_arms
-}
+      clinical_trial_id
+      clinical_trial_short_name
+      clinical_trial_description
+      clinical_trial_designation
+      clinical_trial_long_name
+      clinical_trial_type
+      lead_organization
+      principal_investigators
+      number_of_cases
+      number_of_arms
+  }
 
-clinicalTrialArmByTrialId(trial_id:$id){
-                  arm_id
-                  arm_target
-                  arm_drug
-                  pubmed_id
-                  number_of_cases
-                }
+  clinicalTrialArmByTrialId(trial_id:$id){
+      arm_id
+      arm_target
+      arm_drug
+      pubmed_id
+      number_of_cases
+  }
 }`;
 
 export {

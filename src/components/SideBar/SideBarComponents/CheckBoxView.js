@@ -70,6 +70,7 @@ function CheckBoxView(props) {
           classes={{ root: classes.checkboxRoot }}
         />
         <div className={classes.panelDetailText}>
+          {/* {console.log('checkboxItem', checkboxItem)} */}
           <span>
             {`${checkboxItem.name}`}
           </span>
