@@ -28,7 +28,6 @@ import colors from '../../utils/colors';
 
 const TrialView = ({ classes, data, theme }) => {
   const trialData = data.clinicalTrialByTrialId;
-  console.log(data, trialData);
 
   const redirectTo = () => {
     setSideBarToLoading();

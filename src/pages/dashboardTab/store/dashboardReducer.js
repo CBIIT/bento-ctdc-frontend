@@ -140,7 +140,6 @@ function getFilteredStat(input, statCountVariables) {
 function getWidgetsInitData(data, widgetsInfoFromCustConfig) {
   const donut = widgetsInfoFromCustConfig.reduce((acc, widget) => {
     if (widget.type === 'sunburst') { 
-    console.log('##abc', widget.dataName, data[widget.dataName]);
     const sunbrustData = data[widget.dataName];
     data[widget.dataName] = sunbrustData.map((d)=>{
       d.program = d.trials
@@ -148,12 +147,9 @@ function getWidgetsInitData(data, widgetsInfoFromCustConfig) {
     })
   };
     const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.dataName], widget.datatable_level1_field, widget.datatable_level2_field, 'arms') : removeEmptySubjectsFromDonutData(data[widget.dataName]);
-    if (widget.type === 'sunburst') console.log('##sunburst', Data);
-    if (widget.type === 'sunburst') console.log('##sunburst', data[widget.dataName]);
     const label = widget.dataName;
     return { ...acc, [label]: Data };
   }, {});
-  // console.log(donut);
 
   return donut;
 }
@@ -209,7 +205,6 @@ function createFilterVariables(data) {
   const currentAllActiveFilters = getState().allActiveFilters;
   const removeUncecked = (currentAllActiveFilters, key, data) => {
     const checkedItems = currentAllActiveFilters[key].filter((item) => item !== data[0].name);
-    console.log('#6', checkedItems);
     return checkedItems.length <= 0 ? [""] : checkedItems;
   }
 
@@ -226,8 +221,6 @@ function createFilterVariables(data) {
     // return { ...acc , [key]: [...currentAllActiveFilters[key],...[data[0].name]] }
     return { ...acc, [key]: currentAllActiveFilters[key] };
   }, {});
-
-  console.log('#4', filter)
 
   return filter;
 }
@@ -874,7 +867,6 @@ const reducers = {
     const updatedCheckboxData1 = updateFilteredAPIDataIntoCheckBoxData(
       item.data, facetSearchData,
     );
-    console.log('#7', updatedCheckboxData1);
     const checkboxData1 = setSelectedFilterValues(updatedCheckboxData1, item.allFilters);
     fetchDataForDashboardTab(state.currentActiveTab,
       item.data.searchSubjects.subjectIds, item.data.searchSubjects.sampleIds,
@@ -1067,7 +1059,6 @@ const reducers = {
   CLEAR_SECTION_SORT: (state, item) => {
     let { sortByList = {} } = state;
     const { groupName } = item;
-    // console.log(groupName);
     sortByList[groupName] ? delete sortByList[groupName] : null ;
 
     return { ...state, sortByList };

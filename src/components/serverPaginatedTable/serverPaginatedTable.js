@@ -220,7 +220,6 @@ class ServerPaginatedTableView extends React.Component {
       onTableInit: () => this.onTableInit(data),
       // rowsSelected: data.map((item, idx) => idx),
       onTableChange: (action, tableState) => {
-        // console.log(action, tableState);
 
         // a developer could react to change on an action basis or
         // examine the state as a whole and do whatever they want
