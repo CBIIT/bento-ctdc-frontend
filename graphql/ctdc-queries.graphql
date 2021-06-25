@@ -126,6 +126,11 @@ type ClinicalTrialArm{
   number_of_cases: Int
 }
 
+type FileNameAndId{
+  file_name: String
+  file_id: String
+}
+
 # ---Queries---
 
 type QueryType {
@@ -133,7 +138,7 @@ type QueryType {
   # ---Schema Version---
 
   schemaVersion: String @cypher(statement: """
-    RETURN '0.1.3'
+    RETURN '0.2.0'
   """)
 
   # ---Numbers of nodes---
@@ -1084,5 +1089,33 @@ type QueryType {
       number_of_cases: COUNT(DISTINCT c)
     }
   """, passThrough: true)
+
+  fileIdsFromFileName(file_name: [String] = [""], order_by: String = ""): [FileNameAndId] @cypher(statement: """
+    MATCH (f:file)
+      WHERE $file_name IS NULL OR $file_name = [""] OR f.file_name IN $file_name
+    RETURN{
+      file_name: f.file_name,
+      file_id: f.uuid
+    }
+    ORDER BY
+    CASE $order_by
+      WHEN 'file_id' THEN f.uuid
+      ELSE f.file_name
+    END
+  """, passThrough: true) 
+
+  fileIdsFromFileNameDesc(file_name: [String] = [""], order_by: String = ""): [FileNameAndId] @cypher(statement: """
+    MATCH (f:file)
+      WHERE $file_name IS NULL OR $file_name = [""] OR f.file_name IN $file_name
+    RETURN{
+      file_name: f.file_name,
+      file_id: f.uuid
+    }
+    ORDER BY
+    CASE $order_by
+      WHEN 'file_id' THEN f.uuid
+      ELSE f.file_name
+    END DESC
+  """, passThrough: true) 
 
 } 

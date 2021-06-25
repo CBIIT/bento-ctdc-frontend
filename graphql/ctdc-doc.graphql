@@ -366,6 +366,11 @@ type ClinicalTrialArm{
   number_of_cases: Int
 }
 
+type FileNameAndId{
+  file_name: String
+  file_id: String
+}
+
 # ---Queries---
 
 type QueryType {
@@ -605,5 +610,9 @@ type QueryType {
   fileCountByTrialId(trial_id: String!): Int 
 
   clinicalTrialArmByTrialId(trial_id: String!): [ClinicalTrialArm] 
+
+  fileIdsFromFileName(file_name: [String] = [""], order_by: String = ""): [FileNameAndId] 
+
+  fileIdsFromFileNameDesc(file_name: [String] = [""], order_by: String = ""): [FileNameAndId] 
 
 } 
