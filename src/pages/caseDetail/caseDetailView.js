@@ -40,7 +40,6 @@ const CaseDetail = ({ data, filesOfCase, classes }) => {
   React.useEffect(() => {
     dispatch(fetchDataForDashboardDataTable());
   }, []);
-  console.log(data);
   const stat = {
     numberOfTrials: 1,
     numberOfCases: 1,
