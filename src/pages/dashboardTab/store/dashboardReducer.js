@@ -307,10 +307,12 @@ export function fetchDataForDashboardTab(
     .query({
       query: QUERY,
       variables: {
-        subject_ids: subjectIDsAfterFilter, sample_ids: sampleIDsAfterFilter, file_ids: fileIDsAfterFilter, order_by: sortfield || '',
+        case_ids: subjectIDsAfterFilter, uuid: fileIDsAfterFilter, order_by: sortfield || '',
       },
     })
-    .then((result) => store.dispatch({ type: 'UPDATE_CURRRENT_TAB_DATA', payload: { currentTab: payload, sortDirection, ..._.cloneDeep(result) } }))
+    .then((result) => {
+      store.dispatch({ type: 'UPDATE_CURRRENT_TAB_DATA', payload: { currentTab: payload, sortDirection, ..._.cloneDeep(result) } }
+    )})
     .catch((error) => store.dispatch(
       { type: 'DASHBOARDTAB_QUERY_ERR', error },
     ));
@@ -327,7 +329,7 @@ function transformCasesFileIdsToFiles(data) {
     return accumulator;
   }, []);
   return transformData.map((item) => ({
-    files: [item.file_id],
+    files: [item.uuid],
   }));
 }
 
@@ -363,7 +365,7 @@ export async function fetchAllFileIDsForSelectAll(fileCount = 100000) {
       },
     })
     .then((result) => {
-      const RESULT_DATA = getState().currentActiveTab === tabIndex[1].title ? 'fileOverview' : 'caseOverViewPaged';
+      const RESULT_DATA = getState().currentActiveTab === tabIndex[1].title ? 'fileOverview' : 'caseOverviewPaged';
       const fileIdsFromQuery = RESULT_DATA === 'fileOverview' ? transformfileIdsToFiles(result.data[RESULT_DATA]) : RESULT_DATA === 'caseOverViewPaged' ? transformCasesFileIdsToFiles(result.data[RESULT_DATA]) : result.data[RESULT_DATA] || [];
       return fileIdsFromQuery;
     });
@@ -436,8 +438,7 @@ async function getFileIDs(
     .query({
       query: SELECT_ALL_QUERY,
       variables: {
-        subject_ids: caseIds,
-        sample_ids: sampleIds,
+        case_ids: caseIds,
         file_ids: [],
         first: fileCount,
       },
@@ -449,8 +450,8 @@ async function getFileIDs(
     // check if file
     if (files && files.length > 0) {
       return accumulator.concat(files.map((f) => {
-        if(typeof f.file_id !== 'undefined'){
-          return f.file_id
+        if(typeof f.uuid !== 'undefined'){
+          return f.uuid
         }
         return f
       }));
@@ -869,7 +870,7 @@ const reducers = {
     );
     const checkboxData1 = setSelectedFilterValues(updatedCheckboxData1, item.allFilters);
     fetchDataForDashboardTab(state.currentActiveTab,
-      item.data.searchSubjects.subjectIds, item.data.searchSubjects.sampleIds,
+      item.data.searchSubjects.caseIds, item.data.searchSubjects.sampleIds,
       item.data.searchSubjects.fileIds);
     return {
       ...state,
