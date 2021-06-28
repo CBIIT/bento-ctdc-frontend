@@ -126,6 +126,11 @@ type ClinicalTrialArm{
   number_of_cases: Int
 }
 
+type FileNameAndId{
+  file_name: String
+  file_id: String
+}
+
 # ---Queries---
 
 type QueryType {
@@ -133,7 +138,7 @@ type QueryType {
   # ---Schema Version---
 
   schemaVersion: String @cypher(statement: """
-    RETURN '0.1.1'
+    RETURN '0.2.0'
   """)
 
   # ---Numbers of nodes---
@@ -170,7 +175,7 @@ type QueryType {
 
   trialsAndArms(case_ids: [String] = [""]): [TrialArms] @cypher(statement: """
     MATCH (c:case)
-      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_ids IN $case_ids)
+      WHERE ($case_ids IS NULL OR $case_ids = [""] OR c.case_id IN $case_ids)
     OPTIONAL MATCH (c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     WITH 
       ct, 
@@ -443,7 +448,7 @@ type QueryType {
     trial_arm: [String] = [""], 
     first: Int = 100
   ): SearchResult @cypher(statement: """
-    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    OPTIONAL MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
       WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
         AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
         AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
@@ -453,14 +458,14 @@ type QueryType {
         AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
         AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
         AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-        AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+        AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     WITH 
       COUNT(DISTINCT ct) AS numberOfTrials,
       COUNT(DISTINCT c) AS numberOfCases,
       COUNT(DISTINCT f) AS numberOfFiles,
       COLLECT(DISTINCT f.uuid) AS fileIds,
       COLLECT(DISTINCT c.case_id) AS caseIds
-    MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
+    OPTIONAL MATCH (f:file)-[:of_sequencing_assay]->(sa:sequencing_assay)-[:of_nucleic_acid]->(na:nucleic_acid)-[:of_specimen]->(s:specimen)-[:of_case]->(c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
       WHERE ($clinical_trial_id IS NULL OR $clinical_trial_id = [""] OR ct.clinical_trial_id IN $clinical_trial_id)
         AND ($clinical_trial_designation IS NULL OR $clinical_trial_designation = [""] OR ct.clinical_trial_designation IN $clinical_trial_designation)
         AND ($pubmed_id IS NULL OR $pubmed_id = [""] OR a.pubmed_id IN $pubmed_id)
@@ -470,7 +475,7 @@ type QueryType {
         AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
         AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
         AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-        AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+        AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     WITH
       numberOfTrials, numberOfCases, numberOfFiles, fileIds, caseIds,
       {
@@ -525,7 +530,7 @@ type QueryType {
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: ct.clinical_trial_id,
       count: COUNT(DISTINCT c)
@@ -553,7 +558,7 @@ type QueryType {
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: ct.clinical_trial_designation,
       count: COUNT(DISTINCT c)
@@ -581,7 +586,7 @@ type QueryType {
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: a.pubmed_id,
       count: COUNT(DISTINCT c)
@@ -609,7 +614,7 @@ type QueryType {
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: c.gender,
       count: COUNT(DISTINCT c)
@@ -637,7 +642,7 @@ type QueryType {
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: c.race,
       count: COUNT(DISTINCT c)
@@ -665,7 +670,7 @@ type QueryType {
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: c.ethnicity,
       count: COUNT(DISTINCT c)
@@ -693,7 +698,7 @@ type QueryType {
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: c.disease,
       count: COUNT(DISTINCT c)
@@ -721,7 +726,7 @@ type QueryType {
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_format IS NULL OR $file_format = [""] OR f.file_format IN $file_format)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: f.file_type,
       count: COUNT(DISTINCT c)
@@ -749,7 +754,7 @@ type QueryType {
       AND ($ethnicity IS NULL OR $ethnicity = [""] OR c.ethnicity IN $ethnicity)
       AND ($disease IS NULL OR $disease = [""] OR c.disease IN $disease)
       AND ($file_type IS NULL OR $file_type = [""] OR f.file_type IN $file_type)
-      AND ($trial_arm IS NULL OR $trial_arm = [""] OR ct.clinical_trial_short_name IN $trial_arm)
+      AND ($trial_arm IS NULL OR $trial_arm = [""] OR a.arm_id+'_'+ a.arm_drug IN $trial_arm)
     RETURN{
       group: f.file_format,
       count: COUNT(DISTINCT c)
@@ -1084,5 +1089,33 @@ type QueryType {
       number_of_cases: COUNT(DISTINCT c)
     }
   """, passThrough: true)
+
+  fileIdsFromFileName(file_name: [String] = [""], order_by: String = ""): [FileNameAndId] @cypher(statement: """
+    MATCH (f:file)
+      WHERE $file_name IS NULL OR $file_name = [""] OR f.file_name IN $file_name
+    RETURN{
+      file_name: f.file_name,
+      file_id: f.uuid
+    }
+    ORDER BY
+    CASE $order_by
+      WHEN 'file_id' THEN f.uuid
+      ELSE f.file_name
+    END
+  """, passThrough: true) 
+
+  fileIdsFromFileNameDesc(file_name: [String] = [""], order_by: String = ""): [FileNameAndId] @cypher(statement: """
+    MATCH (f:file)
+      WHERE $file_name IS NULL OR $file_name = [""] OR f.file_name IN $file_name
+    RETURN{
+      file_name: f.file_name,
+      file_id: f.uuid
+    }
+    ORDER BY
+    CASE $order_by
+      WHEN 'file_id' THEN f.uuid
+      ELSE f.file_name
+    END DESC
+  """, passThrough: true) 
 
 } 
