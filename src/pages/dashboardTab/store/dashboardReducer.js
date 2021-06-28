@@ -302,7 +302,6 @@ export function fetchDataForDashboardTab(
   fileIDsAfterFilter = null,
 ) {
   const { QUERY, sortfield, sortDirection } = getQueryAndDefaultSort(payload);
-  console.log(QUERY, sortfield, sortDirection, subjectIDsAfterFilter);
 
   return client
     .query({
@@ -493,7 +492,6 @@ export async function fetchAllFileIDs(fileCount = 100000, selectedIds = [], offs
       filesIds = await getFileIDsByFileName(selectedIds, offset, first, order_by);
       break;
     default:
-      console.log('selectedIds',selectedIds);
       filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], 'caseOverviewPaged');
   }
   return filterOutFileIds(filesIds);
@@ -871,7 +869,6 @@ const reducers = {
       item.data, facetSearchData,
     );
     const checkboxData1 = setSelectedFilterValues(updatedCheckboxData1, item.allFilters);
-    console.log('TOGGGLE_CHECKBOX_WITH_API',  item.data);
     fetchDataForDashboardTab(state.currentActiveTab,
       item.data.searchSubjects.caseIds, item.data.searchSubjects.sampleIds,
       item.data.searchSubjects.fileIds);
