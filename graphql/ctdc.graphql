@@ -337,7 +337,8 @@ type FileInList{
   file_format: String,
   file_size: Float,
   uuid: String,
-  md5sum: String
+  md5sum: String,
+  file_name: String
 }
 
 type ArmDiagnosisCount{
@@ -378,7 +379,7 @@ type QueryType {
   # ---Schema Version---
 
   schemaVersion: String @cypher(statement: """
-    RETURN '0.2.0'
+    RETURN '0.2.1'
   """)
 
   # ---Numbers of nodes---
@@ -1187,7 +1188,8 @@ type QueryType {
       f.file_format as file_format,
       f.file_size as file_size,
       f.uuid as uuid,
-      f.md5sum as md5sum
+      f.md5sum as md5sum,
+      f.file_name as file_name
     RETURN{
       clinical_trial_code: clinical_trial_code,
       case_id: case_id, 
@@ -1198,7 +1200,8 @@ type QueryType {
       file_format: file_format,
       file_size: file_size,
       uuid: uuid,
-      md5sum: md5sum
+      md5sum: md5sum,
+      file_name: file_name
     }
     ORDER BY 
     CASE $order_by
@@ -1212,6 +1215,7 @@ type QueryType {
       WHEN "file_format" THEN file_format
       WHEN "file_size" THEN file_size
       WHEN "md5sum" THEN md5sum
+      WHEN "file_name" THEN file_name
       ELSE uuid
     END
   """, passThrough: true)
@@ -1227,7 +1231,7 @@ type QueryType {
       c, ct, a
     MATCH (f)-->(parent) 
       WHERE f.uuid IN $uuid 
-    WITH
+        WITH
       ct.clinical_trial_designation as clinical_trial_code,
       c.case_id as case_id,
       a.arm_id as arm_id,
@@ -1237,7 +1241,8 @@ type QueryType {
       f.file_format as file_format,
       f.file_size as file_size,
       f.uuid as uuid,
-      f.md5sum as md5sum
+      f.md5sum as md5sum,
+      f.file_name as file_name
     RETURN{
       clinical_trial_code: clinical_trial_code,
       case_id: case_id, 
@@ -1248,7 +1253,8 @@ type QueryType {
       file_format: file_format,
       file_size: file_size,
       uuid: uuid,
-      md5sum: md5sum
+      md5sum: md5sum,
+      file_name: file_name
     }
     ORDER BY 
     CASE $order_by
@@ -1262,6 +1268,7 @@ type QueryType {
       WHEN "file_format" THEN file_format
       WHEN "file_size" THEN file_size
       WHEN "md5sum" THEN md5sum
+      WHEN "file_name" THEN file_name
       ELSE uuid
     END DESC
   """, passThrough: true)
