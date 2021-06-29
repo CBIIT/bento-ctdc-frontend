@@ -18,11 +18,11 @@ export const myFilesPageData = {
   downButtonText: 'DOWNLOAD MANIFEST',
   headerIconSrc: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/Icon-Cart-Workflow.svg',
   headerIconAlt: 'Bento MyFiles header logo',
-  manifestFileName: 'BENTO File Manifest',
+  manifestFileName: 'CTDC File Manifest',
   tooltipIcon: 'https://raw.githubusercontent.com/google/material-design-icons/master/src/action/help/materialicons/24px.svg',
   tooltipAlt: 'tooltip icon',
   tooltipMessage: 'To access and analyze files: select and remove unwanted files,  click the “Download Manifest” button, and upload the resulting Manifest file to your Seven Bridges Genomics account.',
-  textareaPlaceholder: 'Please add a description for the XML file you are about to download.',
+  textareaPlaceholder: 'User Comments',
   errorMessage: 'An error has occurred in loading CART',
   popUpWindow: {
     showNumberOfFileBeRemoved: true,
@@ -36,8 +36,8 @@ export const myFilesPageData = {
 };
 
 export const manifestData = {
-  keysToInclude: ['study_code', 'subject_id', 'file_name', 'file_id', 'md5sum'],
-  header: ['Study Code', 'Case ID', 'File Name', 'File ID', 'Md5sum', 'User Comments'],
+  keysToInclude: ['case_id', 'file_name', 'uuid', 'md5sum'],
+  header: ['Case ID', 'File Name', 'File ID', 'Md5sum', 'User Comments'],
 };
 
 // --------------- File table configuration --------------
@@ -112,6 +112,7 @@ query filesInList($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by
       file_size
       uuid
       md5sum
+      file_name
     }
 }`;
 
@@ -129,5 +130,6 @@ query filesInListDesc($uuid: [String], $offset: Int = 0, $first: Int = 10, $orde
     file_size
     uuid
     md5sum
+    file_name
     }
 }`;
