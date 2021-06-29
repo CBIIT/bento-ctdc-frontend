@@ -337,7 +337,8 @@ type FileInList{
   file_format: String,
   file_size: Float,
   uuid: String,
-  md5sum: String
+  md5sum: String,
+  file_name: String
 }
 
 type ArmDiagnosisCount{
