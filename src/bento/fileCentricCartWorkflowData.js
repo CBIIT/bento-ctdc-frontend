@@ -112,6 +112,7 @@ query filesInList($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by
       file_size
       uuid
       md5sum
+      file_name
     }
 }`;
 
@@ -129,5 +130,6 @@ query filesInListDesc($uuid: [String], $offset: Int = 0, $first: Int = 10, $orde
     file_size
     uuid
     md5sum
+    file_name
     }
 }`;
