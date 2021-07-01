@@ -1029,10 +1029,6 @@ const reducers = {
       ? sortByCheckboxItemsByCount(groupData.checkboxItems)
       : sortByCheckboxItemsByAlphabet(groupData.checkboxItems);
 
-      console.log('====================================');
-      console.log(sortedCheckboxItems);
-      console.log('====================================');
-
     sortByList[groupData.groupName] = item.sortBy;
     const data = state.checkbox.data.map((group) => {
       if (group.groupName === groupData.groupName) {
