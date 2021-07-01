@@ -613,7 +613,7 @@ function sortByCheckboxItemsByAlphabet(checkboxData) {
  */
 
 function sortByCheckboxItemsByCount(checkboxData) {
-  checkboxData.sort((a, b) => b.cases - a.cases);
+  checkboxData.sort((a, b) => b.subjects - a.subjects);
   return sortByCheckboxByIsChecked(checkboxData);
 }
 
@@ -1028,6 +1028,10 @@ const reducers = {
     const sortedCheckboxItems = item.sortBy === 'count'
       ? sortByCheckboxItemsByCount(groupData.checkboxItems)
       : sortByCheckboxItemsByAlphabet(groupData.checkboxItems);
+
+      console.log('====================================');
+      console.log(sortedCheckboxItems);
+      console.log('====================================');
 
     sortByList[groupData.groupName] = item.sortBy;
     const data = state.checkbox.data.map((group) => {
