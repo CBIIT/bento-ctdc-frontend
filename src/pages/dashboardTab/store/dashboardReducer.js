@@ -613,7 +613,7 @@ function sortByCheckboxItemsByAlphabet(checkboxData) {
  */
 
 function sortByCheckboxItemsByCount(checkboxData) {
-  checkboxData.sort((a, b) => b.cases - a.cases);
+  checkboxData.sort((a, b) => b.subjects - a.subjects);
   return sortByCheckboxByIsChecked(checkboxData);
 }
 

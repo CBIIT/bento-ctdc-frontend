@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { animateScroll as scroll } from 'react-scroll';
 import { withStyles, Divider } from '@material-ui/core';
-import { AboutHeader } from 'bento-components';
 import scrollUp from '../../assets/icons/ScrollUpButton.svg';
 import scrollUpHover from '../../assets/icons/ScrollUpHoverButton.svg';
 
 import Stats from '../../components/Stats/AllStatsController';
 import AlphabetBar from './alphabetComponent';
 import Section from './attributeComponent';
+import AboutHeader from '../about/aboutHeader';
 
 const DataDictonaryView = ({ classes, data }) => {
   const prevScrollY = useRef(0);
