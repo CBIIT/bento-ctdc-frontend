@@ -61,7 +61,7 @@ export const tabContainers = [
         dataField: 'clinical_trial_code',
         header: 'Trial Code',
         sort: 'asc',
-        link: '/trial/{clinical_trial_code}',
+        link: '/trial/{clinical_trial_id}',
         display: true,
       },
       {
