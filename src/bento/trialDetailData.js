@@ -112,7 +112,7 @@ const table = {
     {
       dataField: 'arm_id',
       header: 'Arm',
-      link: '/arm/{arm_id}',
+      link: '/cases',
     },
     {
       dataField: 'arm_drug',

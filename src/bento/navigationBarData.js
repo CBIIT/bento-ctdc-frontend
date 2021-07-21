@@ -1,12 +1,14 @@
 export const navBarstyling = {
   global: {
-    backgroundColor: '#142D64',
+    backgroundColor: '#E7E5E5',
     height: '39px',
     padding: '9px 20px 0px 20px',
-    fontColor: '#142D64',
+    fontColor: '#0E273A',
+    activeLabel: '2px solid #39C0F0',
+    fontFamily: 'Lato',
   },
   dropDownIcon: {
-    displayIcon: false,
+    displayIcon: true,
     fontSize: '18px',
     margin: '0px 0px 0px 0px',
   },
@@ -96,6 +98,6 @@ export const navBarData = [
 export const navBarCartData = {
   cartLabel: 'MY Files',
   cartLink: '/fileCentricCart',
-  cartIcon: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/Icon-Cart-Navbar.svg',
+  cartIcon: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/navBar/Icon-MyCases.svg',
   cartIconAlt: 'cart_logo',
 };
