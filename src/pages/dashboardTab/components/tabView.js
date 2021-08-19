@@ -50,7 +50,6 @@ const TabView = ({
   paginationAPIFieldDesc,
   dataKey,
   filteredSubjectIds,
-  filteredSampleIds,
   filteredFileIds,
   defaultSortCoulmn,
   defaultSortDirection,
@@ -283,8 +282,7 @@ const TabView = ({
             paginationAPIField={paginationAPIField}
             paginationAPIFieldDesc={paginationAPIFieldDesc}
             queryCustomVaribles={{
-              subject_ids: filteredSubjectIds,
-              sample_ids: filteredSampleIds,
+              case_ids: filteredSubjectIds,
               file_ids: filteredFileIds,
             }}
             defaultSortCoulmn={defaultSortCoulmn}

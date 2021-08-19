@@ -876,8 +876,7 @@ const reducers = {
       ...state,
       setSideBarLoading: false,
       allActiveFilters: item.allFilters,
-      filteredSubjectIds: item.data.searchSubjects.subjectIds,
-      filteredSampleIds: item.data.searchSubjects.sampleIds,
+      filteredSubjectIds: item.data.searchSubjects.caseIds,
       filteredFileIds: item.data.searchSubjects.fileIds,
       checkbox: {
         data: checkboxData1,
