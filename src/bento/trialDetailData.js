@@ -91,6 +91,15 @@ const rightPanel = {
       display: true,
     },
   ],
+  links: [
+    {
+      label: 'Mutation Exploration',
+      icon: 'https://cbioportal.bento-tools.org/reactapp/images/369b022222badf37b2b0c284f4ae2284.png',
+      link: 'https://cbioportal.bento-tools.org/study/summary?id=match_z1',
+      display: true,
+    },
+
+  ],
 };
 
 // --------------- Table configuration --------------
