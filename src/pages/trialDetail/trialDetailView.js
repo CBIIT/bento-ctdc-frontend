@@ -77,7 +77,7 @@ const TrialView = ({ classes, data, theme }) => {
           {link.label}
         </span>
         <div className={classes.LinkContent}>
-          <MUILink href="https://cbioportal.bento-tools.org/study/summary?id=match_z1">
+          <MUILink target="_blank" href="https://cbioportal.bento-tools.org/study/summary?id=match_z1">
             <div className={classes.LinkIcon}>
               <img
                 src={link.icon}

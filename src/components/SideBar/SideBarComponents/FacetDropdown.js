@@ -78,7 +78,7 @@ const FacetPanel = ({ classes }) => {
               <Avatar>
                 <LinkIcon />
               </Avatar>
-              <Link href="https://cbioportal.bento-tools.org/study/summary?id=match_z1">
+              <Link target="_blank" href="https://cbioportal.bento-tools.org/study/summary?id=match_z1">
                 <ListItemText primary="cBioPortal" secondary="Click to redirect" />
               </Link>
             </ListItem>
