@@ -4,6 +4,7 @@ import {
   withStyles, Drawer, List, Button,
 } from '@material-ui/core';
 import FacetFilter from './SideBarComponents/FacetFilters';
+import FacetDropdown from './SideBarComponents/FacetDropdown';
 import { facetSearchData, resetIcon } from '../../bento/dashboardData';
 import { clearAllFilters } from '../../pages/dashboardTab/store/dashboardReducer';
 
@@ -59,6 +60,7 @@ const SideBarContent = ({ classes }) => {
         </div>
         <List component="nav" aria-label="filter cases" classes={{ root: classes.listRoot, divider: classes.dividerRoot }}>
           <FacetFilter />
+          <FacetDropdown />
         </List>
       </div>
       )}

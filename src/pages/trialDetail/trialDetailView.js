@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Grid,
   withStyles,
+  Link as MUILink,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import {
@@ -66,6 +67,28 @@ const TrialView = ({ classes, data, theme }) => {
   }];
 
   const updatedAttributesData = manipulateLinks(leftPanel.attributes);
+
+  const getLinksUIComponent = (links) => links.map((link) => (
+    <Grid item xs={12}>
+      <div className={classes.fileContainer}>
+        <span
+          className={classes.detailContainerHeader}
+        >
+          {link.label}
+        </span>
+        <div className={classes.LinkContent}>
+          <MUILink target="_blank" href="https://cbioportal.bento-tools.org/study/summary?id=match_z1">
+            <div className={classes.LinkIcon}>
+              <img
+                src={link.icon}
+                alt=""
+              />
+            </div>
+          </MUILink>
+        </div>
+      </div>
+    </Grid>
+  ));
 
   return (
     <>
@@ -290,6 +313,7 @@ const TrialView = ({ classes, data, theme }) => {
                     </div>
                   </Grid>
                 ) : ''}
+                { rightPanel.links ? getLinksUIComponent(rightPanel.links) : ''}
               </Grid>
             </Grid>
 
@@ -672,6 +696,17 @@ const styles = (theme) => ({
     width: '16px',
     verticalAlign: 'sub',
     marginLeft: '4px',
+  },
+  LinkContent: {
+    height: '162px',
+    width: '350px',
+    paddingLeft: '48px',
+  },
+  LinkIcon: {
+    '& img': {
+      width: '163%',
+      padding: '21px 120px 0px 0px',
+    },
   },
 });
 
