@@ -30,11 +30,6 @@ type CaseDetail{
   files: [String]
 }
 
-type ArmDiagnosisCount{
-  arm_id: String,
-  diagnoses: String
-}
-
 type ClinicalTrialInfo{
   clinical_trial_id: String,
   clinical_trial_short_name: String,
@@ -82,15 +77,6 @@ type QueryType {
       arm_drug: a.arm_drug,
       ethnicity: c.ethnicity,
       files: COLLECT(DISTINCT f.uuid)
-    }
-  """, passThrough: true)
-
-  diagnosisCountByArm: [ArmDiagnosisCount] @cypher(statement: """
-    MATCH (a:arm)
-    OPTIONAL MATCH (c:case)-[:of_arm]->(a)
-    RETURN{
-      arm_id: a.arm_id,
-      diagnoses: COUNT(DISTINCT c.disease)
     }
   """, passThrough: true)
 
