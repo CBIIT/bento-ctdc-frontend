@@ -57,8 +57,33 @@ export const globalStatsData = [
 ];
 
 // --------------- GraphQL query - Retrieve stats details --------------
-export const GET_GLOBAL_STATS_DATA_QUERY = gql`{
-  numberOfTrials
-  numberOfCases
-  numberOfFiles
+export const GET_GLOBAL_STATS_DATA_QUERY = gql`
+  query search(
+    $clinical_trial_designation : [String],
+    $clinical_trial_id : [String],
+    $pubmed_id : [String],
+    $trial_arm : [String],
+    $disease : [String],
+    $gender : [String],
+    $race : [String],
+    $ethnicity : [String],
+    $file_type : [String],
+    $file_format : [String]
+){
+    searchCases(
+        clinical_trial_designation: $clinical_trial_designation
+        clinical_trial_id: $clinical_trial_id
+        pubmed_id: $pubmed_id
+        trial_arm: $trial_arm
+        disease: $disease
+        gender: $gender
+        race: $race
+        ethnicity: $ethnicity
+        file_type: $file_type
+        file_format: $file_format
+    ){
+        numberOfTrials
+        numberOfCases
+        numberOfFiles
+    }
 }`;

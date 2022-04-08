@@ -19,7 +19,9 @@ const styles = {
     height: 12,
   },
   panelDetailText: {
+    marginTop: '1.5px',
     color: '#000000',
+    lineHeight: '120%',
     fontFamily: 'Nunito',
     fontSize: '14px',
   },
@@ -27,30 +29,37 @@ const styles = {
     color: '#000000',
     fontFamily: 'Nunito',
     fontSize: '12px',
-    marginRight: '24px',
+    marginRight: '12px',
   },
 };
 const alignment = 'flex-start';
 
 function CheckBoxView(props) {
   const {
-    classes, checkboxItem, handleToggle, sideBarItem, facetSectionVariables,
-    defaultFacetSectionVariables, backgroundColor, checkColor, lineColor,
+    classes,
+    lineColor,
+    checkColor,
+    sideBarItem,
+    checkboxItem,
+    handleToggle,
+    backgroundColor,
+    facetSectionVariables,
+    defaultFacetSectionVariables,
   } = props;
 
   return (
     <>
       <ListItem
-        width={1}
         button
+        width={1}
         alignItems={alignment}
-        selected={checkboxItem.isChecked}
-        onClick={handleToggle(`${checkboxItem.name}$$${sideBarItem.groupName}$$${sideBarItem.datafield}$$${checkboxItem.isChecked}$$${sideBarItem.section}`)}
         className={classes.nested}
+        selected={checkboxItem.isChecked}
+        classes={{ selected: classes.selected, gutters: classes.listItemGutters }}
+        onClick={handleToggle(`${checkboxItem.name}$$${sideBarItem.groupName}$$${sideBarItem.datafield}$$${checkboxItem.isChecked}$$${sideBarItem.section}`)}
         style={{
           backgroundColor: checkboxItem.isChecked ? backgroundColor : null,
         }}
-        classes={{ selected: classes.selected, gutters: classes.listItemGutters }}
       >
         <Checkbox
           id={`checkbox_${sideBarItem.groupName}_${checkboxItem.name}`}
@@ -63,10 +72,10 @@ function CheckBoxView(props) {
               }}
             />
           )}
-          checked={checkboxItem.isChecked}
           tabIndex={-1}
           disableRipple
           color="secondary"
+          checked={checkboxItem.isChecked}
           classes={{ root: classes.checkboxRoot }}
         />
         <div className={classes.panelDetailText}>
@@ -86,10 +95,8 @@ function CheckBoxView(props) {
         </div>
       </ListItem>
       <Divider
-        variant="middle"
         style={{
           backgroundColor: checkboxItem.isChecked ? '#FFFFFF' : lineColor,
-          margin: checkboxItem.isChecked ? '0px' : '0px',
           height: checkboxItem.isChecked ? '2px' : '1px',
         }}
       />
