@@ -1,5 +1,10 @@
 import gql from 'graphql-tag';
 
+export const searchEnabled = true;
+
+export const filterTabTitleText = 'Filter';
+export const searchTabTitleText = 'Search';
+
 // --------------- Dashboard Sidebar Filters configuration --------------
 // A maximum of 12 facetSearchData are allowed
 export const facetSearchData = [
@@ -39,8 +44,62 @@ export const facetSearchData = [
 export const facetSectionVariables = {
   'Filter By Cases': {
     color: '#10A075',
+    backgroundColor: '#C0E9D7',
     checkBoxColorsOne: '#E8F7DC',
     checkBoxColorsTwo: '#F5FDEE',
+    height: '5px',
+    isExpanded: true,
+  },
+  Files: {
+    color: '#E636E4',
+    backgroundColor: '#F5C3F1',
+    checkBoxColorsOne: '#FBE3FB',
+    checkBoxColorsTwo: '#FFF2FF',
+    height: '5px',
+    isExpanded: true,
+  },
+};
+
+// --------------- Dashboard Facet Local Find Configuration --------------
+
+export const facetSectionFindApi = {
+  Cases: {
+    api: 'subjectIds',
+  },
+  Samples: {
+    api: 'sampleIds',
+  },
+  Files: {
+    api: 'fileIds',
+  },
+};
+
+export const search = {
+  fileIds: {
+    color: '#E636E4',
+    checkBoxColorsOne: '#FBE3FB',
+    checkBoxColorsTwo: '#FFF2FF',
+    height: '5px',
+    isExpanded: false,
+  },
+  subjectIds: {
+    color: '#10A075',
+    checkBoxColorsOne: '#E8F7DC',
+    checkBoxColorsTwo: '#F5FDEE',
+    height: '5px',
+    isExpanded: false,
+  },
+  sampleIds: {
+    color: '#10BEFF',
+    checkBoxColorsOne: '#C9EBF7',
+    checkBoxColorsTwo: '#E8F8FE',
+    height: '5px',
+    isExpanded: false,
+  },
+  fileNames: {
+    color: '#E636E4',
+    checkBoxColorsOne: '#FBE3FB',
+    checkBoxColorsTwo: '#FFF2FF',
     height: '5px',
     isExpanded: false,
   },
@@ -54,6 +113,17 @@ export const defaultFacetSectionVariables = {
   height: '5px',
   isExpanded: false,
 };
+
+export const defaultSearch = {
+  color: '#000000',
+  checkBoxColorsOne: '#E8F7DC',
+  checkBoxColorsTwo: '#F5FDEE',
+  height: '5px',
+  isExpanded: false,
+};
+
+// --------------- Dashboard ActiveFiltersQuery configuration --------------
+export const displayActiveFiltersQuery = true;
 
 // --------------- Dashboard Widgets configuration --------------
 // A maximum of 6 widgets are allowed
@@ -113,6 +183,11 @@ export const externalLinkIcon = {
 // --------------- Facet resetIcon link configuration --------------
 // Ideal size for resetIcon is 16x16 px
 export const resetIcon = {
+  src: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/Clear-icon.svg',
+  alt: 'Reset icon',
+  size: '12 px',
+};
+export const resetIconFilter = {
   src: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/Clear-icon.svg',
   alt: 'Reset icon',
   size: '12 px',
@@ -272,6 +347,11 @@ subjectCountByFileAssociation {
 subjectCountByTissueComposition{
     group
     subjects
+}
+filterSubjectCountByAge{
+  lowerBound
+  upperBound
+  subjects
 }
 subjectCountByTissueType{
     group
