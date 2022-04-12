@@ -16,7 +16,7 @@ import DataDictonary from '../../pages/dataDictionary/dataDictonaryController';
 import Trials from '../../pages/trials/trialsController';
 import ProgramDetail from '../../pages/programDetail/programDetailController';
 import TrialDetail from '../../pages/trialDetail/trialDetailController';
-import GraphqlClient from '../GraphqlClient/GraphqlView';
+// import GraphqlClient from '../GraphqlClient/GraphqlView';
 import fileCentricCart from '../../pages/fileCentricCart/cartController';
 import JBrowse from '../JBrowse/JBrowseView';
 
@@ -61,7 +61,7 @@ const Layout = ({ classes, isSidebarOpened }) => (
               ),
             )}
             <Route path="/data-dictionary" component={DataDictonary} />
-            <Route path="/graphql" component={GraphqlClient} />
+            {/* <Route path="/graphql" component={GraphqlClient} /> */}
             <Route component={Error} />
           </Switch>
           <Footer data={{ isSidebarOpened }} />
