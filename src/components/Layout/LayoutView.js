@@ -18,7 +18,6 @@ import ProgramDetail from '../../pages/programDetail/programDetailController';
 import TrialDetail from '../../pages/trialDetail/trialDetailController';
 import GraphqlClient from '../GraphqlClient/GraphqlView';
 import fileCentricCart from '../../pages/fileCentricCart/cartController';
-import JBrowse from '../JBrowse/JBrowseView';
 
 const ScrollToTop = () => {
   window.scrollTo(0, 0);
@@ -50,7 +49,6 @@ const Layout = ({ classes, isSidebarOpened }) => (
             <Route path="/trial/:id" component={TrialDetail} />
             <Route path="/case/:id" component={CaseDetail} />
             <Route path="/arm/:id" component={ArmDetail} />
-            <Route path="/JBrowse" component={JBrowse} />
             {aboutPageRoutes.map(
               (aboutPageRoute, index) => (
                 <Route
