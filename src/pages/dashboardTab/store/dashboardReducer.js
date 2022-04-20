@@ -16,7 +16,7 @@ import {
 } from 'bento-components';
 import store from '../../../store';
 import client from '../../../utils/graphqlClient';
-// import { SEARCH_PAGE_RESULTS, SEARCH } from '../../../bento/search';
+import { SEARCH_PAGE_RESULTS, SEARCH } from '../../../bento/search';
 import { globalStatsData as statsCount } from '../../../bento/globalStatsData';
 import { widgetsData, facetSearchData } from '../../../bento/dashboardData';
 
@@ -117,29 +117,29 @@ function customizer(objValue, srcValue) {
   }
 }
 
-// export async function getSearch(inputVlaue) {
-//   const allids = await client
-//     .query({
-//       query: SEARCH,
-//       variables: {
-//         input: inputVlaue,
-//       },
-//     })
-//     .then((result) => result.data.globalSearch);
-//   return allids;
-// }
+export async function getSearch(inputVlaue) {
+  const allids = await client
+    .query({
+      query: SEARCH,
+      variables: {
+        input: inputVlaue,
+      },
+    })
+    .then((result) => result.data.globalSearch);
+  return allids;
+}
 
-// export async function getSearchPageResults(inputVlaue) {
-//   const allids = await client
-//     .query({
-//       query: SEARCH_PAGE_RESULTS,
-//       variables: {
-//         input: inputVlaue,
-//       },
-//     })
-//     .then((result) => result.data.globalSearch);
-//   return allids;
-// }
+export async function getSearchPageResults(inputVlaue) {
+  const allids = await client
+    .query({
+      query: SEARCH_PAGE_RESULTS,
+      variables: {
+        input: inputVlaue,
+      },
+    })
+    .then((result) => result.data.globalSearch);
+  return allids;
+}
 
 /**
  * Returns the  stats from inputAPI data.

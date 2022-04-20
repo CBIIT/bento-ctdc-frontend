@@ -1,6 +1,8 @@
 import React from 'react';
 import { Header } from 'bento-components';
+import { withRouter } from 'react-router-dom';
 import headerData from '../../bento/globalHeaderData';
+import SearchAUtoFill from '../Search/searchAutoFillComponent';
 
 const customStyle = {
   nihLogoImg: {
@@ -16,8 +18,9 @@ const customStyle = {
   },
 };
 
-const CTDCHeader = () => (
-  <>
+const CTDCHeader = (props) => {
+  const { location } = props;
+  return location.pathname.match('/search') ? (
     <Header
       logo={headerData.globalHeaderLogo}
       easter={headerData.globalHeaderImage}
@@ -25,6 +28,14 @@ const CTDCHeader = () => (
       homeLink={headerData.globalHeaderLogoLink}
       customStyle={customStyle}
     />
-  </>
-);
-export default CTDCHeader;
+  ) : (
+    <Header
+      logo={headerData.globalHeaderLogo}
+      alt={headerData.globalHeaderLogoAltText}
+      homeLink={headerData.globalHeaderLogoLink}
+      SearchComponent={SearchAUtoFill}
+    />
+  );
+};
+
+export default withRouter(CTDCHeader);
