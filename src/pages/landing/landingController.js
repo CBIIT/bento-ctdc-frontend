@@ -18,7 +18,7 @@ const landingController = () => {
     );
   }
 
-  return <LandingView heroData={data} />;
+  return <LandingView heroData={data.searchCases} />;
 };
 
 export default landingController;
