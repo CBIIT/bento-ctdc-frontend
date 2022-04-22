@@ -66,7 +66,7 @@ const LocalSearchComponent = ({ classes, type }, ref) => {
     }
     (async () => {
       const response = await getAllIds(type);
-      const opts = response[type].map((id) => ({ type, title: id }));
+      const opts = response.case_ids.map((id) => ({ type, title: id }));
       if (active) {
         setOptions(opts);
       }
@@ -163,7 +163,7 @@ const LocalSearchComponent = ({ classes, type }, ref) => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="e.g. BENTO-CASE-06, BENTO-CASE-22"
+                placeholder="e.g. CTDC-06, CTDC-22"
                 variant="outlined"
                 size="small"
                 InputProps={{
