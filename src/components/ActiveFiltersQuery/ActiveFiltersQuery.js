@@ -24,9 +24,9 @@ const ActiveFiltersQuery = ({ classes }) => {
       ? state.dashboardTab.checkbox : {}));
   const autoCompleteSelection = useSelector((state) => (state.dashboardTab
     && state.dashboardTab.autoCompleteSelection
-    ? state.dashboardTab.autoCompleteSelection.subject_ids : {}));
+    ? state.dashboardTab.autoCompleteSelection.case_id : {}));
   const bulkUpload = useSelector((state) => (state.dashboardTab
-    && state.dashboardTab.bulkUpload ? state.dashboardTab.bulkUpload.subject_ids : {}));
+    && state.dashboardTab.bulkUpload ? state.dashboardTab.bulkUpload.case_id : {}));
   // activeFilters helps filtering only active Filters
   const activeFilters = [];
   // Loop all filters except range filter to find active ones only
@@ -93,7 +93,7 @@ const ActiveFiltersQuery = ({ classes }) => {
           <span
             className={classes.filterCheckboxes}
             style={{
-              color: facetSectionVariables.Cases.color,
+              color: facetSectionVariables['Filter By Cases'].color,
             }}
             onClick={onDeleteInputSet}
           >
@@ -138,7 +138,7 @@ const ActiveFiltersQuery = ({ classes }) => {
         className={classes.filterCheckboxes}
         key={idx}
         style={{
-          color: facetSectionVariables.Cases.color,
+          color: facetSectionVariables['Filter By Cases'].color,
         }}
         onClick={() => (isFilter
           ? onDeleteFilterCheckbox(filterData, data)
@@ -189,7 +189,7 @@ const ActiveFiltersQuery = ({ classes }) => {
                     <span
                       className={classes.filterCheckboxes}
                       style={{
-                        backgroundColor: facetSectionVariables.Cases.backgroundColor,
+                        backgroundColor: facetSectionVariables['Filter By Cases'].backgroundColor,
                       }}
                       onClick={onDeleteInputSet}
                     >
@@ -203,7 +203,7 @@ const ActiveFiltersQuery = ({ classes }) => {
                       <span
                         className={classes.filterName}
                         style={{
-                          backgroundColor: facetSectionVariables.Cases.backgroundColor,
+                          backgroundColor: facetSectionVariables['Filter By Cases'].backgroundColor,
                         }}
                         onClick={removeCaseIds}
                       >
@@ -225,7 +225,7 @@ const ActiveFiltersQuery = ({ classes }) => {
                         <span
                           className={classes.filterCheckboxes}
                           style={{
-                            color: facetSectionVariables.Cases.color,
+                            color: facetSectionVariables['Filter By Cases'].color,
                           }}
                           onClick={() => onDeleteCaseIds(autoCompleteSelection[0])}
                         >
@@ -242,7 +242,7 @@ const ActiveFiltersQuery = ({ classes }) => {
                         <span
                           className={classes.filterCheckboxes}
                           style={{
-                            color: facetSectionVariables.Cases.color,
+                            color: facetSectionVariables['Filter By Cases'].color,
                           }}
                           onClick={() => onDeleteCaseIds(autoCompleteSelection[0])}
                         >
@@ -252,7 +252,7 @@ const ActiveFiltersQuery = ({ classes }) => {
                         <span
                           className={classes.filterCheckboxes}
                           style={{
-                            color: facetSectionVariables.Cases.color,
+                            color: facetSectionVariables['Filter By Cases'].color,
                           }}
                           onClick={() => onDeleteCaseIds(autoCompleteSelection[1])}
                         >

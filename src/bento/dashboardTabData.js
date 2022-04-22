@@ -379,7 +379,7 @@ export const DASHBOARD_QUERY = gql`
       $file_type: [String],
       $age_at_index: [Float]
   ){
-      searchSubjects (          
+    searchCases (          
           programs: $programs,
           studies: $studies,
           diagnoses: $diagnoses,
@@ -600,7 +600,7 @@ query search (
   $file_type: [String],
   $age_at_index: [Float]
 ){
-  searchSubjects (          
+  searchCases (          
       programs: $programs,
       studies: $studies,
       diagnoses: $diagnoses,

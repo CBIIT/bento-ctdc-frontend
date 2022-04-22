@@ -36,14 +36,14 @@ import {
   GET_CASES_OVERVIEW_QUERY,
   GET_SAMPLES_OVERVIEW_QUERY,
 } from '../../../bento/dashboardTabData';
-// import {
-//   GET_IDS_BY_TYPE,
-//   GET_SUBJECT_IDS,
-//   widgetsSearchData,
-//   SUBJECT_OVERVIEW_QUERY,
-//   GET_SEARCH_NODES_BY_FACET,
-//   ageAtIndex,
-// } from '../../../bento/localSearchData';
+import {
+  GET_IDS_BY_TYPE,
+  GET_SUBJECT_IDS,
+  widgetsSearchData,
+  GET_SEARCH_NODES_BY_FACET,
+  ageAtIndex,
+  GET_LOCAL_CASES_OVERVIEW_QUERY,
+} from '../../../bento/localSearchData';
 
 const storeKey = 'dashboardTab';
 
@@ -53,11 +53,13 @@ const initialState = {
       subject_ids: [],
       sample_ids: [],
       file_ids: [],
+      case_id: [],
     },
     bulkUpload: {
       subject_ids: [],
       sample_ids: [],
       file_ids: [],
+      case_id: [],
     },
     isDataTableUptoDate: false,
     isFetched: false,
@@ -211,24 +213,24 @@ function allFilters() {
  * @return {json}r
  */
 
-// function getSearchWidgetsData(data, widgetsInfoFromCustConfig) {
-//   const donut = widgetsInfoFromCustConfig.reduce((acc, widget) => {
-//     const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.mapWithDashboardWidget]) : removeEmptySubjectsFromDonutData(data[widget.mapWithDashboardWidget]);
-//     const label = widget.dataName;
-//     return { ...acc, [label]: Data };
-//   }, {});
-//   const replacements = widgetsSearchData.reduce(
-//     (acc, widget) => ({ ...acc, ...{ [widget.dataName]: widget.mapWithDashboardWidget } }),
-//     {},
-//   );
+function getSearchWidgetsData(data, widgetsInfoFromCustConfig) {
+  const donut = widgetsInfoFromCustConfig.reduce((acc, widget) => {
+    const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.mapWithDashboardWidget], widget.datatable_level1_field, widget.datatable_level2_field, 'arms') : removeEmptySubjectsFromDonutData(data[widget.mapWithDashboardWidget]);
+    const label = widget.dataName;
+    return { ...acc, [label]: Data };
+  }, {});
+  const replacements = widgetsSearchData.reduce(
+    (acc, widget) => ({ ...acc, ...{ [widget.dataName]: widget.mapWithDashboardWidget } }),
+    {},
+  );
 
-//   const replacedItems = Object.keys(donut).map((key) => {
-//     const newKey = replacements[key] || key;
-//     return { [newKey]: donut[key] };
-//   });
-//   const newTab = replacedItems.reduce((a, b) => ({ ...a, ...b }));
-//   return newTab;
-// }
+  const replacedItems = Object.keys(donut).map((key) => {
+    const newKey = replacements[key] || key;
+    return { [newKey]: donut[key] };
+  });
+  const newTab = replacedItems.reduce((a, b) => ({ ...a, ...b }));
+  return newTab;
+}
 
 function fetchDashboardTab() {
   return () => {
@@ -388,7 +390,7 @@ async function getCaseData(variables) {
 
 const getSubjectDetails = async (variables) => {
   const result = await client.query({
-    query: SUBJECT_OVERVIEW_QUERY,
+    query: GET_LOCAL_CASES_OVERVIEW_QUERY,
     variables: {
       offset: 0,
       first: 100,
@@ -1190,13 +1192,13 @@ const reducers = {
       ...state,
       setSideBarLoading: false,
       datatable: {
-        dataCase: item.subjectResponse.data.subjectOverview,
+        dataCase: item.subjectResponse.data.caseOverview,
       },
       checkbox: {
         data: newCheckboxData,
         variables: item.variables,
       },
-      stats: getFilteredStat(item.result.data.nodeCountsFromLists, statsCount),
+      stats: getFilteredStat(item.result.data, statsCount),
       widgets: getSearchWidgetsData(item.result.data, widgetsSearchData),
 
     };
@@ -1296,11 +1298,13 @@ const reducers = {
           subject_ids: [],
           sample_ids: [],
           file_ids: [],
+          case_id: [],
         },
         bulkUpload: {
           subject_ids: [],
           sample_ids: [],
           file_ids: [],
+          case_id: [],
         },
       } : { ...state };
   },
@@ -1327,11 +1331,13 @@ const reducers = {
           subject_ids: [],
           sample_ids: [],
           file_ids: [],
+          case_id: [],
         },
         bulkUpload: {
           subject_ids: [],
           sample_ids: [],
           file_ids: [],
+          case_id: [],
         },
         checkbox: {
           data: checkboxData,
@@ -1446,11 +1452,13 @@ const reducers = {
       subject_ids: [],
       sample_ids: [],
       file_ids: [],
+      case_id: [],
     },
     bulkUpload: {
       subject_ids: [],
       sample_ids: [],
       file_ids: [],
+      case_id: [],
     },
     allActiveFilters: {},
   }),
@@ -1460,6 +1468,7 @@ const reducers = {
       subject_ids: [],
       sample_ids: [],
       file_ids: [],
+      case_id: [],
     },
     allActiveFilters: {},
   }),
@@ -1467,13 +1476,13 @@ const reducers = {
     ...state,
     autoCompleteSelection: {
       ...state.autoCompleteSelection,
-      [`${type}_ids`]: value,
+      case_id: value,
     },
   }),
   ADD_BULKSEARCHDATA: (state, { type, value }) => ({
     ...state,
     bulkUpload: {
-      [`${type}_ids`]: value,
+      case_id: value,
     },
   }),
 };
