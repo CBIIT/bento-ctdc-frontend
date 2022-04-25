@@ -13,7 +13,7 @@ import { ToolTip } from 'bento-components';
 import {
   uploadBulkModalSearch, getAllSubjectIds,
 } from '../../../../pages/dashboardTab/store/dashboardReducer';
-// import FileUploader from '../../../FileUploader';
+import FileUploader from '../../../FileUploader';
 import SummaryTable from './SummaryTable';
 
 const useStyles = makeStyles((theme) => ({
@@ -332,7 +332,7 @@ const FacetModal = ({
               value={fileContent}
               name="caseDescription"
               onChange={handleChange}
-              placeholder="eg. BENTO-CASE-06, BENTO-CASE-22"
+              placeholder="eg. CTDC-06, CTDC-22"
               className={classes.textArea}
             />
           </div>
@@ -344,13 +344,13 @@ const FacetModal = ({
               </Typography>
               {getToolTip('Add the case indentifier.')}
             </div>
-            {/* <FileUploader
+            <FileUploader
               clearData={clearData}
               onFileUpload={handleFileUpload}
               isClear={isClear}
               uploadedFileName={uploadedFileName}
               classes={classes}
-            /> */}
+            />
           </div>
         </div>
         {fileContent && <SummaryTable matchedContent={matchIds} unmatchedContent={unmatchedIds} />}

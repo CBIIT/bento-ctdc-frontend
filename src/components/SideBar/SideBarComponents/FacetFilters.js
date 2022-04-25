@@ -39,7 +39,6 @@ import {
   defaultFacetSectionVariables,
   sortLabels, showCheckboxCount,
   resetIconFilter,
-  facetSectionFindApi,
 } from '../../../bento/dashboardData';
 import CheckBoxView from './CheckBoxView';
 import InputViewMin from './InputViewMin';
@@ -144,7 +143,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
 
   const autoCompleteSelection = useSelector((state) => (
     state.dashboardTab
-          && state.dashboardTab.autoCompleteSelection
+      && state.dashboardTab.autoCompleteSelection
       ? state.dashboardTab.autoCompleteSelection : {
         subject_ids: [],
         sample_ids: [],
@@ -186,7 +185,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
 
   React.useEffect(() => {
     // Open toggle chnages
-    if (sectionExpanded.includes('Cases')) {
+    if (sectionExpanded.includes('Filter By Cases')) {
       toggleSearch(true);
     } else {
       toggleSearch(false);
@@ -471,7 +470,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
             >
               {/* <ListItemText primary={sideBarItem.groupName} /> */}
               {
-                currentSection.sectionName === 'Cases' ? (
+                currentSection.sectionName === 'Filter By Cases' ? (
                   <div
                     id={currentSection.sectionName}
                     className={classes.sectionSummaryTextCase}
@@ -488,8 +487,8 @@ export const FacetPanelComponent = ({ classes }, ref) => {
                           {bulkUpload.subject_ids.length !== 0 ? <InputSetListItem /> : ''}
                           <AutoComplete
                             ref={searchRef}
-                            type={facetSectionFindApi[currentSection.sectionName].api}
-                            data={getAllIds(facetSectionFindApi[currentSection.sectionName].api)}
+                            type="subjectIds"
+                            data={getAllIds('subjectIds')}
                           />
                           <Button
                             variant="contained"
@@ -498,7 +497,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
                             className={classes.uploadButton}
                             id="localFindUploadCaseSetButton"
                           >
-                            { bulkUpload.subject_ids.length !== 0 ? 'View Case Set' : 'Upload Case Set' }
+                            {bulkUpload.subject_ids.length !== 0 ? 'View Case Set' : 'Upload Case Set'}
                             <span className={classes.iconSpan}>
                               <img
                                 className={classes.uploadIcon}
@@ -716,11 +715,11 @@ export const FacetPanelComponent = ({ classes }, ref) => {
                                         value,
                                       )}
                                       onChangeCommitted={
-                                      (event, value) => handleChangeCommittedSlider(
-                                        sideBarItem,
-                                        value,
-                                      )
-                                    }
+                                        (event, value) => handleChangeCommittedSlider(
+                                          sideBarItem,
+                                          value,
+                                        )
+                                      }
                                       valueLabelDisplay="auto"
                                       getAriaValueText={valuetext}
                                       disableSwap
@@ -742,49 +741,49 @@ export const FacetPanelComponent = ({ classes }, ref) => {
                                   <div>
                                     {typeof sliderValue[sideBarIndex] !== 'undefined'
                                       ? (sliderValue[sideBarIndex][0]
-                                      > sideBarItem.checkboxItems.lowerBound
-                                      || sliderValue[sideBarIndex][1]
-                                      < sideBarItem.checkboxItems.upperBound)
-                                    && (
-                                      <div>
-                                        <ListItem
-                                          width={1}
-                                          button
-                                          className={classes.nested}
-                                          style={{
-                                            backgroundColor: getCheckBoxColor(0, currentSection),
-                                            justifyContent: 'end',
-                                          }}
-                                          classes={{
-                                            selected: classes.selected,
-                                            gutters: classes.listItemGutters,
-                                          }}
-                                        >
-                                          <div className={classes.sliderListItem}>
-                                            <span className={classes.sliderText}>
-                                              {sideBarItem.quantifier}
-                                            </span>
-                                            <span className={classes.sliderText}>
-                                              {sliderValue[sideBarIndex][1]}
-                                              &nbsp;
-                                            </span>
-                                            <span className={classes.sliderText}>
-                                              -
-                                            </span>
-                                            <span className={classes.sliderText}>
-                                              {sliderValue[sideBarIndex][0]}
-                                            </span>
-                                          </div>
-                                        </ListItem>
-                                        <Divider
-                                          style={{
-                                            backgroundColor: '#FFFFFF',
-                                            height: '2px',
-                                          }}
-                                        />
-                                      </div>
-                                    ) : (
-                                      <span />
+                                        > sideBarItem.checkboxItems.lowerBound
+                                        || sliderValue[sideBarIndex][1]
+                                        < sideBarItem.checkboxItems.upperBound)
+                                      && (
+                                        <div>
+                                          <ListItem
+                                            width={1}
+                                            button
+                                            className={classes.nested}
+                                            style={{
+                                              backgroundColor: getCheckBoxColor(0, currentSection),
+                                              justifyContent: 'end',
+                                            }}
+                                            classes={{
+                                              selected: classes.selected,
+                                              gutters: classes.listItemGutters,
+                                            }}
+                                          >
+                                            <div className={classes.sliderListItem}>
+                                              <span className={classes.sliderText}>
+                                                {sideBarItem.quantifier}
+                                              </span>
+                                              <span className={classes.sliderText}>
+                                                {sliderValue[sideBarIndex][1]}
+                                                &nbsp;
+                                              </span>
+                                              <span className={classes.sliderText}>
+                                                -
+                                              </span>
+                                              <span className={classes.sliderText}>
+                                                {sliderValue[sideBarIndex][0]}
+                                              </span>
+                                            </div>
+                                          </ListItem>
+                                          <Divider
+                                            style={{
+                                              backgroundColor: '#FFFFFF',
+                                              height: '2px',
+                                            }}
+                                          />
+                                        </div>
+                                      ) : (
+                                        <span />
                                       )}
                                   </div>
                                 </div>
