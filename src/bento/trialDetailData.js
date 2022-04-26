@@ -148,13 +148,18 @@ query trialIdQueries(
   $ids: [String],
   $id: String!
 ){
-  casesCountBaseOnTrialId(trial_ids:$ids){
-      group
-      count
-  }
+
+    searchCases(
+        clinical_trial_id: $ids
+    ){
+        casesCountBaseOnTrialId{
+            group
+            subjects
+        }
+        numberOfFiles
+    }
 
   fileCountByTrialId(trial_id:$id)
-
   clinicalTrialByTrialId(trial_id: $id) {
       clinical_trial_id
       clinical_trial_short_name
@@ -167,7 +172,6 @@ query trialIdQueries(
       number_of_cases
       number_of_arms
   }
-
   clinicalTrialArmByTrialId(trial_id:$id){
       arm_id
       arm_target
