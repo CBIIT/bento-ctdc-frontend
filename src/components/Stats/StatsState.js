@@ -28,9 +28,9 @@ function receiveStats(json) {
   return {
     type: RECIEVE_STATS,
     payload:
-{
-  data: json.data,
-},
+    {
+      data: json.data ? json.data.searchCases : {},
+    },
   };
 }
 

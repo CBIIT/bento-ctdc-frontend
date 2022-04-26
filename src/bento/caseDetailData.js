@@ -250,12 +250,16 @@ const dataRoot = 'caseDetailByCaseId';
 // query name, also used as key for files to Samples Mapping.
 const filesOfCase = 'filesOfCase';
 // Primary ID field used to query a case
+const caseIDField1 = 'case_id1';
+// Secondary ID field used to query a case
+const caseIDField2 = 'case_id2';
+// ID field used to match with data response case_id
 const caseIDField = 'case_id';
 
 // GraphQL query to retrieve detailed info for a case
 const GET_CASE_DETAIL_DATA_QUERY = gql`
-query caseDetailByCaseId($case_id: String!){
-    caseDetailByCaseId(case_id:$case_id){
+query caseDetailByCaseId($case_id1: String!, $case_id2: [String]){
+    caseDetailByCaseId(case_id:$case_id1){
       case_id
       clinical_trial_code
       clinical_trial_id
@@ -268,7 +272,7 @@ query caseDetailByCaseId($case_id: String!){
       ethnicity
       files
   }
-  filesOfCase(case_id:$case_id){
+  filesOfCase(case_id:$case_id2){
   parent 
   file_name 
   file_type 
@@ -282,6 +286,8 @@ query caseDetailByCaseId($case_id: String!){
 export {
   caseHeader,
   dataRoot,
+  caseIDField1,
+  caseIDField2,
   caseIDField,
   filesOfCase,
   leftPanel,

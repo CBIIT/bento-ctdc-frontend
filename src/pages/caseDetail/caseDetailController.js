@@ -4,12 +4,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import CaseDetailView from './caseDetailView';
 import { Typography } from '../../components/Wrappers/Wrappers';
 import {
-  GET_CASE_DETAIL_DATA_QUERY, dataRoot, caseIDField, filesOfCase,
+  GET_CASE_DETAIL_DATA_QUERY, dataRoot, caseIDField1, caseIDField2, caseIDField, filesOfCase,
 } from '../../bento/caseDetailData';
 
 const CaseDetailContainer = ({ match }) => {
   const { loading, error, data } = useQuery(GET_CASE_DETAIL_DATA_QUERY, {
-    variables: { [caseIDField]: match.params.id },
+    variables: { [caseIDField1]: match.params.id, [caseIDField2]: [match.params.id] },
   });
 
   if (loading) return <CircularProgress />;
