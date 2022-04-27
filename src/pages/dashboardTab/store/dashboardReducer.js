@@ -284,10 +284,10 @@ export async function getAllSubjectIds(subjectIdsArray) {
     .query({
       query: GET_SUBJECT_IDS,
       variables: {
-        subject_ids: subjectIdsArray,
+        case_id: subjectIdsArray,
       },
     })
-    .then((result) => result.data.findSubjectIdsInList)
+    .then((result) => result.data.caseOverview)
     .catch((error) => store.dispatch(
       { type: 'DASHBOARDTAB_QUERY_ERR', error },
     ));
