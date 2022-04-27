@@ -165,9 +165,9 @@ const SummaryTable = (props) => {
               </tr>
               {matchedContent.map((matched, id) => (
                 <tr key={id}>
-                  <td className={classes.tableColumn} style={id % 2 ? { backgroundColor: '#fff' } : { backgroundColor: '#F8F8F8' }}>{matched.subject_id}</td>
+                  <td className={classes.tableColumn} style={id % 2 ? { backgroundColor: '#fff' } : { backgroundColor: '#F8F8F8' }}>{matched.case_id}</td>
                   <td className={classes.emptyCell} />
-                  <td className={classes.programHeading} style={id % 2 ? { backgroundColor: '#fff' } : { backgroundColor: '#F8F8F8' }}>{matched.program_id}</td>
+                  <td className={classes.programHeading} style={id % 2 ? { backgroundColor: '#fff' } : { backgroundColor: '#F8F8F8' }}>{matched.trial_id}</td>
                 </tr>
               ))}
             </table>

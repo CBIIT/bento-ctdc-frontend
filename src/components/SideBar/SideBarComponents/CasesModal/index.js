@@ -211,7 +211,7 @@ const FacetModal = ({
   const [uploadedFileName, setUploadedFileName] = React.useState('');
 
   const submitCase = () => {
-    uploadBulkModalSearch(matchIds.map((obj) => obj.subject_id), 'subject');
+    uploadBulkModalSearch(matchIds.map((obj) => obj.case_id), 'subject');
     closeModal();
   };
 
@@ -256,7 +256,7 @@ const FacetModal = ({
       unmatchData.map((subId) => {
         const trimSubId = subId.trim();
         const isExist = matchedSubIds.findIndex((item) => (
-          item.subject_id.trim().toLowerCase() === trimSubId.toLowerCase()
+          item.case_id.trim().toLowerCase() === trimSubId.toLowerCase()
         ));
         if (isExist <= -1) {
           const isItemExist = unMatchedContent.findIndex((item) => (
