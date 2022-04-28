@@ -4,6 +4,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import FacetFilter from './SideBarComponents/FacetFilters';
+import FacetDropdown from './SideBarComponents/FacetDropdown';
 import ClearFilters from './SideBarComponents/clearFilters';
 import {
   resetIcon,
@@ -56,6 +57,7 @@ const SideBarContent = ({
               }}
             >
               <FacetFilter ref={searchRef} />
+              <FacetDropdown />
             </List>
           </div>
         )}
