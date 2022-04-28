@@ -578,16 +578,23 @@ const getQueryAndDefaultSort = (payload = tabIndex[0].title) => {
 
  export function fetchDataForDashboardTab(
   payload,
-  subjectIDsAfterFilter = null,
+  filters = null,
   fileIDsAfterFilter = null,
 ) {
+  const newFilters = filters;
   const { QUERY, sortfield, sortDirection } = getQueryAndDefaultSort(payload);
-
+  const activeFilters = newFilters === null
+    ? (getState().allActiveFilters !== {}
+      ? {
+        ...getState().allActiveFilters,
+        ..._.mergeWith({}, getState().bulkUpload, getState().autoCompleteSelection, customizer),
+      }
+      : allFilters()) : filters;
   return client
     .query({
       query: QUERY,
       variables: {
-        case_ids: subjectIDsAfterFilter, uuid: fileIDsAfterFilter, order_by: sortfield || '',
+        ...activeFilters, order_by: sortfield || '',
       },
     })
     .then((result) => {
