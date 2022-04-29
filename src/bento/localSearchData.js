@@ -315,7 +315,11 @@ query caseOverview(
     $race : [String],
     $ethnicity : [String],
     $file_type : [String],
-    $file_format : [String]
+    $file_format : [String],
+    $first: Int, 
+    $offset: Int, 
+    $order_by:  String,
+    $sort_direction: String
 ){
     caseOverview(
         case_id: $case_id,
@@ -329,6 +333,10 @@ query caseOverview(
         ethnicity: $ethnicity
         file_type: $file_type
         file_format: $file_format
+        first: $first
+        offset: $offset
+        order_by: $order_by
+        sort_direction: $sort_direction
     ){
         case_id
         trial_code

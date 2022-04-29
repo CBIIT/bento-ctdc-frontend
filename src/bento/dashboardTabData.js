@@ -25,8 +25,8 @@ export const tabContainers = [
     name: 'Cases',
     dataField: 'dataCase',
     api: 'GET_CASES_OVERVIEW_QUERY',
-    paginationAPIField: 'caseOverviewPaged',
-    paginationAPIFieldDesc: 'caseOverviewPagedDesc',
+    paginationAPIField: 'caseOverview',
+    paginationAPIFieldDesc: 'caseOverviewDesc',
     count: 'numberOfCases',
     dataKey: 'case_id',
     defaultSortField: 'case_id',
@@ -72,7 +72,7 @@ export const tabContainers = [
       },
       {
         dataField: 'arm_treatment',
-        header: 'Arm Trearment',
+        header: 'Arm Treatment',
         sort: 'asc',
         display: true,
       },
@@ -777,7 +777,11 @@ query fileOverview($file_name: [String],
     $race : [String],
     $ethnicity : [String],
     $file_type : [String],
-    $file_format : [String]){
+    $file_format : [String],
+    $first: Int, 
+    $offset: Int, 
+    $order_by:  String
+    $sort_direction: String){
     fileOverview(
         file_name: $file_name,
         clinical_trial_designation: $clinical_trial_designation
@@ -790,6 +794,10 @@ query fileOverview($file_name: [String],
         ethnicity: $ethnicity
         file_type: $file_type
         file_format: $file_format
+        first: $first
+        offset: $offset
+        order_by: $order_by
+        sort_direction: $sort_direction
     ){
         file_name
         association
@@ -878,7 +886,12 @@ query caseOverview($case_id: [String],
     $race : [String],
     $ethnicity : [String],
     $file_type : [String],
-    $file_format : [String]){
+    $file_format : [String],
+    $first: Int, 
+    $offset: Int, 
+    $order_by:  String,
+    $sort_direction: String
+    ){
     caseOverview(
         case_id: $case_id,
         clinical_trial_designation: $clinical_trial_designation
@@ -891,6 +904,10 @@ query caseOverview($case_id: [String],
         ethnicity: $ethnicity
         file_type: $file_type
         file_format: $file_format
+        first: $first
+        offset: $offset
+        order_by: $order_by
+        sort_direction: $sort_direction
     ){
         case_id
         trial_code
@@ -1118,4 +1135,3 @@ export const GET_FILE_IDS_FROM_FILE_NAME = gql`
           file_id
       }
   }`;
-  
