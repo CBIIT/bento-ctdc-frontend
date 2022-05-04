@@ -55,9 +55,9 @@ export const navBarData = [
     link: '/trials',
   },
   {
-    labelText: 'cases',
+    labelText: 'explore',
     type: 'link',
-    link: '/cases',
+    link: '/explore',
   },
   {
     labelText: 'about',

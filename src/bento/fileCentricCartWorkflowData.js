@@ -19,6 +19,7 @@ export const myFilesPageData = {
   headerIconSrc: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/Icon-Cart-Workflow.svg',
   headerIconAlt: 'Bento MyFiles header logo',
   manifestFileName: 'CTDC File Manifest',
+  paginationAPIField: 'filesInList',
   tooltipIcon: 'https://raw.githubusercontent.com/google/material-design-icons/master/src/action/help/materialicons/24px.svg',
   tooltipAlt: 'tooltip icon',
   tooltipMessage: 'To access and analyze files: select and remove unwanted files,  click the “Download Manifest” button, and upload the resulting Manifest file to your Seven Bridges Genomics account.',
@@ -100,8 +101,8 @@ export const table = {
 
 // --------------- GraphQL query - Retrieve selected cases info --------------
 export const GET_MY_CART_DATA_QUERY = gql`
-query filesInList($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="") {
-    filesInList(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
+query filesInList($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="", $sort_direction: String,) {
+    filesInList(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by, sort_direction: $sort_direction,) {
       clinical_trial_code
       case_id
       arm_id
@@ -113,23 +114,5 @@ query filesInList($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by
       uuid
       md5sum
       file_name
-    }
-}`;
-
-// --------------- GraphQL query - Retrieve selected files info Desc --------------
-export const GET_MY_CART_DATA_QUERY_DESC = gql`
-query filesInListDesc($uuid: [String], $offset: Int = 0, $first: Int = 10, $order_by:String ="") {
-  filesInListDesc(uuid: $uuid, offset: $offset,first: $first, order_by: $order_by) {
-    clinical_trial_code
-    case_id
-    arm_id
-    file_type
-    association
-    file_description
-    file_format
-    file_size
-    uuid
-    md5sum
-    file_name
     }
 }`;

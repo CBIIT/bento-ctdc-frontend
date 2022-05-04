@@ -60,10 +60,10 @@ const tabController = (classes) => {
     && state.dashboardTab.allActiveFilters ? state.dashboardTab.allActiveFilters : {}));
   const autoCompleteSelection = useSelector((state) => (state.dashboardTab
     && state.dashboardTab.autoCompleteSelection
-    ? state.dashboardTab.autoCompleteSelection.subject_ids : {}));
+    ? state.dashboardTab.autoCompleteSelection.case_id : {}));
   const bulkUpload = useSelector((state) => (state.dashboardTab
     && state.dashboardTab.bulkUpload ? state.dashboardTab.bulkUpload.case_id : {}));
-  const subjectIds = autoCompleteSelection.concat(bulkUpload);
+  const caseId = autoCompleteSelection.concat(bulkUpload);
   useEffect(() => {
     setCurrentTab(0);
   }, [dashboardStats]);
@@ -227,7 +227,7 @@ const tabController = (classes) => {
         defaultSortDirection={container.defaultSortDirection || 'asc'}
         dataKey={container.dataKey}
         filteredFileIds={filteredFileIds}
-        allFilters={{ ...allFilters, ...{ subject_ids: subjectIds } }}
+        allFilters={{ ...allFilters, ...{ case_id: caseId } }}
         tableHasSelections={tableHasSelections}
         setRowSelection={getTableRowSelectionEvent()}
         selectedRowInfo={tableRowSelectionData[container.tabIndex].selectedRowInfo}
