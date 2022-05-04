@@ -2,7 +2,7 @@ import env from '../utils/env';
 
 export default {
   bg: '#325068',
-  footerLogoImage: 'https://raw.githubusercontent.com/CBIIT/bento-frontend/master/src/assets/footer/FNL_logo.png',
+  footerLogoImage: 'https://raw.githubusercontent.com/cbiit/datacommons-assets/main/bento/images/icons/png/footerlogo.png',
   footerLogoAltText: 'Footer Logo',
   footerLogoHyperlink: 'https://frederick.cancer.gov/',
   footerStaticText: 'NIH … Turning Discovery Into Health®',

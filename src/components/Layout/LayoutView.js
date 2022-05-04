@@ -42,7 +42,7 @@ const Layout = ({ classes, isSidebarOpened }) => (
             <Route exact path="/ICDC/" component={Home} />
             <Route exact path="/" component={Home} />
             <Route exact path="/home" component={Home} />
-            <Route path="/cases" component={Dashboard} />
+            <Route path="/explore" component={Dashboard} />
             <Route path="/trials" component={Trials} />
             <Route path="/table" component={table} />
             <Route path="/fileCentricCart" component={fileCentricCart} />

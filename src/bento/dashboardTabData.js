@@ -356,6 +356,46 @@ query search(
           group
           subjects
       }
+      filterCasesCountBaseOnTrialId {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnTrialCode {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnPubMedID {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnGender {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnRace {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnEthnicity {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnDiagnoses {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnFileType {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnFileFormat {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnTrialArm {
+            group
+            subjects
+        }
   }
 }
 `;
@@ -768,6 +808,7 @@ query search (
 
 export const GET_FILES_OVERVIEW_QUERY = gql`
 query fileOverview($file_name: [String],
+    $case_id: [String],
     $clinical_trial_designation : [String],
     $clinical_trial_id : [String],
     $pubmed_id : [String],
@@ -783,7 +824,8 @@ query fileOverview($file_name: [String],
     $order_by:  String
     $sort_direction: String){
     fileOverview(
-        file_name: $file_name,
+        file_name: $file_name
+        case_id: $case_id
         clinical_trial_designation: $clinical_trial_designation
         clinical_trial_id: $clinical_trial_id
         pubmed_id: $pubmed_id
@@ -922,12 +964,14 @@ query caseOverview($case_id: [String],
 
 
 export const GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL = gql`
-query search (          
-  $subject_ids: [String],
+query fileIdsFromCaseId(
+    $case_id: [String]
 ){
-  fileIDsFromList (          
-      subject_ids: $subject_ids,
-  ) 
+    fileIdsFromCaseId(
+        case_id: $case_id
+    ){
+        file_ids
+    }
 }
   `;
 
@@ -942,64 +986,63 @@ query search (
   `;
 
 export const GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL = gql`
-query search (          
-  $file_names: [String] 
+query fileIdsFromFileName(
+    $file_name: [String],
+    $order_by: String,
+    $sort_direction: String,
+    $first: Int,
+    $offset: Int
 ){
-  fileIDsFromList (          
-      file_names: $file_names
-  ) 
+    fileIdsFromFileName(
+        file_name: $file_name,
+        order_by: $order_by,
+        sort_direction: $sort_direction,
+        first: $first,
+        offset: $offset
+    ){
+        file_name
+        uuid
+    }
+    
 }
   `;
 
 export const GET_ALL_FILEIDS_FROM_CASESTAB_FOR_ADD_ALL_CART = gql`
-query subjectsAddAllToCart(
-  $subject_ids: [String],
-  $programs: [String] ,
-  $studies: [String] ,
-  $diagnoses: [String] ,
-  $rc_scores: [String] ,
-  $tumor_sizes: [String] ,
-  $chemo_regimen: [String] ,
-  $tumor_grades: [String] ,
-  $er_status: [String] ,
-  $pr_status: [String] ,
-  $endo_therapies: [String] ,
-  $meno_status: [String] ,
-  $tissue_type: [String],
-  $composition: [String],
-  $association: [String],
-  $file_type: [String],
-  $age_at_index: [Float],
-  $first: Int,
+query caseOverview($case_id: [String],
+    $clinical_trial_designation : [String],
+    $clinical_trial_id : [String],
+    $pubmed_id : [String],
+    $trial_arm : [String],
+    $disease : [String],
+    $gender : [String],
+    $race : [String],
+    $ethnicity : [String],
+    $file_type : [String],
+    $file_format : [String],
+    $first: Int,
   $offset: Int= 0, 
   $order_by: String = "file_id",
-  $sort_direction: String = "asc" 
-  ){
-  subjectOverview(
-      subject_ids: $subject_ids,
-      programs: $programs,
-      studies: $studies,
-      diagnoses: $diagnoses,
-      rc_scores: $rc_scores,
-      tumor_sizes: $tumor_sizes,
-      chemo_regimen: $chemo_regimen,
-      tumor_grades: $tumor_grades,
-      er_status: $er_status,
-      pr_status: $pr_status,
-      endo_therapies: $endo_therapies,
-      meno_status: $meno_status,
-      tissue_type: $tissue_type,
-      composition: $composition,
-      association: $association,
-      file_type: $file_type,
-      age_at_index: $age_at_index,
-      first: $first,
-      offset: $offset,
-      order_by: $order_by,
-      sort_direction: $sort_direction
-      ) {
+  $sort_direction: String = "asc"
+    ){
+    caseOverview(
+        case_id: $case_id,
+        clinical_trial_designation: $clinical_trial_designation
+        clinical_trial_id: $clinical_trial_id
+        pubmed_id: $pubmed_id
+        trial_arm: $trial_arm
+        disease: $disease
+        gender: $gender
+        race: $race
+        ethnicity: $ethnicity
+        file_type: $file_type
+        file_format: $file_format
+        first: $first
+        offset: $offset
+        order_by: $order_by
+        sort_direction: $sort_direction
+    ){
       files
-  }
+    }
 }
     `;
 
@@ -1057,54 +1100,44 @@ export const GET_ALL_FILEIDS_FROM_SAMPLETAB_FOR_ADD_ALL_CART = gql`
         `;
 
 export const GET_ALL_FILEIDS_FROM_FILESTAB_FOR_ADD_ALL_CART = gql`
-query fileAddAllToCart(
-  $subject_ids: [String],
-  $programs: [String] ,
-  $studies: [String] ,
-  $diagnoses: [String] ,
-  $rc_scores: [String] ,
-  $tumor_sizes: [String] ,
-  $chemo_regimen: [String] ,
-  $tumor_grades: [String] ,
-  $er_status: [String] ,
-  $pr_status: [String] ,
-  $endo_therapies: [String] ,
-  $meno_status: [String] ,
-  $tissue_type: [String],
-  $composition: [String],
-  $association: [String],
-  $file_type: [String],
-  $age_at_index: [Float],
-  $first: Int,
+query fileOverview(
+    $file_name: [String],
+    $case_id: [String],
+    $clinical_trial_designation : [String],
+    $clinical_trial_id : [String],
+    $pubmed_id : [String],
+    $trial_arm : [String],
+    $disease : [String],
+    $gender : [String],
+    $race : [String],
+    $ethnicity : [String],
+    $file_type : [String],
+    $file_format : [String],
+    $first: Int,
   $offset: Int= 0, 
   $order_by: String = "file_id",
   $sort_direction: String = "asc"
- ){
-  fileOverview(
-      subject_ids:$subject_ids,
-      programs: $programs,
-      studies: $studies,
-      diagnoses: $diagnoses,
-      rc_scores: $rc_scores,
-      tumor_sizes: $tumor_sizes,
-      chemo_regimen: $chemo_regimen,
-      tumor_grades: $tumor_grades,
-      er_status: $er_status,
-      pr_status: $pr_status,
-      endo_therapies: $endo_therapies,
-      meno_status: $meno_status,
-      tissue_type: $tissue_type,
-      composition: $composition,
-      association: $association,       
-      file_type: $file_type,
-      age_at_index: $age_at_index,
-      first: $first, 
+){
+    fileOverview(
+        file_name: $file_name,
+        case_id: $case_id,
+        clinical_trial_designation: $clinical_trial_designation
+        clinical_trial_id: $clinical_trial_id
+        pubmed_id: $pubmed_id
+        trial_arm: $trial_arm
+        disease: $disease
+        gender: $gender
+        race: $race
+        ethnicity: $ethnicity
+        file_type: $file_type
+        file_format: $file_format
+        first: $first, 
       offset: $offset, 
       order_by: $order_by,
       sort_direction: $sort_direction
-  ){
-      file_id,
-  }
+    ){
+        file_id
+    }
 }
             `;
 

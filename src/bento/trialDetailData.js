@@ -19,7 +19,7 @@ const breadCrumb = {
 const aggregateCount = {
   labelText: 'Cases',
   dataField: 'number_of_cases',
-  link: '/cases',
+  link: '/explore',
   display: true,
 };
 
@@ -121,7 +121,7 @@ const table = {
     {
       dataField: 'arm_id',
       header: 'Arm',
-      link: '/cases',
+      link: '/explore',
     },
     {
       dataField: 'arm_drug',
