@@ -66,7 +66,7 @@ const cartView = ({
     );
   }
 
-  const fileIdIndex = table.columns.map((d) => d.dataField).findIndex((e) => e === 'file_id');
+  const fileIdIndex = table.columns.map((d) => d.dataField).findIndex((e) => e === 'uuid');
 
   const deleteColumn = [{
     name: 'Remove',
@@ -98,7 +98,7 @@ const cartView = ({
                 <IconButton aria-label="help" className={classes.removeHeadCellIconButton}>
                   <ArrowDropDownIcon onClick={() => openDialogBox()} onMouseEnter={() => toggleRemoveAllMessageStatus('open')} onMouseLeave={() => toggleRemoveAllMessageStatus('close')} />
                 </IconButton>
-                { removeAllMessageStatus ? (
+                {removeAllMessageStatus ? (
                   <div className={classes.removeAllMessage}>
                     {' '}
                     Remove
@@ -140,6 +140,7 @@ const cartView = ({
             headerIconAlt={myFilesPageData.headerIconAlt}
             mainTitle={myFilesPageData.mainTitle}
             subTitle={myFilesPageData.subTitle}
+            paginationAPIField={myFilesPageData.paginationAPIField}
           />
 
           <div className={classes.topButtonGroup}>
@@ -162,7 +163,7 @@ const cartView = ({
                 className={classes.helpIcon}
               />
             </IconButton>
-            { TopMessageStatus ? (
+            {TopMessageStatus ? (
               <div className={classes.messageTop}>
                 {' '}
                 <Message data={tooltipMessageData} />
@@ -177,6 +178,7 @@ const cartView = ({
               fileIDs={fileIDs}
               defaultSortCoulmn={defaultSortCoulmn}
               defaultSortDirection={defaultSortDirection}
+              paginationAPIField={myFilesPageData.paginationAPIField}
             />
             <CartFooter
               placeholder={myFilesPageData.textareaPlaceholder}

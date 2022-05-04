@@ -182,7 +182,7 @@ const removeEmptySubjectsFromDonutData = (data) => data.filter((item) => item.su
  * @param {json} widgetsInfoFromCustConfig
  * @return {json}r
  */
- function getWidgetsInitData(data, widgetsInfoFromCustConfig) {
+function getWidgetsInitData(data, widgetsInfoFromCustConfig) {
   const donut = widgetsInfoFromCustConfig.reduce((acc, widget) => {
     const Data = widget.type === 'sunburst' ? transformInitialDataForSunburst(data[widget.dataName], widget.datatable_level1_field, widget.datatable_level2_field, 'arms') : removeEmptySubjectsFromDonutData(data[widget.dataName]);
     const label = widget.dataName;
@@ -576,7 +576,7 @@ const getQueryAndDefaultSort = (payload = tabIndex[0].title) => {
  * @return {json}
  */
 
- export function fetchDataForDashboardTab(
+export function fetchDataForDashboardTab(
   payload,
   filters = null,
   fileIDsAfterFilter = null,
@@ -608,23 +608,17 @@ const getQueryAndDefaultSort = (payload = tabIndex[0].title) => {
 
 function transformCasesFileIdsToFiles(data) {
   // use reduce to combine all the files' id into single array
-  const transformData = data.reduce((accumulator, currentValue) => {
-    const { files } = currentValue;
-    // check if file
-    if (files && files.length > 0) {
-      return accumulator.concat(files);
-    }
-    return accumulator;
-  }, []);
-  return transformData.map((item) => ({
-    files: [item.file_id],
-  }));
+  const filteredData = [];
+  data.map((item) => (
+    item.files.map((fileId) => (filteredData.push({ uuid: fileId })))
+  ));
+  return filteredData;
 }
 
 function transformfileIdsToFiles(data) {
   // use reduce to combine all the files' id into single array
   return data.map((item) => ({
-    files: [item.file_id],
+    uuid: item.file_id,
   }));
 }
 
@@ -642,9 +636,7 @@ export async function fetchAllFileIDsForSelectAll(fileCount = 100000) {
 
   const SELECT_ALL_QUERY = getState().currentActiveTab === tabIndex[1].title
     ? GET_ALL_FILEIDS_FROM_FILESTAB_FOR_ADD_ALL_CART
-    : getState().currentActiveTab === tabIndex[1].title
-      ? GET_ALL_FILEIDS_FROM_SAMPLETAB_FOR_ADD_ALL_CART
-      : GET_ALL_FILEIDS_FROM_CASESTAB_FOR_ADD_ALL_CART;
+    : GET_ALL_FILEIDS_FROM_CASESTAB_FOR_ADD_ALL_CART;
 
   const fetchResult = await client
     .query({
@@ -656,26 +648,16 @@ export async function fetchAllFileIDsForSelectAll(fileCount = 100000) {
       },
     })
     .then((result) => {
-      const RESULT_DATA = getState().currentActiveTab === tabIndex[1].title ? 'fileOverview' : getState().currentActiveTab === tabIndex[1].title ? 'sampleOverview' : 'subjectOverview';
-      const fileIdsFromQuery = RESULT_DATA === 'fileOverview' ? transformfileIdsToFiles(result.data[RESULT_DATA]) : RESULT_DATA === 'subjectOverViewPaged' ? transformCasesFileIdsToFiles(result.data[RESULT_DATA]) : result.data[RESULT_DATA] || [];
+      const RESULT_DATA = getState().currentActiveTab === tabIndex[1].title ? 'fileOverview' : 'caseOverview';
+      const fileIdsFromQuery = RESULT_DATA === 'fileOverview' ? transformfileIdsToFiles(result.data[RESULT_DATA]) : transformCasesFileIdsToFiles(result.data[RESULT_DATA]) || [];
       return fileIdsFromQuery;
     });
-
-  // Restaruting the result Bringing {files} to files
-  const filesArray = fetchResult.reduce((accumulator, currentValue) => {
-    const { files } = currentValue;
-    // check if file
-    if (files && files.length > 0) {
-      return accumulator.concat(files.map((f) => f));
-    }
-    return accumulator;
-  }, []);
 
   // Removing fileIds that are not in our current list of filtered fileIds
 
   const filteredFilesArray = fileIds != null
-    ? filesArray.filter((x) => fileIds.includes(x))
-    : filesArray;
+    ? fetchResult.filter((x) => fileIds.includes(x))
+    : fetchResult;
   return filteredFilesArray;
 }
 
@@ -726,18 +708,26 @@ async function getFileIDs(
   sampleIds = [],
   fileNames = [],
   apiReturnField,
+  isCaseTab,
 ) {
   const fetchResult = await client
     .query({
       query: SELECT_ALL_QUERY,
       variables: {
-        subject_ids: caseIds,
+        case_id: caseIds,
         sample_ids: sampleIds,
-        file_names: fileNames,
+        file_name: fileNames,
         first: fileCount,
       },
     })
-    .then((result) => result.data[apiReturnField] || []);
+    .then((result) => {
+      let dataResponse = result.data[apiReturnField] || [];
+      if (result.data[apiReturnField] && result.data[apiReturnField].file_ids && isCaseTab) {
+        const caseResponse = dataResponse.file_ids.map((data) => ({ uuid: data }));
+        dataResponse = [...caseResponse];
+      }
+      return dataResponse;
+    });
 
   return fetchResult;
 }
@@ -750,7 +740,6 @@ async function getFileIDs(
 function filterOutFileIds(fileIds) {
   // Removing fileIds that are not in our current list of filtered fileIds
   const { filteredFileIds } = getState();
-
   if (fileIds
     && fileIds.length > 0
     && filteredFileIds
@@ -770,14 +759,14 @@ function filterOutFileIds(fileIds) {
 export async function fetchAllFileIDs(fileCount = 100000, selectedIds = []) {
   let filesIds = [];
   switch (getState().currentActiveTab) {
-    case tabIndex[2].title:
-      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL, [], [], selectedIds, 'fileIDsFromList');
-      break;
     case tabIndex[1].title:
-      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_SAMPLESTAB_FOR_SELECT_ALL, [], selectedIds, [], 'fileIDsFromList');
+      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_FILESTAB_FOR_SELECT_ALL, [], [], selectedIds, 'fileIdsFromFileName');
+      break;
+    case tabIndex[0].title:
+      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], [], 'fileIdsFromCaseId', true);
       break;
     default:
-      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], [], 'fileIDsFromList');
+      filesIds = await getFileIDs(fileCount, GET_ALL_FILEIDS_CASESTAB_FOR_SELECT_ALL, selectedIds, [], [], 'fileIdsFromCaseId', true);
   }
   return filterOutFileIds(filesIds);
 }
@@ -1017,7 +1006,7 @@ export function updateFilteredAPIDataIntoCheckBoxData(data, facetSearchDataFromC
       groupName: mapping.label,
       checkboxItems: mapping.slider === true
         ? data[mapping.api]
-        : transformAPIDataIntoCheckBoxData(data[mapping.api], mapping.field),
+        : transformAPIDataIntoCheckBoxData(data[mapping.apiForFiltering], mapping.field),
       datafield: mapping.datafield,
       show: mapping.show,
       slider: mapping.slider,
@@ -1077,14 +1066,14 @@ export async function tableHasSelections() {
 
   const filteredNames = await getFileNamesByFileIds(getState().filteredFileIds);
   switch (getState().currentActiveTab) {
-    case tabIndex[2].title:
+    case tabIndex[1].title:
       filteredIds = filteredNames;
       selectedRowInfo = getState().dataFileSelected.selectedRowInfo;
 
       break;
-    case tabIndex[1].title:
-      filteredIds = getState().filteredSampleIds;
-      selectedRowInfo = getState().dataSampleSelected.selectedRowInfo;
+    case tabIndex[0].title:
+      filteredIds = getState().filteredSubjectIds;
+      selectedRowInfo = getState().dataCaseSelected.selectedRowInfo;
       break;
     default:
       filteredIds = getState().filteredSubjectIds;

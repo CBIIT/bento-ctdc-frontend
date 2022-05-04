@@ -372,7 +372,7 @@ class ServerPaginatedTableView extends React.Component {
       options1.page = newPage;
     }
     let updatedData = data;
-    if (data.length > rowsPerPage) {
+    if (data && data.length > rowsPerPage) {
       const newData = [...data];
       const sortedData = this.getSortData(newData, sortOrder.name, sortOrder.direction);
       updatedData = sortedData.splice(0, rowsPerPage);
