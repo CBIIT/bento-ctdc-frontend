@@ -62,7 +62,7 @@ const tabController = (classes) => {
     && state.dashboardTab.autoCompleteSelection
     ? state.dashboardTab.autoCompleteSelection.subject_ids : {}));
   const bulkUpload = useSelector((state) => (state.dashboardTab
-    && state.dashboardTab.bulkUpload ? state.dashboardTab.bulkUpload.subject_ids : {}));
+    && state.dashboardTab.bulkUpload ? state.dashboardTab.bulkUpload.case_id : {}));
   const subjectIds = autoCompleteSelection.concat(bulkUpload);
   useEffect(() => {
     setCurrentTab(0);

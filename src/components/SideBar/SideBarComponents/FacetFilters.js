@@ -194,7 +194,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
 
   React.useEffect(() => {
     // Open all sections and groups when user selected auto complete
-    if (bulkUpload.subject_ids.length > 0 || autoCompleteSelection.subject_ids.length > 0) {
+    if (bulkUpload.case_id.length > 0 || autoCompleteSelection.subject_ids.length > 0) {
       const allSectionLabels = Object.keys(facetSectionVariables);
       const allCheckBoxLabels = facetSearchData.reduce((acc, facet) => (
         [...acc, facet.label]
@@ -484,7 +484,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
                     {
                       showSearch && (
                         <div className={classes.searchContainer} onClick={handleCaseFacetClick}>
-                          {bulkUpload.subject_ids.length !== 0 ? <InputSetListItem /> : ''}
+                          {bulkUpload.case_id.length !== 0 ? <InputSetListItem /> : ''}
                           <AutoComplete
                             ref={searchRef}
                             type="subjectIds"
@@ -497,7 +497,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
                             className={classes.uploadButton}
                             id="localFindUploadCaseSetButton"
                           >
-                            {bulkUpload.subject_ids.length !== 0 ? 'View Case Set' : 'Upload Case Set'}
+                            {bulkUpload.case_id.length !== 0 ? 'View Case Set' : 'Upload Case Set'}
                             <span className={classes.iconSpan}>
                               <img
                                 className={classes.uploadIcon}
