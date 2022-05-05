@@ -78,22 +78,23 @@ export const getFilesIdsInCart = () => getState().fileIds;
 const reducers = {
   addFiles: (state, item) => {
     // get previous subject's id
+    const currentFileIds = Object.assign([], item.fileIds);
     const previousFileIds = Object.assign([], state.fileIds);
 
     // remove duplicated subject's id
-    const uniqueFileIds = item.fileIds.length > 0
-      ? Array.from(
-        new Set(
-          previousFileIds.concat(item.fileIds),
-        ),
-      ) : previousFileIds;
-
+    previousFileIds.map((data) => {
+      const isIndex = currentFileIds.findIndex((file) => file.uuid === data.uuid);
+      if (isIndex < 0) {
+        currentFileIds.push(data);
+      }
+      return currentFileIds;
+    });
     // store ids in the localstorage.
-    localStorage.setItem('CartFileIds', JSON.stringify(uniqueFileIds) || []);
+    localStorage.setItem('CartFileIds', JSON.stringify(currentFileIds) || []);
 
     return {
       ...state,
-      fileIds: uniqueFileIds,
+      fileIds: currentFileIds,
       sortColumn: localStorage.getItem('sortColumn'),
       sortDirection: localStorage.getItem('sortDirection'),
     };
