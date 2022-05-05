@@ -32,7 +32,7 @@ const ValueCard = ({ data, classes, index }) => {
     {
       label: 'Page Link',
       dataField: 'node_name',
-      link: '/resources',
+      link: '/ctdc-data-model',
     },
   ];
   const propertiesWithLinks = prepareLinks(properties, data);

@@ -34,6 +34,7 @@ const CTDCHeader = (props) => {
       alt={headerData.globalHeaderLogoAltText}
       homeLink={headerData.globalHeaderLogoLink}
       SearchComponent={SearchAUtoFill}
+      customStyle={customStyle}
     />
   );
 };
