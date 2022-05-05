@@ -42,11 +42,16 @@ const SelectAllModalDialog = ({
     const getAllFilesData = await fetchAllFileIDsForSelectAll(getFilesCount());
     const currentFileIdsInCart = getFilesIdsInCart();
 
-    const newFileIDSLength = (currentFileIdsInCart !== null || currentFileIdsInCart !== [])
-      ? getAllFilesData.filter(
-        (e) => !currentFileIdsInCart.find((a) => e === a),
-      ).length : getAllFilesData.length;
-    openSnack(newFileIDSLength || 0);
+    const fileIds = JSON.parse(localStorage.getItem('CartFileIds')) || [];
+    let newFileCount = currentFileIdsInCart.length;
+    currentFileIdsInCart.map((data) => {
+      const isIndex = fileIds.findIndex((file) => file.uuid === data.uuid);
+      if (isIndex >= 0) {
+        newFileCount -= 1;
+      }
+      return newFileCount;
+    });
+    openSnack(newFileCount || 0);
     addToCart({ fileIds: getAllFilesData });
     // tell the reducer to clear the selection on the table.
     clearTableSelections();

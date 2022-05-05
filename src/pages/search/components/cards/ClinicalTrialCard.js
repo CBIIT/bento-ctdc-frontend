@@ -10,6 +10,7 @@ const ClinicalTrialCard = ({ data, classes, index }) => {
     {
       label: 'Trial Designation',
       dataField: 'clinical_trial_designation',
+      link: '/trial/{clinical_trial_id}',
 
     },
 

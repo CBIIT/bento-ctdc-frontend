@@ -9,7 +9,6 @@ const ArmCard = ({ data, classes, index }) => {
     {
       label: 'Arm ID',
       dataField: 'arm_id',
-      link: '/arm/{arm_id}',
 
     },
     {

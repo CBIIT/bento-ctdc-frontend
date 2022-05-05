@@ -117,17 +117,25 @@ const TabView = ({
     const newFileIDS = fileIDs !== null ? selectFileIds.filter(
       (e) => !fileIDs.find((a) => e === a),
     ).length : selectedIDs.length;
+    const fileIds = JSON.parse(localStorage.getItem('CartFileIds')) || [];
+    let newFileCount = selectedIDs.length;
+    selectedIDs.map((data) => {
+      const isIndex = fileIds.findIndex((file) => file.uuid === data.uuid);
+      if (isIndex >= 0) {
+        newFileCount -= 1;
+      }
+    });
     if (cartWillFull(newFileIDS)) {
       // throw an alert
       setCartIsFull(true);
       AddToCartAlertDialogRef.current.open();
     } else if (newFileIDS > 0) {
       addToCart({ fileIds: selectFileIds });
-      openSnack(newFileIDS);
+      openSnack(newFileCount);
       // tell the reducer to clear the selection on the table.
       clearTableSelections();
     } else if (newFileIDS === 0) {
-      openSnack(newFileIDS);
+      openSnack(newFileCount);
       // tell the reducer to clear the selection on the table.
       clearTableSelections();
     }
@@ -236,7 +244,7 @@ const TabView = ({
           className={classes.button}
           id={`${tableID}_${buttonText}`}
         >
-          { buttonText }
+          {buttonText}
         </button>
         <ToolTip classes={{ tooltip: classes.customTooltip, arrow: classes.customArrow }} title={tooltipMessage} arrow placement="bottom">
           <IconButton
@@ -264,7 +272,7 @@ const TabView = ({
           <CustomDataTable
             key={data.length}
             data={data}
-            columns={getColumns(customColumn, classes, data, externalLinkIcon, '', () => {}, DocumentDownload, globalData.replaceEmptyValueWith)}
+            columns={getColumns(customColumn, classes, data, externalLinkIcon, '', () => { }, DocumentDownload, globalData.replaceEmptyValueWith)}
             options={finalOptions}
             count={count}
             overview={getOverviewQuery(api)}
@@ -284,7 +292,7 @@ const TabView = ({
           onClick={exportFiles}
           className={classes.button}
         >
-          { buttonText }
+          {buttonText}
         </button>
 
         <ToolTip classes={{ tooltip: classes.customTooltip, arrow: classes.customArrow }} title={tooltipMessage} arrow placement="bottom">
