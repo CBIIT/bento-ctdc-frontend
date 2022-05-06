@@ -42,10 +42,10 @@ const SelectAllModalDialog = ({
     const getAllFilesData = await fetchAllFileIDsForSelectAll(getFilesCount());
     const currentFileIdsInCart = getFilesIdsInCart();
 
-    const fileIds = JSON.parse(localStorage.getItem('CartFileIds')) || [];
-    let newFileCount = currentFileIdsInCart.length;
-    currentFileIdsInCart.map((data) => {
-      const isIndex = fileIds.findIndex((file) => file.uuid === data.uuid);
+    let newFileCount = getAllFilesData.length;
+    // eslint-disable-next-line no-unused-expressions
+    currentFileIdsInCart.length && getAllFilesData.map((data) => {
+      const isIndex = currentFileIdsInCart.findIndex((file) => file.uuid === data.uuid);
       if (isIndex >= 0) {
         newFileCount -= 1;
       }

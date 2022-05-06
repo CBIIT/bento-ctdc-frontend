@@ -194,7 +194,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
 
   React.useEffect(() => {
     // Open all sections and groups when user selected auto complete
-    if (bulkUpload.case_id.length > 0 || autoCompleteSelection.subject_ids.length > 0) {
+    if (bulkUpload.case_id.length > 0 || autoCompleteSelection.case_id.length > 0) {
       const allSectionLabels = Object.keys(facetSectionVariables);
       const allCheckBoxLabels = facetSearchData.reduce((acc, facet) => (
         [...acc, facet.label]
@@ -487,7 +487,7 @@ export const FacetPanelComponent = ({ classes }, ref) => {
                           {bulkUpload.case_id.length !== 0 ? <InputSetListItem /> : ''}
                           <AutoComplete
                             ref={searchRef}
-                            type="subjectIds"
+                            type="case_id"
                             data={getAllIds('subjectIds')}
                           />
                           <Button
