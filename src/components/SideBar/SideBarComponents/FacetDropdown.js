@@ -57,6 +57,7 @@ const FacetPanel = ({ classes }) => {
         classes={{
           root: classes.expansionPanelRoot,
         }}
+        defaultExpanded
       >
         <CustomExpansionPanelSummary>
           {/* <ListItemText primary={sideBarItem.groupName} /> */}
