@@ -56,7 +56,7 @@ const TrialView = ({ classes, data, theme }) => {
 
   const stat = {
     numberOfTrials: 1,
-    numberOfCases: data.searchCases.casesCountBaseOnTrialId.count,
+    numberOfCases: data.clinicalTrialByTrialId.number_of_cases,
     numberOfFiles: data.fileCountByTrialId,
   };
 
