@@ -80,6 +80,11 @@ query globalSearch($input : String,
         case_count
         cases {
             case_id
+            clinical_trial_code
+            arm_id
+            gender
+            race
+            disease
             type
         }
     }

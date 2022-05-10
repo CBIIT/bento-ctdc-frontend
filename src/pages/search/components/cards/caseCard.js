@@ -8,9 +8,34 @@ const CaseCard = ({ data, classes, index }) => {
   const properties = [
 
     {
-      label: 'Case ID',
+      label: 'Test Case ID',
       dataField: 'case_id',
       link: '/case/{case_id}',
+
+    },
+    {
+      label: 'Assigned to Trial',
+      dataField: 'clinical_trial_code',
+
+    },
+    {
+      label: 'ARM',
+      dataField: 'arm_id',
+
+    },
+    {
+      label: 'Gender',
+      dataField: 'gender',
+
+    },
+    {
+      label: 'Race',
+      dataField: 'race',
+
+    },
+    {
+      label: 'Disease',
+      dataField: 'disease',
 
     },
   ];
