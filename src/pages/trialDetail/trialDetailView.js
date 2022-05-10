@@ -46,10 +46,10 @@ const TrialView = ({ classes, data, theme }) => {
     setSideBarToLoading();
     setDashboardTableLoading();
     singleCheckBox([{
-      datafield: 'clinical_trial_id',
-      groupName: 'Trial ID',
+      datafield: 'trial_arm',
+      groupName: 'Trial ARM',
       isChecked: true,
-      name: `${programArm.rowData[0]}_ ${programArm.rowData[1]}`,
+      name: `${programArm.rowData[0]}_${programArm.rowData[1]}`,
       section: 'Filter By Cases',
     }]);
   };
