@@ -49,7 +49,7 @@ const table = {
       header: 'Arms',
     },
     {
-      dataField: 'number_of_cases',
+      dataField: 'numberOfCases',
       header: 'Cases',
     },
   ],
@@ -67,7 +67,7 @@ const GET_TRIALS_DATA_QUERY = gql`{
   lead_organization
   principal_investigators
   number_of_arms
-  number_of_cases
+  numberOfCases
   }
 }`;
 

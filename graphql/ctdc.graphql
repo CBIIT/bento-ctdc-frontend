@@ -288,7 +288,7 @@ type ClinicalTrialArm{
   arm_target: String,
   arm_drug: String,
   pubmed_id: String,
-  number_of_cases: Int
+  numberOfCases: Int
 }
 
 # ---Queries---
@@ -371,7 +371,7 @@ type QueryType {
       arm_target: a.arm_target,
       arm_drug: a.arm_drug,
       pubmed_id: a.pubmed_id,
-      number_of_cases: COUNT(DISTINCT c)
+      numberOfCases: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 

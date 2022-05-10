@@ -18,8 +18,8 @@ const Programs = ({ classes, data }) => {
     setSideBarToLoading();
     setDashboardTableLoading();
     singleCheckBox([{
-      datafield: 'programs',
-      groupName: 'Program',
+      datafield: 'clinical_trial_designation',
+      groupName: 'Trial Code',
       isChecked: true,
       name: program.rowData[0],
       section: 'Filter By Cases',

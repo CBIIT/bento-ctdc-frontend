@@ -34,10 +34,10 @@ const TrialView = ({ classes, data, theme }) => {
     setSideBarToLoading();
     setDashboardTableLoading();
     singleCheckBox([{
-      datafield: 'programs',
-      groupName: 'Program',
+      datafield: 'clinical_trial_designation',
+      groupName: 'Trial Code',
       isChecked: true,
-      name: trialData.program_acronym,
+      name: trialData.clinical_trial_designation,
       section: 'Filter By Cases',
     }]);
   };
@@ -46,17 +46,17 @@ const TrialView = ({ classes, data, theme }) => {
     setSideBarToLoading();
     setDashboardTableLoading();
     singleCheckBox([{
-      datafield: 'studies',
-      groupName: 'Arm',
+      datafield: 'trial_arm',
+      groupName: 'Trial ARM',
       isChecked: true,
-      name: `${programArm.rowData[0]}: ${programArm.rowData[1]}`,
+      name: `${programArm.rowData[0]}_${programArm.rowData[1]}`,
       section: 'Filter By Cases',
     }]);
   };
 
   const stat = {
     numberOfTrials: 1,
-    numberOfCases: data.clinicalTrialByTrialId.number_of_cases,
+    numberOfCases: data.clinicalTrialByTrialId.numberOfCases,
     numberOfFiles: data.fileCountByTrialId,
   };
 
