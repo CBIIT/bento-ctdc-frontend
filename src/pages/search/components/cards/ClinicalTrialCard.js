@@ -17,6 +17,7 @@ const ClinicalTrialCard = ({ data, classes, index }) => {
     {
       label: 'Trial ID',
       dataField: 'clinical_trial_id',
+      link: 'https://clinicaltrials.gov/ct2/show/{clinical_trial_id}',
     },
 
   ];

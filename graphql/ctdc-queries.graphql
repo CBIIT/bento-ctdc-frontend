@@ -40,7 +40,7 @@ type ClinicalTrialInfo{
   lead_organization: String,
   principal_investigators: String,
   number_of_arms: Int,
-  number_of_cases: Int
+  numberOfCases: Int
 }
 
 type ClinicalTrialArm{
@@ -93,7 +93,7 @@ type QueryType {
       lead_organization: ct.lead_organization,
       principal_investigators: ct.principal_investigators,
       number_of_arms: COUNT(DISTINCT a),
-      number_of_cases: COUNT(DISTINCT c)
+      numberOfCases: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 
@@ -111,7 +111,7 @@ type QueryType {
       lead_organization: ct.lead_organization,
       principal_investigators: ct.principal_investigators,
       number_of_arms: COUNT(DISTINCT a),
-      number_of_cases: COUNT(DISTINCT c)
+      numberOfCases: COUNT(DISTINCT c)
     }
   """, passThrough: true)
 

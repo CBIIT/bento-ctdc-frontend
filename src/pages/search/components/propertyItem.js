@@ -1,9 +1,9 @@
 import { Grid, withStyles } from '@material-ui/core';
 import React from 'react';
-import { Anchor } from 'bento-components';
+import { Anchor, formatBytes } from 'bento-components';
 
 const PropertyItem = ({
-  label, value, link, labelLink, classes, index,
+  label, value, link, convertBytes, labelLink, classes, index,
 }) => {
   const defaultValue = '';
   return (
@@ -15,7 +15,9 @@ const PropertyItem = ({
           </span>
           <span className={classes.content} id={`section_description_${index + 1}`}>
             {value || value === 0 ? (
-              link ? <Anchor link={link} text={value} classes={classes} /> : value
+              link ? <Anchor link={link} text={value} classes={classes} />
+                : convertBytes ? formatBytes(value)
+                  : value
             ) : defaultValue}
           </span>
         </Grid>

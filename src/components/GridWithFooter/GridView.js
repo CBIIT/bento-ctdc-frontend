@@ -123,8 +123,18 @@ const GridView = ({
       setCartIsFull(true);
       AddToCartAlertDialogRef.current.open();
     } else if (newFileIDS > 0) {
-      addToCart({ fileIds: selectedIDs });
-      openSnack(newFileIDS);
+      const filterSelectedIds = selectedIDs.map((id) => ({ uuid: id }));
+      const fileIds = JSON.parse(localStorage.getItem('CartFileIds')) || [];
+      let newFileCount = filterSelectedIds.length;
+      filterSelectedIds.map((id) => {
+        const isIndex = fileIds.findIndex((file) => file.uuid === id.uuid);
+        if (isIndex >= 0) {
+          newFileCount -= 1;
+        }
+        return newFileCount;
+      });
+      addToCart({ fileIds: filterSelectedIds });
+      openSnack(newFileCount);
       setSelectedIDs([]);
     }
   }

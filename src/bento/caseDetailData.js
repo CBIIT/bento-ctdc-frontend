@@ -237,6 +237,11 @@ const table2 = {
       // set formatBytes to true to display file size (in bytes) in a more human readable format
       formatBytes: true,
     },
+    {
+      dataField: 'uuid',
+      header: 'UUID',
+      display: false,
+    },
   ],
   // Util Functions
   // Custom function on selct checkbox is selected.
@@ -279,6 +284,7 @@ query caseDetailByCaseId($case_id1: String!, $case_id2: [String]){
   file_description 
   file_format 
   file_size 
+  uuid
   md5sum 
   }
 }`;
