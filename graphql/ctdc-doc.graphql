@@ -288,7 +288,7 @@ type ClinicalTrialArm{
   arm_target: String,
   arm_drug: String,
   pubmed_id: String,
-  number_of_cases: Int
+  numberOfCases: Int
 }
 
 # ---Queries---
