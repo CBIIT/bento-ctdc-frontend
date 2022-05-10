@@ -280,7 +280,7 @@ type ClinicalTrialInfo{
   lead_organization: String,
   principal_investigators: String,
   number_of_arms: Int,
-  number_of_cases: Int
+  numberOfCases: Int
 }
 
 type ClinicalTrialArm{
