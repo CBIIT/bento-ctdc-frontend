@@ -13,24 +13,19 @@ const FileCard = ({ data, classes, index }) => {
     {
       label: 'File Description',
       dataField: 'file_description',
-
     },
     {
-      label: 'Program ID',
-      dataField: 'program_id',
-      link: '/program/{program_id}',
-
+      label: 'File Type',
+      dataField: 'file_type',
     },
     {
-      label: 'Case ID',
-      dataField: 'subject_id',
-      link: '/case/{subject_id}',
-
+      label: 'File Size',
+      dataField: 'file_size',
+      convertBytes: true,
     },
     {
-      label: 'Sample ID',
-      dataField: 'sample_id',
-      link: '/case/{subject_id}',
+      label: 'Trial Code',
+      dataField: 'clinical_trial_code',
     },
   ];
   const propertiesWithLinks = prepareLinks(properties, data);
@@ -56,6 +51,7 @@ const FileCard = ({ data, classes, index }) => {
               label={prop.label}
               value={data[prop.dataField]}
               link={prop.link}
+              convertBytes={prop.convertBytes}
             />
           ))}
         </Grid>

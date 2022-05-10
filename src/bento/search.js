@@ -117,6 +117,9 @@ query globalSearch($input : String,
         files {
             file_name
             file_description
+            file_type
+            file_size
+            clinical_trial_code
             type
         }
     }
