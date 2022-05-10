@@ -18,7 +18,7 @@ const breadCrumb = {
 // --------------- Aggregated count configuration --------------
 const aggregateCount = {
   labelText: 'Cases',
-  dataField: 'number_of_cases',
+  dataField: 'numberOfCases',
   link: '/explore',
   display: true,
 };
@@ -121,7 +121,6 @@ const table = {
     {
       dataField: 'arm_id',
       header: 'Arm',
-      link: '/explore',
     },
     {
       dataField: 'arm_drug',
@@ -169,7 +168,7 @@ query trialIdQueries(
       clinical_trial_type
       lead_organization
       principal_investigators
-      number_of_cases
+      numberOfCases
       number_of_arms
   }
   clinicalTrialArmByTrialId(trial_id:$id){
