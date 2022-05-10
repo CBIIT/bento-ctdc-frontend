@@ -135,7 +135,7 @@ const table = {
       header: 'PubMed ID',
     },
     {
-      dataField: 'number_of_cases',
+      dataField: 'numberOfCases',
       header: 'Associated Cases',
     },
   ],
@@ -176,7 +176,7 @@ query trialIdQueries(
       arm_target
       arm_drug
       pubmed_id
-      number_of_cases
+      numberOfCases
   }
 }`;
 
