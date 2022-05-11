@@ -250,7 +250,8 @@ const FacetModal = ({
         newArr.push.apply(newArr, fileItems);
         return newArr;
       });
-      const unmatchData = [...newArr];
+      let unmatchData = [...newArr];
+      unmatchData = unmatchData.map(function(x){ return x.toUpperCase(); })
       const unMatchedContent = [];
       const matchedSubIds = await getAllSubjectIds(unmatchData);
       unmatchData.map((subId) => {

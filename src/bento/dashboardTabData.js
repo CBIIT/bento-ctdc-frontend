@@ -284,7 +284,8 @@ query search(
   $race : [String],
   $ethnicity : [String],
   $file_type : [String],
-  $file_format : [String]
+  $file_format : [String],
+  $case_id : [String],
 ){
   searchCases(
       clinical_trial_designation: $clinical_trial_designation
@@ -297,6 +298,7 @@ query search(
       ethnicity: $ethnicity
       file_type: $file_type
       file_format: $file_format
+      case_id: $case_id
   ){
       numberOfTrials
       numberOfCases
