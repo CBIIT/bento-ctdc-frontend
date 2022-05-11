@@ -36,7 +36,7 @@ export default {
       items: [
         {
           text: 'CTDC Data & Model',
-          link: '/model',
+          link: '/ctdc-data-model',
         },
         {
           text: 'Analyzing Data',
