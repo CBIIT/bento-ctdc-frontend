@@ -8,7 +8,7 @@ const CaseCard = ({ data, classes, index }) => {
   const properties = [
 
     {
-      label: 'Test Case ID',
+      label: 'Case ID',
       dataField: 'case_id',
       link: '/case/{case_id}',
 

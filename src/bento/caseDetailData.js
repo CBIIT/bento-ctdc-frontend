@@ -285,6 +285,7 @@ query caseDetailByCaseId($case_id1: String!, $case_id2: [String]){
   file_format 
   file_size 
   uuid
+  association
   md5sum 
   }
 }`;
