@@ -14,9 +14,17 @@ export const GET_ALL_IDS = gql`{
 export const GET_SUBJECT_IDS = gql`
   query caseOverview(
     $case_id: [String],
+    $first: Int= 1000, 
+    $offset: Int= 0, 
+    $order_by:  String= "case_id",
+    $sort_direction: String= "asc"
 ){
     caseOverview(
         case_id: $case_id,
+        first: $first,
+        offset: $offset,
+        order_by: $order_by,
+        sort_direction: $sort_direction
     ){
         case_id
         trial_id
@@ -316,10 +324,10 @@ query caseOverview(
     $ethnicity : [String],
     $file_type : [String],
     $file_format : [String],
-    $first: Int, 
-    $offset: Int, 
+    $first: Int= 1000, 
+    $offset: Int= 0, 
     $order_by:  String,
-    $sort_direction: String
+    $sort_direction: String= "asc"
 ){
     caseOverview(
         case_id: $case_id,

@@ -133,7 +133,7 @@ export const widgetsData = [
     label: 'Trials and Arms',
     dataName: 'trialsAndArms',
     datatable_level1_field: 'trials',
-    datatable_level2_field: 'arms',
+    datatable_level2_field: 'arm',
     show: true,
   },
   {
