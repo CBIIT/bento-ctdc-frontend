@@ -1165,8 +1165,8 @@ const reducers = {
   },
   LOCAL_SEARCH: (state, item) => {
     const isEmpty = item.subjectResponse.data
-      && item.subjectResponse.data.subjectOverview
-      && item.subjectResponse.data.subjectOverview.length < 1;
+      && item.subjectResponse.data.caseOverview
+      && item.subjectResponse.data.caseOverview.length < 1;
     const checkboxData = customCheckBox(item.result.data, facetSearchData, isEmpty);
     const newCheckboxData = [...checkboxData];
     checkboxData.map((val, idx) => {
