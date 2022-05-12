@@ -23,7 +23,7 @@ const cartView = ({
   const [modalStatus, setModalStatus] = React.useState(false);
   const [TopMessageStatus, setTopMessageStatus] = React.useState(false);
   const [removeAllMessageStatus, setRemoveAllMessageStatus] = React.useState(false);
-  const [userComments, setUserComments] = React.useState('');
+  const commentRef = React.useRef();
   async function fetchData() {
     const fetchResult = await client
       .query({
@@ -58,6 +58,7 @@ const cartView = ({
   // =========== Downlaod Manifest Functions ===========
   async function prepareDownload() {
     const data1 = await fetchData();
+    const userComments = commentRef.current.getValue();
     return downloadJson(
       data1,
       userComments,
@@ -182,7 +183,7 @@ const cartView = ({
             />
             <CartFooter
               placeholder={myFilesPageData.textareaPlaceholder}
-              onChange={(e) => setUserComments(e.target.value)}
+              ref={commentRef}
             />
           </div>
         </Grid>
