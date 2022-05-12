@@ -16,6 +16,7 @@ const CaseCard = ({ data, classes, index }) => {
     {
       label: 'Assigned to Trial',
       dataField: 'clinical_trial_code',
+      link: '/trial/{clinical_trial_id}',
 
     },
     {
@@ -34,7 +35,7 @@ const CaseCard = ({ data, classes, index }) => {
 
     },
     {
-      label: 'Disease',
+      label: 'Diagnosis',
       dataField: 'disease',
 
     },
