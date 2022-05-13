@@ -58,7 +58,7 @@ type QueryType {
   # ---Schema Version---
 
   schemaVersion: String @cypher(statement: """
-    RETURN '0.2.2'
+    RETURN '1.0.0'
   """)
 
   caseDetailByCaseId(case_id: String!): CaseDetail @cypher(statement: """
