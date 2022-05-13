@@ -1,6 +1,5 @@
 import { Grid, withStyles } from '@material-ui/core';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { prepareLinks } from 'bento-components';
 import PropertyItem from '../propertyItem';
 
@@ -40,12 +39,6 @@ const FileCard = ({ data, classes, index }) => {
         <Grid item xs={11} className={classes.propertyContainer}>
           <div>
             <span className={classes.detailContainerHeader}>FILE</span>
-            <span className={classes.cardTitle}>
-              <Link to={`/case/${data.subject_id}`} className={classes.cardTitle}>
-                {data.file_id}
-              </Link>
-            </span>
-
           </div>
           {propertiesWithLinks.map((prop) => (
             <PropertyItem
