@@ -26,6 +26,7 @@ const FileCard = ({ data, classes, index }) => {
     {
       label: 'Trial Code',
       dataField: 'clinical_trial_code',
+      link: '/trial/{clinical_trial_id}',
     },
   ];
   const propertiesWithLinks = prepareLinks(properties, data);

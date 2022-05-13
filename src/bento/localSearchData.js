@@ -51,7 +51,7 @@ query search(
   $ethnicity : [String],
   $file_type : [String],
   $file_format : [String],
-  $case_id: [String],
+  $case_id : [String],
 ){
   searchCases(
       clinical_trial_designation: $clinical_trial_designation
@@ -124,6 +124,46 @@ query search(
           group
           subjects
       }
+      filterCasesCountBaseOnTrialId {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnTrialCode {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnPubMedID {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnGender {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnRace {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnEthnicity {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnDiagnoses {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnFileType {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnFileFormat {
+            group
+            subjects
+        }
+        filterCasesCountBaseOnTrialArm {
+            group
+            subjects
+        }
   }
 }
 `;
