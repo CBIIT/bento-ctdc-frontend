@@ -29,11 +29,23 @@ query globalSearch($input : String,
         case_count
         cases {
             case_id
+            clinical_trial_code
+            clinical_trial_id
+            arm_id
+            gender
+            race
+            disease
+            type
         }
         file_count
         files {
             file_name
             file_description
+            file_type
+            file_size
+            clinical_trial_code
+            clinical_trial_id
+            type
         }
         model_count
         model {
@@ -81,6 +93,7 @@ query globalSearch($input : String,
         cases {
             case_id
             clinical_trial_code
+            clinical_trial_id
             arm_id
             gender
             race
@@ -120,6 +133,7 @@ query globalSearch($input : String,
             file_type
             file_size
             clinical_trial_code
+            clinical_trial_id
             type
         }
     }
