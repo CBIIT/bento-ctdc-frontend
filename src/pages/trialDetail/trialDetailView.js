@@ -321,7 +321,7 @@ const TrialView = ({ classes, data, theme }) => {
         </div>
       </div>
       { table.display ? (
-        <div id="table_program_detail" className={classes.tableContainer}>
+        <div id="table_trial_detail" className={classes.tableContainer}>
 
           <div className={classes.tableDiv}>
             <div className={classes.tableTitle}>
