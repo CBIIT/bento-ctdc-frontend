@@ -51,7 +51,7 @@ const Programs = ({ classes, data }) => {
           </div>
 
           { table.display ? (
-            <div id="table_programs" className={classes.tableDiv}>
+            <div id="table_trials" className={classes.tableDiv}>
               <Grid container>
                 <Grid item xs={12}>
                   <CustomDataTable
