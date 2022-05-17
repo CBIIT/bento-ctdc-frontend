@@ -49,12 +49,12 @@
   primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_Developers.png
   content:
     - paragraph: "The CTDC System features a GraphQL API to enable querying of the entire data model."
-    - paragraph: "https://trialcommons-dev.cancer.gov/v1/graphql/"
+    - paragraph: "https://ctdc-dev.bento-tools.org/graphql/"
     - paragraph: "The CTDC metadata is open to the public and will not require authentication to the system. However, some clinical data and all Data Files are not public so require permission."
-    - paragraph: "Users can query the CTDC data via Graphical User Interface (GUI) or API. The GUI provides users a distilled set of parameters (faceted querying) they can use to explore a subset of the CTDC data model. The API provide access to the full collection of parameters as seen in the $$[CTDC Data Model](https://github.com/CBIIT/ctdc-codebase)$$."
+    - paragraph: "Users can query the CTDC data via Graphical User Interface (GUI) or API. The GUI provides users a distilled set of parameters (faceted querying) they can use to explore a subset of the CTDC data model. The API provide access to the full collection of parameters as seen in the $$[CTDC Data Model](https://ctdc-dev.bento-tools.org/#/ctdc-data-model)$$."
     - paragraph: "The API is provided “as is”; there are no warranties or conditions arising out of usage of these services. "
     - paragraph: "$$#GITHUB:#$$"
-    - paragraph: "As a resource for the public and cancer research, $$[the CTDC GitHub repo](https://github.com/CBIIT/ctdc-codebase)$$ is available for research,
+    - paragraph: "As a resource for the public and cancer research, $$[the CTDC GitHub repo](https://github.com/CBIIT/bento-ctdc-frontend)$$ is available for research,
         usage, forking, and pull requests. The codebase is intended for sharing and building frameworks for related initiatives 
         and projects. The CTDC GitHub repo has documentation about how to access the system, including endpoints and recommendations for 
         tools and example queries. Both the project and documentation are currently maintained and updated. "
@@ -112,7 +112,7 @@
     - paragraph: "The CTDC data model is a representation of how all the constituent data are arranged relative to each 
         other. Given the number of studies, the range of study types and the multiple data types that the CTDC needs 
         to support, the data model will need to adapt to the needs of the science. The data model is not static and 
-        is expected to change as new needs are identified. The data dictionary can be found $$[here](https://trialcommons-dev.cancer.gov/#/data-dictionary)$$."
+        is expected to change as new needs are identified. The data dictionary can be found $$[here](https://ctdc-dev.bento-tools.org/#/data-dictionary)$$."
     - paragraph: "The SVG graphic below represents the current CTDC data model consisting of data nodes, 
         node properties, and relationships (edges). It provides a comprehensive mapping of the system data, 
         part of which may be viewed in the application interface and UI. In other words, additional nodes and 
@@ -120,7 +120,7 @@
     - paragraph: "Additionally, the CTDC Data Model serves as a template for similar initiatives and data structures, 
         including graph-based database schemas. The model will continue to evolve as data needs are further discerned. "
     - paragraph: "The tool used to generate this visual may be sourced on Github at: https://github.com/CBIIT/ctdc-model"
-    - paragraph: "The entire CTDC data model can be queried via API: https://trialcommons-dev.cancer.gov/v1/graphql/"
+    - paragraph: "The entire CTDC data model can be queried via API: https://ctdc-dev.bento-tools.org/graphql/"
 - page: '/data-dictionary'
   title: 'CTDC Data Dictionary '
   content:
