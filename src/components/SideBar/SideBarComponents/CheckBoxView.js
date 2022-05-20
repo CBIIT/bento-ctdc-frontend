@@ -86,7 +86,7 @@ function CheckBoxView(props) {
           classes={{ root: classes.checkboxRoot }}
         />
         <div className={classes.panelDetailText}>
-          <span className={checkboxItem.name.includes('_') && classes.itemDetailOverflow} title={checkboxItem.name.includes('_') && checkboxItem.name}>
+          <span className={checkboxItem.name.includes('_') && classes.itemDetailOverflow} title={checkboxItem.name.includes('_') && checkboxItem.name.length > 15 && checkboxItem.name}>
             {`${checkboxItem.name}`}
           </span>
         </div>
