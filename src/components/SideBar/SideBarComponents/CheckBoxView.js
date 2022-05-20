@@ -25,6 +25,13 @@ const styles = {
     fontFamily: 'Nunito',
     fontSize: '14px',
   },
+  itemDetailOverflow: {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    width: 150,
+    display: 'block',
+    overflow: 'hidden',
+  },
   panelSubjectText: {
     color: '#000000',
     fontFamily: 'Nunito',
@@ -79,7 +86,7 @@ function CheckBoxView(props) {
           classes={{ root: classes.checkboxRoot }}
         />
         <div className={classes.panelDetailText}>
-          <span>
+          <span className={checkboxItem.name.includes('_') && classes.itemDetailOverflow} title={checkboxItem.name.includes('_') && checkboxItem.name.length > 15 && checkboxItem.name}>
             {`${checkboxItem.name}`}
           </span>
         </div>

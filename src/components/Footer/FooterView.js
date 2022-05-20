@@ -6,23 +6,20 @@ import FooterData from '../../bento/globalFooterData';
 import env from '../../utils/env';
 import client from '../../utils/graphqlClient';
 
-const GET_BE_VERSION = gql`{
-  schemaVersion
-}
-`;
-
 const FILE_SERVICE_API = env.REACT_APP_FILE_SERVICE_API;
+const BE_VERSION_API = env.REACT_APP_BE_VERSION_API;
 
 const ICDCFooter = () => {
   const [footerUpdatedData, setFooterUpdatedData] = useState(FooterData);
-  async function getBEVersion() {
-    const schemaVersion = await client
-      .query({
-        query: GET_BE_VERSION,
-      })
-      .then((result) => result.data.schemaVersion);
-    return schemaVersion;
-  }
+
+  const getBEVersion = async () => {
+    const response = await fetch(
+      BE_VERSION_API,
+    ).then((resp) => (resp))
+      .catch(() => ({ version: '' }));
+    const data = response.json();
+    return data;
+  };
   useEffect(() => {
     const getSystems = async () => {
       const response = await fetch(
@@ -31,7 +28,7 @@ const ICDCFooter = () => {
         .catch(() => ({ version: '' }));
       const data = response.json();
       const beVersion = await getBEVersion();
-      setFooterUpdatedData({ ...FooterData, ...{ FileServiceVersion: data.version || '' }, ...{ BEversion: beVersion } });
+      setFooterUpdatedData({ ...FooterData, ...{ FileServiceVersion: data.version || '' }, ...{ BEversion: beVersion.version } });
     };
     getSystems();
   }, [FooterData]);
