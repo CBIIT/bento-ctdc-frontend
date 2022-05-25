@@ -267,6 +267,7 @@ class ServerPaginatedTableView extends React.Component {
       const sortedData = this.getSortData(newData, sortColumn, sortDirection);
       fetchResult = sortedData.splice(offsetReal, this.state.rowsPerPage);
     } else {
+      localStorage.setItem('rowsPerPage', String(rowsRequired));
       fetchResult = await client
         .query({
           query: this.props.overview,
