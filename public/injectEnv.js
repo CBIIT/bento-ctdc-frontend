@@ -6,5 +6,4 @@ window.injectedEnv = {
 	REACT_APP_FE_VERSION: '0.0.0',
 	REACT_APP_ABOUT_CONTENT_URL:'https://raw.githubusercontent.com/CBIIT/bento-ctdc-frontend/develop/src/content/pre-prod/aboutPagesContent.yml',
 	REACT_APP_FILE_SERVICE_API:'https://bento-dev.bento-tools.org/api/files/',
-	REACT_APP_BE_VERSION_API:'https://ctdc-dev.bento-tools.org/version',
 };

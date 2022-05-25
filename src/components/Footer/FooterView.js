@@ -1,25 +1,28 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Footer } from 'bento-components';
-import gql from 'graphql-tag';
 import FooterData from '../../bento/globalFooterData';
 import env from '../../utils/env';
-import client from '../../utils/graphqlClient';
 
 const FILE_SERVICE_API = env.REACT_APP_FILE_SERVICE_API;
-const BE_VERSION_API = env.REACT_APP_BE_VERSION_API;
 
 const ICDCFooter = () => {
   const [footerUpdatedData, setFooterUpdatedData] = useState(FooterData);
-
-  const getBEVersion = async () => {
-    const response = await fetch(
-      BE_VERSION_API,
-    ).then((resp) => (resp))
-      .catch(() => ({ version: '' }));
-    const data = response.json();
-    return data;
-  };
+  const url = window.location.href;
+  const { hash } = window.location;
+  const indexOfHash = url.indexOf(hash) || url.length;
+  const hashlessUrl = url.substr(0, indexOfHash);
+  async function getBEVersion() {
+    const schemaVersion = await fetch(
+      `${hashlessUrl}version`,
+    )
+      .then((response) => response.text())
+      .then((data) => {
+        const backendObj = JSON.parse(data);
+        return backendObj.version;
+      })
+      .catch(() => '0.0.0');
+    return schemaVersion;
+  }
   useEffect(() => {
     const getSystems = async () => {
       const response = await fetch(
@@ -28,7 +31,7 @@ const ICDCFooter = () => {
         .catch(() => ({ version: '' }));
       const data = response.json();
       const beVersion = await getBEVersion();
-      setFooterUpdatedData({ ...FooterData, ...{ FileServiceVersion: data.version || '' }, ...{ BEversion: beVersion.version } });
+      setFooterUpdatedData({ ...FooterData, ...{ FileServiceVersion: data.version || '' }, ...{ BEversion: beVersion } });
     };
     getSystems();
   }, [FooterData]);
