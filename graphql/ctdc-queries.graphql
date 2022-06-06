@@ -66,16 +66,16 @@ type QueryType {
       WHERE c.case_id = $case_id
     OPTIONAL MATCH (f:file)-[*]->(c)-[:of_arm]->(a:arm)-[:of_trial]->(ct:clinical_trial)
     RETURN{
-      case_id: c.case_id,
-      clinical_trial_code: ct.clinical_trial_designation,
-      clinical_trial_id: ct.clinical_trial_id,
-      disease: c.disease,
-      gender: c.gender,
-      race: c.race,
-      arm_id: a.arm_id,
-      arm_target: a.arm_target,
-      arm_drug: a.arm_drug,
-      ethnicity: c.ethnicity,
+      case_id: COALESCE(c.case_id, ''),
+      clinical_trial_code: COALESCE(ct.clinical_trial_designation, ''),
+      clinical_trial_id: COALESCE(ct.clinical_trial_id, ''),
+      disease: COALESCE(c.disease, ''),
+      gender: COALESCE(c.gender, ''),
+      race: COALESCE(c.race, ''),
+      arm_id: COALESCE(a.arm_id, ''),
+      arm_target: COALESCE(a.arm_target, ''),
+      arm_drug: COALESCE(a.arm_drug, ''),
+      ethnicity: COALESCE(c.ethnicity, ''),
       files: COLLECT(DISTINCT f.uuid)
     }
   """, passThrough: true)
@@ -84,14 +84,14 @@ type QueryType {
     MATCH (ct:clinical_trial)
     OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
     RETURN{
-      clinical_trial_id: ct.clinical_trial_id,
-      clinical_trial_short_name: ct.clinical_trial_short_name,
-      clinical_trial_description: ct.clinical_trial_description,
-      clinical_trial_designation: ct.clinical_trial_designation,
-      clinical_trial_long_name: ct.clinical_trial_long_name,
-      clinical_trial_type: ct.clinical_trial_type,
-      lead_organization: ct.lead_organization,
-      principal_investigators: ct.principal_investigators,
+      clinical_trial_id: COALESCE(ct.clinical_trial_id, ''),
+      clinical_trial_short_name: COALESCE(ct.clinical_trial_short_name, ''),
+      clinical_trial_description: COALESCE(ct.clinical_trial_description, ''),
+      clinical_trial_designation: COALESCE(ct.clinical_trial_designation, ''),
+      clinical_trial_long_name: COALESCE(ct.clinical_trial_long_name, ''),
+      clinical_trial_type: COALESCE(ct.clinical_trial_type, ''),
+      lead_organization: COALESCE(ct.lead_organization, ''),
+      principal_investigators: COALESCE(ct.principal_investigators, ''),
       number_of_arms: COUNT(DISTINCT a),
       numberOfCases: COUNT(DISTINCT c)
     }
@@ -102,14 +102,14 @@ type QueryType {
       WHERE ct.clinical_trial_id = $trial_id
     OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
     RETURN{
-      clinical_trial_id: ct.clinical_trial_id,
-      clinical_trial_short_name: ct.clinical_trial_short_name,
-      clinical_trial_description: ct.clinical_trial_description,
-      clinical_trial_designation: ct.clinical_trial_designation,
-      clinical_trial_long_name: ct.clinical_trial_long_name,
-      clinical_trial_type: ct.clinical_trial_type,
-      lead_organization: ct.lead_organization,
-      principal_investigators: ct.principal_investigators,
+      clinical_trial_id: COALESCE(ct.clinical_trial_id, ''),
+      clinical_trial_short_name: COALESCE(ct.clinical_trial_short_name, ''),
+      clinical_trial_description: COALESCE(ct.clinical_trial_description, ''),
+      clinical_trial_designation: COALESCE(ct.clinical_trial_designation, ''),
+      clinical_trial_long_name: COALESCE(ct.clinical_trial_long_name, ''),
+      clinical_trial_type: COALESCE(ct.clinical_trial_type, ''),
+      lead_organization: COALESCE(ct.lead_organization, ''),
+      principal_investigators: COALESCE(ct.principal_investigators, ''),
       number_of_arms: COUNT(DISTINCT a),
       numberOfCases: COUNT(DISTINCT c)
     }
@@ -127,10 +127,10 @@ type QueryType {
       WHERE ct.clinical_trial_id = $trial_id
     OPTIONAL MATCH (c:case)-[:of_arm]->(a:arm)-[:of_trial]->(ct)
     RETURN{
-      arm_id: a.arm_id,
-      arm_target: a.arm_target,
-      arm_drug: a.arm_drug,
-      pubmed_id: a.pubmed_id,
+      arm_id: COALESCE(a.arm_id, ''),
+      arm_target: COALESCE(a.arm_target, ''),
+      arm_drug: COALESCE(a.arm_drug, ''),
+      pubmed_id: COALESCE(a.pubmed_id, ''),
       numberOfCases: COUNT(DISTINCT c)
     }
   """, passThrough: true)
