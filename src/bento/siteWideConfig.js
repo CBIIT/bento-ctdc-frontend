@@ -5,4 +5,5 @@ export default {
   enableAuthentication: true,
   // List for options for authentication empty array defaults to google
   authEndPoint: ['google'], // authEndPoint: []
+  isLoggedIn: false,
 };

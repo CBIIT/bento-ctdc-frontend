@@ -57,6 +57,7 @@ const TabView = ({
   tooltipMessage,
   tooltipIcon,
   tooltipAlt,
+  isLoggedIn,
 }) => {
   // Get the existing files ids from  cart state
   const cart = getCart();
@@ -103,9 +104,11 @@ const TabView = ({
   }
 
   useEffect(() => {
+    if(isLoggedIn){
     initSaveButtonDefaultStyle(saveButton);
     initSaveButtonDefaultStyle(saveButton2);
     updateButtonStatus(selectedRowInfo.length > 0);
+    }
   });
 
   async function exportFiles() {
@@ -231,7 +234,7 @@ const TabView = ({
 
   return (
     <div>
-      <Grid item xs={12} className={classes.saveButtonDiv}>
+      {isLoggedIn && <Grid item xs={12} className={classes.saveButtonDiv}>
         <SelectAllModal tableIDForButton={tableID} openSnack={openSnack} />
         <AddToCartAlertDialog
           cartWillFull={cartIsFull}
@@ -266,7 +269,7 @@ const TabView = ({
           </IconButton>
         </ToolTip>
 
-      </Grid>
+      </Grid>}
       <Grid container>
         <Grid item xs={12} id={tableID}>
           <CustomDataTable
