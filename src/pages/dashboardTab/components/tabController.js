@@ -22,6 +22,8 @@ import {
   fetchAllFileIDs,
   getFilesCount,
 } from '../store/dashboardReducer';
+import UnauthorizedMessage from '../../../components/UnauthorizedMessage/UnauthorizedMessageView';
+import globalData from '../../../bento/siteWideConfig';
 
 function TabContainer({ children, dir }) {
   return (
@@ -45,6 +47,11 @@ const tabController = (classes) => {
     useSelector((state) => (state.dashboardTab.dataSampleSelected)),
     useSelector((state) => (state.dashboardTab.dataFileSelected))];
 
+  const updatedTabContainers = tabContainers.map((item) => {
+    const newItem = { ...item };
+    newItem.selectableRows = globalData.isLoggedIn;
+    return newItem;
+  });
   // data from store
   const dashboard = useSelector((state) => (state.dashboardTab
     && state.dashboardTab.datatable
@@ -200,46 +207,52 @@ const tabController = (classes) => {
     />
   ));
 
+  const isFilesDisable = !globalData.isLoggedIn && currentTab === 1;
   // Tab table Generator
-  const TABContainers = tabContainers.map((container) => (
+  const TABContainers = updatedTabContainers.map((container) => (
     <TabContainer id={container.id}>
-      <TabView
-        options={getOptions(container, classes)}
-        data={dashboard[container.dataField] ? dashboard[container.dataField] : 'undefined'}
-        customColumn={container}
-        customOnRowsSelect={onRowsSelectFunction[container.onRowsSelect]}
-        openSnack={openSnack}
-        closeSnack={closeSnack}
-        disableRowSelection={disableRowSelectionFunction[container.disableRowSelection]}
-        buttonText={container.buttonText}
-        tableID={container.tableID}
-        saveButtonDefaultStyle={container.saveButtonDefaultStyle}
-        ActiveSaveButtonDefaultStyle={container.ActiveSaveButtonDefaultStyle}
-        DeactiveSaveButtonDefaultStyle={container.DeactiveSaveButtonDefaultStyle}
-        // eslint-disable-next-line jsx-a11y/tabindex-no-positive
-        tabIndex={container.tabIndex}
-        externalLinkIcon={externalLinkIcon}
-        count={dashboardStats[container.count] ? dashboardStats[container.count] : 0}
-        api={container.api}
-        paginationAPIField={container.paginationAPIField}
-        paginationAPIFieldDesc={container.paginationAPIFieldDesc}
-        defaultSortCoulmn={container.defaultSortField || ''}
-        defaultSortDirection={container.defaultSortDirection || 'asc'}
-        dataKey={container.dataKey}
-        filteredFileIds={filteredFileIds}
-        allFilters={{ ...allFilters, ...{ case_id: caseId } }}
-        tableHasSelections={tableHasSelections}
-        setRowSelection={getTableRowSelectionEvent()}
-        selectedRowInfo={tableRowSelectionData[container.tabIndex].selectedRowInfo}
-        selectedRowIndex={tableRowSelectionData[container.tabIndex].selectedRowIndex}
-        clearTableSelections={clearTableSelections}
-        fetchAllFileIDs={fetchAllFileIDs}
-        tableDownloadCSV={container.tableDownloadCSV || false}
-        getFilesCount={getFilesCount}
-        tooltipMessage={tooltipContent[currentTab]}
-        tooltipIcon={tooltipContent.icon}
-        tooltipAlt={tooltipContent.alt}
-      />
+      {isFilesDisable
+        ? <UnauthorizedMessage classes={classes} />
+        : (
+          <TabView
+            options={getOptions(container, classes)}
+            data={dashboard[container.dataField] ? dashboard[container.dataField] : 'undefined'}
+            customColumn={container}
+            customOnRowsSelect={onRowsSelectFunction[container.onRowsSelect]}
+            openSnack={openSnack}
+            closeSnack={closeSnack}
+            disableRowSelection={disableRowSelectionFunction[container.disableRowSelection]}
+            buttonText={container.buttonText}
+            tableID={container.tableID}
+            saveButtonDefaultStyle={container.saveButtonDefaultStyle}
+            ActiveSaveButtonDefaultStyle={container.ActiveSaveButtonDefaultStyle}
+            DeactiveSaveButtonDefaultStyle={container.DeactiveSaveButtonDefaultStyle}
+            // eslint-disable-next-line jsx-a11y/tabindex-no-positive
+            tabIndex={container.tabIndex}
+            externalLinkIcon={externalLinkIcon}
+            count={dashboardStats[container.count] ? dashboardStats[container.count] : 0}
+            api={container.api}
+            paginationAPIField={container.paginationAPIField}
+            paginationAPIFieldDesc={container.paginationAPIFieldDesc}
+            defaultSortCoulmn={container.defaultSortField || ''}
+            defaultSortDirection={container.defaultSortDirection || 'asc'}
+            dataKey={container.dataKey}
+            filteredFileIds={filteredFileIds}
+            allFilters={{ ...allFilters, ...{ case_id: caseId } }}
+            tableHasSelections={tableHasSelections}
+            setRowSelection={getTableRowSelectionEvent()}
+            selectedRowInfo={tableRowSelectionData[container.tabIndex].selectedRowInfo}
+            selectedRowIndex={tableRowSelectionData[container.tabIndex].selectedRowIndex}
+            clearTableSelections={clearTableSelections}
+            fetchAllFileIDs={fetchAllFileIDs}
+            tableDownloadCSV={container.tableDownloadCSV || false}
+            getFilesCount={getFilesCount}
+            tooltipMessage={tooltipContent[currentTab]}
+            tooltipIcon={tooltipContent.icon}
+            tooltipAlt={tooltipContent.alt}
+            isLoggedIn={globalData.isLoggedIn}
+          />
+        )}
     </TabContainer>
   ));
 
@@ -265,7 +278,10 @@ const tabController = (classes) => {
           </div>
         )}
       />
-      <TabThemeProvider tableBorder={getBorderStyle()} tablecolor={getTableColor()}>
+      <TabThemeProvider
+        tableBorder={getBorderStyle()}
+        tablecolor={getTableColor()}
+      >
         <Tabs
           classes
           value={currentTab}

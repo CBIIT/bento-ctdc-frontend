@@ -11,6 +11,8 @@ import IconButton from '@material-ui/core/IconButton';
 import { addToCart, cartWillFull } from '../../pages/fileCentricCart/store/cart';
 import Message from '../Message';
 import AddToCartAlertDialog from '../AddToCartDialog';
+import UnauthorizedMessage from '../UnauthorizedMessage/UnauthorizedMessageView';
+import globalData from '../../bento/siteWideConfig';
 
 const GridView = ({
   classes,
@@ -104,12 +106,14 @@ const GridView = ({
   };
 
   useEffect(() => {
-    initSaveButtonDefaultStyle(saveButton);
+    if (globalData.isLoggedIn) {
+      initSaveButtonDefaultStyle(saveButton);
 
-    if (selectedIDs.length === 0) {
-      updateActiveSaveButtonStyle(true, saveButton);
-    } else {
-      updateActiveSaveButtonStyle(false, saveButton);
+      if (selectedIDs.length === 0) {
+        updateActiveSaveButtonStyle(true, saveButton);
+      } else {
+        updateActiveSaveButtonStyle(false, saveButton);
+      }
     }
   });
 
@@ -216,6 +220,19 @@ const GridView = ({
 
   const finalOptions = { ...options, ...defaultOptions() };
 
+  if (!globalData.isLoggedIn) {
+    return (
+      <>
+        <div className={classes.titleContainer}>
+          <span>
+            associated files
+          </span>
+        </div>
+        <UnauthorizedMessage classes={classes} />
+      </>
+    );
+  }
+
   return (
     <div>
       <AddToCartAlertDialog cartWillFull={cartIsFull} ref={AddToCartAlertDialogRef} />
@@ -273,6 +290,15 @@ const GridView = ({
 };
 
 const styles = () => ({
+  titleContainer: {
+    color: '#3695A9',
+    fontSize: 17,
+    fontFamily: 'Lato',
+    letterSpacing: '0.025em',
+    textTransform: 'uppercase',
+    backgroundColor: '#fff',
+    padding: 20,
+  },
   link: {
     color: '#DC762F',
     textDecoration: 'none',
