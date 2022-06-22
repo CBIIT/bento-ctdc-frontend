@@ -6,6 +6,7 @@ import { Search as SearchIcon } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getSearch } from '../../pages/dashboardTab/store/dashboardReducer';
+import globalData from '../../bento/siteWideConfig';
 
 function searchComponent({ classes }) {
   const history = useHistory();
@@ -31,8 +32,12 @@ function searchComponent({ classes }) {
   async function getAutoCompleteRes(newValue = []) {
     setInputValue(newValue);
     const searchResp = await getSearch(newValue);
-    const keys = ['arms', 'clinical_trials', 'cases', 'files'];
-    const datafields = ['arm_id', 'clinical_trial_id', 'case_id', 'file_name'];
+    const keys = ['arms', 'clinical_trials', 'cases'];
+    const datafields = ['arm_id', 'clinical_trial_id', 'case_id'];
+    if (globalData.isLoggedIn) {
+      keys.push('files');
+      datafields.push('file_name');
+    }
 
     const mapOption = keys.map((key, ind) => searchResp[key].map((id) => (id[datafields[ind]])));
     const option = mapOption.reduce((acc = [], iterator) => [...acc, ...iterator]);

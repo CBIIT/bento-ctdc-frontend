@@ -104,10 +104,10 @@ const TabView = ({
   }
 
   useEffect(() => {
-    if(isLoggedIn){
-    initSaveButtonDefaultStyle(saveButton);
-    initSaveButtonDefaultStyle(saveButton2);
-    updateButtonStatus(selectedRowInfo.length > 0);
+    if (isLoggedIn) {
+      initSaveButtonDefaultStyle(saveButton);
+      initSaveButtonDefaultStyle(saveButton2);
+      updateButtonStatus(selectedRowInfo.length > 0);
     }
   });
 
@@ -289,16 +289,16 @@ const TabView = ({
         </Grid>
       </Grid>
       <Grid item xs={12} className={classes.saveButtonDivBottom}>
-        <button
+        {isLoggedIn && <button
           type="button"
           ref={saveButton}
           onClick={exportFiles}
           className={classes.button}
         >
           {buttonText}
-        </button>
+        </button>}
 
-        <ToolTip classes={{ tooltip: classes.customTooltip, arrow: classes.customArrow }} title={tooltipMessage} arrow placement="bottom">
+        {isLoggedIn && <ToolTip classes={{ tooltip: classes.customTooltip, arrow: classes.customArrow }} title={tooltipMessage} arrow placement="bottom">
           <IconButton
             aria-label="help"
             className={classes.helpIconButton}
@@ -316,7 +316,7 @@ const TabView = ({
               />
             )}
           </IconButton>
-        </ToolTip>
+        </ToolTip>}
         <div style={{ position: 'relative' }}>
           <Link
             rel="noreferrer"
