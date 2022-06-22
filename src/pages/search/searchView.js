@@ -19,6 +19,7 @@ import {
 import { getSearch, getSearchPageResults } from '../dashboardTab/store/dashboardReducer';
 // import Pagination from './components/pagination';
 import Subsection from './components/searchResultSection';
+import globalData from '../../bento/siteWideConfig';
 
 function searchComponent({ classes, searchparam = '' }) {
   const [tab, setTab] = React.useState('1');
@@ -83,8 +84,22 @@ function searchComponent({ classes, searchparam = '' }) {
   }, [open]);
 
   // eslint-disable-next-line max-len
-  const allCount = () => (searchResults.arm_count + searchResults.case_count + searchResults.clinical_trial_count + searchResults.file_count + searchResults.model_count + searchResults.about_count);
+  const allCount = () => (searchResults.arm_count + searchResults.case_count + searchResults.clinical_trial_count + (globalData.isLoggedIn ? searchResults.file_count : 0) + searchResults.model_count + searchResults.about_count);
 
+  const getTabs = () => {
+    const tabArray = [
+      <Tab label={AllLabel()} classes={{ root: classes.buttonRoot, wrapper: classes.allTab }} value="1" />,
+      <Tab classes={{ root: classes.buttonRoot, wrapper: classes.subjectTab }} label={`Cases ${searchResults.case_count || 0}`} value="2" />,
+      <Tab classes={{ root: classes.buttonRoot, wrapper: classes.sampleTab }} label={`Arms ${searchResults.arm_count || 0}`} value="3" />,
+      <Tab classes={{ root: classes.buttonRoot, wrapper: classes.programTab }} label={`Clinical Trials ${searchResults.clinical_trial_count || 0}`} value="5" />,
+      <Tab classes={{ root: classes.buttonRoot, wrapper: classes.aboutTab }} label={`About ${searchResults.about_count || 0}`} value="6" />,
+      <Tab classes={{ root: classes.buttonRoot, wrapper: classes.modelTab }} label={`Model ${searchResults.model_count || 0}`} value="7" />,
+    ];
+    if (globalData.isLoggedIn) {
+      tabArray.push(<Tab classes={{ root: classes.buttonRoot, wrapper: classes.fileTab }} label={`Files ${searchResults.file_count || 0}`} value="4" />);
+    }
+    return tabArray.map((item) => (item));
+  };
   return (
     <>
       <div className={classes.heroArea}>
@@ -97,7 +112,7 @@ function searchComponent({ classes, searchparam = '' }) {
                 src="https://raw.githubusercontent.com/CBIIT/datacommons-assets/main/bento/images/icons/svgs/globalSearchDelete.svg"
                 alt="clear icon"
               />
-)}
+            )}
             classes={{ root: classes.inputRoot }}
             freeSolo
             id="search"
@@ -153,19 +168,15 @@ function searchComponent({ classes, searchparam = '' }) {
           <TabContext value={tab} fullWidth inkBarStyle={{ background: '#142D64' }}>
             <Box sx={{ borderBottom: '1px solid #828282' }}>
               <TabList onChange={handleChange} aria-label="tabs" classes={{ root: classes.tabContainter, indicator: classes.indicator }}>
-                <Tab label={AllLabel()} classes={{ root: classes.buttonRoot, wrapper: classes.allTab }} value="1" />
-                <Tab classes={{ root: classes.buttonRoot, wrapper: classes.subjectTab }} label={`Cases ${searchResults.case_count || 0}`} value="2" />
-                <Tab classes={{ root: classes.buttonRoot, wrapper: classes.sampleTab }} label={`Arms ${searchResults.arm_count || 0}`} value="3" />
-                <Tab classes={{ root: classes.buttonRoot, wrapper: classes.fileTab }} label={`Files ${searchResults.file_count || 0}`} value="4" />
-                <Tab classes={{ root: classes.buttonRoot, wrapper: classes.programTab }} label={`Clinical Trials ${searchResults.clinical_trial_count || 0}`} value="5" />
-                <Tab classes={{ root: classes.buttonRoot, wrapper: classes.aboutTab }} label={`About ${searchResults.about_count || 0}`} value="6" />
-                <Tab classes={{ root: classes.buttonRoot, wrapper: classes.modelTab }} label={`Model ${searchResults.model_count || 0}`} value="7" />
+                {getTabs()}
               </TabList>
             </Box>
             <TabPanel value="1"><Subsection searchText={searchText} queryforAPI={SEARCH_PAGE_RESULT_CASES} count={allCount() || 0} datafield="all" /></TabPanel>
             <TabPanel value="2"><Subsection searchText={searchText} queryforAPI={SEARCH_PAGE_RESULT_CASES} count={searchResults.case_count || 0} datafield="cases" /></TabPanel>
             <TabPanel value="3"><Subsection searchText={searchText} queryforAPI={SEARCH_PAGE_RESULT_ARMS} count={searchResults.arm_count || 0} datafield="arms" /></TabPanel>
-            <TabPanel value="4"><Subsection searchText={searchText} queryforAPI={SEARCH_PAGE_RESULT_FILES} count={searchResults.file_count || 0} datafield="files" /></TabPanel>
+            <TabPanel value="4">
+              {globalData.isLoggedIn && <Subsection searchText={searchText} queryforAPI={SEARCH_PAGE_RESULT_FILES} count={searchResults.file_count || 0} datafield="files" />}
+            </TabPanel>
             <TabPanel value="5"><Subsection searchText={searchText} queryforAPI={SEARCH_PAGE_RESULT_CLINICAL_TRIALS} count={searchResults.clinical_trial_count || 0} datafield="clinical_trials" /></TabPanel>
             <TabPanel value="6"><Subsection searchText={searchText} queryforAPI={SEARCH_PAGE_RESULT_ABOUT} count={searchResults.about_count || 0} datafield="about_page" /></TabPanel>
             <TabPanel value="7"><Subsection searchText={searchText} queryforAPI={SEARCH_PAGE_RESULT_MODEL} count={searchResults.model_count || 0} datafield="model" /></TabPanel>
