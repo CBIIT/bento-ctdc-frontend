@@ -12,6 +12,7 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.widgetBackground.main,
   },
   rightContent: {
+    width: 'calc(100% - 250px)',
     maxWidth: 'calc(100% - 250px)',
     position: 'relative',
     borderRight: 'thin solid #B1B1B1',
