@@ -60,6 +60,46 @@ export const navBarData = [
     link: '/trials',
   },
   {
+    labelText: 'data',
+    type: 'dropdown',
+    dropDownLinks: [
+      {
+        labelText: 'Analyze Data',
+        link: '/crdc',
+      },
+      {
+        labelText: 'CTDC Data Model',
+        link: '/ctdc-data-model',
+      },
+      {
+        labelText: 'CTDC Data Dictionary',
+        link: '/data-dictionary',
+      },
+      {
+        labelText: 'Data Use Policy',
+        link: '/data-use',
+      },
+      {
+        labelText: 'Data Submission',
+        link: '/submit',
+      },
+    ],
+  },
+  {
+    labelText: 'resources',
+    type: 'dropdown',
+    dropDownLinks: [
+      {
+        labelText: 'GraphQL',
+        link: '/graphql',
+      },
+      {
+        labelText: 'Developers',
+        link: '/developers',
+      },
+    ],
+  },
+  {
     labelText: 'about',
     type: 'dropdown',
     dropDownLinks: [
@@ -68,32 +108,26 @@ export const navBarData = [
         link: '/purpose',
       },
       {
-        labelText: 'CRDC & Analysis',
-        link: '/crdc',
-      },
-      {
-        labelText: 'CTDC Data & Model',
-        link: '/ctdc-data-model',
-      },
-      {
-        labelText: 'CTDC Data Dictionary',
-        link: '/data-dictionary',
-      },
-      {
-        labelText: 'Developers',
-        link: '/developers',
-      },
-      {
-        labelText: 'Support',
+        labelText: 'Contact Us',
         link: '/support',
-      },
-      {
-        labelText: 'Request Access',
-        link: '/request-access',
       },
     ],
   },
+  {
+    labelText: 'Request Access',
+    type: 'link',
+    link: '/request-access',
+  },
 ];
+
+export const externalLinks = {
+  resources: [
+    {
+      title: 'GitHub',
+      link: 'https://github.com/CBIIT/bento-ctdc-frontend',
+    },
+  ],
+};
 
 export const navBarCartData = {
   cartLabel: 'MY Files',
