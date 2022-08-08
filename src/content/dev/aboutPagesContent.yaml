@@ -64,7 +64,7 @@
   title: "Support"
   primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_Support.png
   content:
-    - paragraph: "If you have any questions, please contact us at $$*CTDCHelpDesk@mail.nih.gov*$$. "
+    - paragraph: "If you have any questions, please contact us at $$[CTDCHelpDesk@mail.nih.gov](CTDCHelpDesk@mail.nih.gov)$$"
 - page: '/request-access'
   title: "Request Access"
   primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_RequestAccess.png
@@ -83,12 +83,9 @@
   title: "Purpose"
   primaryContentImage: https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_Purpose.png
   content:
-    - paragraph: "The CTDC is part of the Cancer Research Data Commons (CRDC), an initiative from 
-        NCI’s Center for Biomedical Informatics and Information Technology (CBIIT). The CTDC is focused on providing access to data from NCI's Precision Medicine Initiative which has the goal to provide clinicians with new tools to select the therapies that can be used in a more individualized approach with patients. CTDC is providing the community with access to data from the National Cancer Institute-Molecular Analysis for Therapy Choice
-        (NCI-MATCH) project whose primary goal is to determine the percentage of patients whose tumors have a complete or partial response to treatment. Patients are enrolled using criteria that includes tumor genetics. All the data in CTDC is sourced from human subjects."
-    - paragraph: "The data in CTDC has been harmonized into an integrated data model and then made available 
-        to the research community. Bioinformatic analysis of the 
-        CTDC data is accomplished using the CRDC $$[Cloud Resources](https://datascience.cancer.gov/data-commons/cloud-resources)$$."
+    - paragraph: "The CTDC is an initiative from NCI’s Center for Biomedical Informatics and Information Technology (CBIIT) to expand access to data from precision medicine cancer trials to accelerate cancer research.
+        The CTDC as part of the Cancer Research Data Commons provides access to harmonized data from NCI-sponsored clinical trials, including genomic and clinical data from NCI’s $$[Molecular Analysis for Therapy Choice](https://www.cancer.gov/about-cancer/treatment/clinical-trials/nci-supported/nci-match)$$ (NCI-MATCH).
+        CTDC allows users to take advantage of NCI’s $$[Cloud Resources](https://datascience.cancer.gov/data-commons/cloud-resources)$$ for easy visualization and bioinformatic analysis of data, with no programming skills required."
 - page: '/ctdc-data-model'
   title: 'CTDC Data Model'
   primaryContentImage: 'https://raw.githubusercontent.com/CBIIT/datacommons-assets/ctdc_Assets/ctdc/images/aboutPages/About_CTDC_Model.png'
