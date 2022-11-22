@@ -2,10 +2,11 @@ import env from '../utils/env';
 
 export default {
   bg: '#325068',
-  footerLogoImage: 'https://raw.githubusercontent.com/cbiit/datacommons-assets/main/bento/images/icons/png/footerlogo.png',
-  footerLogoAltText: 'Footer Logo',
-  footerLogoHyperlink: 'https://frederick.cancer.gov/',
-  footerStaticText: 'NIH … Turning Discovery Into Health®',
+  // footerLogoImage: 'https://raw.githubusercontent.com/cbiit/datacommons-assets/main/bento/images/icons/png/footerlogo.png',
+  // footerLogoAltText: 'Footer Logo',
+  footerLogoText: 'National Cancer Institute',
+  footerLogoSubText: 'at the National Institutes of Health',
+  footerLogoHyperlink: 'https://cancer.gov/',
   version: env.REACT_APP_FE_VERSION,
   // BEversion: env.REACT_APP_BE_VERSION,
   // A maximum of 3 Subsections (link_sections) are allowed
@@ -14,37 +15,11 @@ export default {
   // Ideal size for icon is 20x20 px
   link_sections: [
     {
-      title: 'About CTDC',
+      title: 'Contact Information',
       items: [
         {
-          text: 'Purpose',
-          link: '/purpose',
-        },
-        {
-          text: 'CRDC',
-          link: '/crdc',
-        },
-        {
-          text: 'Contact Us',
-          link: 'CTDCHelpDesk@mail.nih.gov',
-        },
-      ],
-    },
-
-    {
-      title: 'About the Data',
-      items: [
-        {
-          text: 'CTDC Data & Model',
-          link: '/ctdc-data-model',
-        },
-        {
-          text: 'Analyzing Data',
-          link: '/crdc',
-        },
-        {
-          text: 'Developers (APIs)',
-          link: '/developers',
+          text: 'CTDC Help Desk',
+          link: '/support',
         },
       ],
     },
@@ -53,13 +28,40 @@ export default {
       title: 'More Information',
       items: [
         {
-          text: 'Policies',
-          link: 'https://www.cancer.gov/global/web/policies',
-          title: 'link to NCI policies',
+          text: 'CTDC Home',
+          link: '/home',
         },
         {
+          text: 'CRDC',
+          link: '/crdc',
+        },
+      ],
+    },
+
+    {
+      title: 'System Info',
+      items: [
+        {
+          text: 'Release Notes',
+          link: 'https://github.com/CBIIT/bento-ctdc-frontend',
+        },
+        {
+          text: `FE Version: ${env.REACT_APP_FE_VERSION || '0.0.0'}`,
+          link: '',
+        },
+        {
+          text: `BE Version: ${env.REACT_APP_BE_VERSION || '0.0.0'}`,
+          link: '',
+        },
+      ],
+    },
+
+    {
+      title: 'Policies',
+      items: [
+        {
           text: 'Disclaimer',
-          link: 'https://www.cancer.gov/policies/disclaimer',
+          link: '/home',
         },
         {
           text: 'Accessibility',
