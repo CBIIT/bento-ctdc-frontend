@@ -55,14 +55,11 @@ const LandingController = ({ classes, heroData }) => (
                 About the Clinical Trial Data Commons (CTDC)
               </div>
               <div className={classes.aboutContent}>
-                CTDC has been established to allow researchers to search, explore and select data
-                across
-                clinical trials from the Precision Medicine Initiative. Data in the CTDC is sourced
-                from multiple different programs and projects; all are focused on human subjects
-                and the data files are access controlled. As part of the NCI's Cancer Research Data
-                Commons (CRDC),
-                user selected data files are available for analysis in the CRDC's Cloud Resources.
-
+                The Clinical Trial Data Commons (CTDC) was established to allow expanded access to,
+                and exploration of, data collected from NCI-sponsored cancer clinical
+                trials to advance cancer research. The CTDC is part of&nbsp;
+                <a href="https://datascience.cancer.gov/data-commons" rel="noopener noreferrer">NCI's Cancer Research Data Commons (CRDC)</a>
+                &nbsp;and the data are available to the public via open or controlled access.
               </div>
               <div className={classes.aboutButtonSection}>
                 <div className={classes.aboutButtonLeft}>
@@ -104,8 +101,11 @@ const LandingController = ({ classes, heroData }) => (
                 <div className={classes.content}>
                   <div className={classes.contentHeader}> REQUEST ACCESS</div>
                   <div className={classes.contentContainer}>
-                    Data and files in CTDC are not open access,
-                    they require users to have permission.
+                    High-level case summaries are open to the public without the need for
+                    authentication. Access to additional trial case data and files requires
+                    approval through the NCTN/NCORP Data Archive. See our&nbsp;
+                    <Link to="/request-access">Request Access</Link>
+                    &nbsp;page for more information.
                   </div>
 
                 </div>
@@ -125,9 +125,8 @@ const LandingController = ({ classes, heroData }) => (
               <div className={classes.cases}>
                 <div className={classes.greyContentHeader}> Cases</div>
                 <div className={classes.greyContent}>
-                  Search all the Cases and build cohorts from all the
-                  Programs/Studies within the CTDC. The data files from
-                  these cohorts can then be analyzed in the Cloud Resources.
+                  Search cases and build cohorts from all trials within the CTDC. Data files from
+                  cohorts can then be uploaded to, and analyzed on, NCI’s Cloud Resources.
                 </div>
                 <div className={classes.greybuttonSection}>
                   <div className={classes.blueButtonLeft}>
