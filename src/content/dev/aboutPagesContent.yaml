@@ -117,7 +117,7 @@
     - paragraph: "Additionally, the CTDC Data Model serves as a template for similar initiatives and data structures, 
         including graph-based database schemas. The model will continue to evolve as data needs are further discerned. "
     - paragraph: "The tool used to generate this visual may be sourced on Github at: https://github.com/CBIIT/ctdc-model"
-    - paragraph: "The entire CTDC data model can be queried via API: https://ctdc-dev.bento-tools.org/graphql/"
+    - paragraph: "The entire CTDC data model can be queried via API: https://trialcommons-dev.cancer.gov/#/graphql"
 - page: '/data-dictionary'
   title: 'CTDC Data Dictionary '
   content:
