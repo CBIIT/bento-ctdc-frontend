@@ -1,4 +1,7 @@
 export const navBarstyling = {
+  cart: {
+
+  },
   global: {
     backgroundColor: '#E7E5E5',
     height: '39px',
