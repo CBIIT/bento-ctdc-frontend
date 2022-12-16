@@ -58,7 +58,7 @@ const LandingController = ({ classes, heroData }) => (
                 The Clinical Trial Data Commons (CTDC) was established to allow expanded access to,
                 and exploration of, data collected from NCI-sponsored cancer clinical
                 trials to advance cancer research. The CTDC is part of&nbsp;
-                <a href="https://datascience.cancer.gov/data-commons" rel="noopener noreferrer">NCI's Cancer Research Data Commons (CRDC)</a>
+                <a className={classes.aboutContentAnchor} href="https://datascience.cancer.gov/data-commons" rel="noopener noreferrer">NCI's Cancer Research Data Commons (CRDC)</a>
                 &nbsp;and the data are available to the public via open or controlled access.
               </div>
               <div className={classes.aboutButtonSection}>
@@ -311,6 +311,9 @@ const styles = () => ({
     fontFamily: '"Open Sans"',
     fontSize: '14px',
     lineHeight: '22px',
+  },
+  aboutContentAnchor: {
+    color: '#fff',
   },
   aboutButtonSection: {
     background: '#20506A',
