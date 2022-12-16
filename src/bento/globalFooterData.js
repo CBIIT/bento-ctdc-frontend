@@ -60,7 +60,7 @@ export default {
       items: [
         {
           text: 'Disclaimer',
-          link: '/home',
+          link: 'https://www.cancer.gov/policies/disclaimer',
         },
         {
           text: 'Accessibility',
