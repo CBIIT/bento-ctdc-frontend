@@ -11,9 +11,9 @@ RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build --silent
 FROM nginx:1.23.3-alpine
 
 COPY --from=build /usr/src/app/packages/bento-frontend/dist /usr/share/nginx/html
-COPY --from=build /usr/src/app/conf/inject.template.js /usr/share/nginx/html/inject.template.js
-COPY --from=build /usr/src/app/conf/nginx.conf /etc/nginx/conf.d/configfile.template
-COPY --from=build /usr/src/app/conf/entrypoint.sh /
+COPY --from=build /usr/src/app/config/inject.template.js /usr/share/nginx/html/inject.template.js
+COPY --from=build /usr/src/app/config/nginx.conf /etc/nginx/conf.d/configfile.template
+COPY --from=build /usr/src/app/config/entrypoint.sh /
 
 ENV PORT 80
 
